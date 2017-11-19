@@ -1,7 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1434484983" format="1.1" version="1"}%
-%META:TOPICPARENT{name="Category"}%
----+ A List of Wiki Administrator Documentation
-List of documents relevant for the installer and administrator of the Foswiki installation
-
-%INCLUDE{"Category"}%
-

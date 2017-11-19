@@ -1,2 +1,0 @@
-Foswiki::Contrib::MailerContrib,>=0,perl,Foswiki mailer module
-JSON,>0,cpan,Required. Available from the CPAN archive.

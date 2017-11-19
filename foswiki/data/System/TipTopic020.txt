@@ -1,9 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1282144126" format="1.1" version="1"}%
-%META:TOPICPARENT{name="TipsOfTheDay"}%
----+ !InterwikiPlugin links
-
-The InterwikiPlugin automatically links =ExternalSite:Page= text to external sites based on aliases defined in the InterWikis topic. This enables flexible shortcuts to long URLs.
-
-[[InterwikiPlugin][More information...]]
-
-[[TipsOfTheDay][See More Tips...]]

@@ -1,7 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1281633033" format="1.1" version="1"}%
-%META:TOPICPARENT{name="TipsOfTheDay"}%
----+ <nop>WikiWords for linking
-
-<nop>WikiWords are capitalized words, run together, such as <b>WebPreferences</b> and <b>CollaborationPlatform</b>. Using a lot of !WikiWords creates a good browsing experience for the reader. %WIKITOOLNAME% links <nop>WikiWords automatically to topics of that name.
-
-[[TipsOfTheDay][See More Tips...]]

@@ -1,9 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1434650530" format="1.1" version="1"}%
-%META:TOPICPARENT{name="Macros"}%
----+ WIKIWEBMASTERNAME -- Name of the administrator for the site
----++ Examples
-   * =%<nop>WIKIWEBMASTERNAME%= expands to =%WIKIWEBMASTERNAME%=
-%STOPINCLUDE%
----++ Related
- [[VarWIKIWEBMASTER][WIKIWEBMASTER]]
-

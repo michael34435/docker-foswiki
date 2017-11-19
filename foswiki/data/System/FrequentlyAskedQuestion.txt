@@ -1,9 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1434484983" format="1.1" version="1"}%
-%META:TOPICPARENT{name="FrequentlyAskedQuestions"}%
-%INCLUDE{"FrequentlyAskedQuestions"}%
-<!-- <verbatim class="tml"> The "Summary" section is used in an example in %SYSTEMWEB%.Macros.
-%STARTSECTION{"Summary"}%
-These topics are for frequently
-asked questions including answers.
-%ENDSECTION{"Summary"}%
-</verbatim> -->

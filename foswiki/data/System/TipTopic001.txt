@@ -1,7 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1282144126" format="1.1" version="1"}%
-%META:TOPICPARENT{name="TipsOfTheDay"}%
----+ The Go Box as a browser
-
-The go box (also called jump box) allows you to jump from page to page and search for documents.  If you do not know the entire name of the topic you are looking for, a partial name in the GoBox will perform a literal search. 
-
-[[TipsOfTheDay][See More Tips...]]

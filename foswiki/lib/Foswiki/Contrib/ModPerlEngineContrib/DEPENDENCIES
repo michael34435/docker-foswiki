@@ -1,2 +1,0 @@
-mod_perl2,>=2.0,cpan,Optional, but required if you're using Apache 2.x and plan to enable mod_perl
-Apache2::Request,>=2.0,cpan,Optional, but recommended if you're using Apache 2.x and plan to enable mod_perl

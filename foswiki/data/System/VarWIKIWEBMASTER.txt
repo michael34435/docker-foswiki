@@ -1,9 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1434650530" format="1.1" version="1"}%
-%META:TOPICPARENT{name="Macros"}%
----+ WIKIWEBMASTER -- feedback email address for site
----++ Examples
-   * =%<nop>WIKIWEBMASTER%= expands to =%WIKIWEBMASTER%=
-%STOPINCLUDE%
----++ Related
- [[VarWIKIWEBMASTERNAME][WIKIWEBMASTERNAME]]
-

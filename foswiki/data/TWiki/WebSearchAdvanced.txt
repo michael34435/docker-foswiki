@@ -1,3 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1227615886" format="1.1" version="1"}%
-%META:TOPICPARENT{name="WebSearch"}%
-%INCLUDE{"%SYSTEMWEB%.%TOPIC%"}%

@@ -1,3 +1,0 @@
-This is where Foswiki stores the work areas for plugins. This directory
-should *not* be browseable from the web, and should *not* be accessible
-to anyone on the server except the webserver user.

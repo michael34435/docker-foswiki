@@ -1,4 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1447730097" format="1.1" version="1"}%
-%META:TOPICPARENT{name="PatternSkin"}%
-%WEBCOPYRIGHT%
-%META:PREFERENCE{name="ALLOWTOPICVIEW" title="ALLOWTOPICVIEW" type="Set" value="*"}%

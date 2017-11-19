@@ -1,6 +1,0 @@
-Foswiki::Plugins::JQueryPlugin,>=6.00,perl,Required.
-JSON,>=2.59,cpan,Required. 
-ONLYIF ( $Foswiki::Plugins::VERSION < 2.1)
-Foswiki::Plugins::SetVariablePlugin,>=2.33,perl,Required. required for Foswiki < 1.2
-ONLYIF ( $Foswiki::Plugins::VERSION < 2.1)
-Foswiki::Plugins::ZonePlugin,>=3.1,perl,Required. required for Foswiki < 1.1

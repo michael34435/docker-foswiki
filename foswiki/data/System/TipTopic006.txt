@@ -1,7 +1,0 @@
-%META:TOPICINFO{author="ProjectContributor" date="1282144126" format="1.1" version="1"}%
-%META:TOPICPARENT{name="TipsOfTheDay"}%
----+ Creating a Table of Contents
-
-=%<nop>TOC%= automatically creates a table of contents based on the headings present in the topic. To exclude a heading from a =%<nop>TOC%= add =!!= to the end of the heading markup, e.g. write =---+!!= for a =---+= heading.
-
-[[TipsOfTheDay][See More Tips...]]
