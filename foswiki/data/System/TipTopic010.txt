@@ -1,0 +1,9 @@
+%META:TOPICINFO{author="ProjectContributor" date="1281633033" format="1.1" version="1"}%
+%META:TOPICPARENT{name="TipsOfTheDay"}%
+---+ Disabling individual !WikiWords
+
+Prevent a WikiWord from being linked by prefixing it with an exclamation point.
+
+Example: To escape =SunOs= write =!SunOs= to get !SunOs.
+
+[[TipsOfTheDay][See More Tips...]]

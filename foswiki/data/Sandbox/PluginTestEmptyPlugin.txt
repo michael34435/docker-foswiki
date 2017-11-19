@@ -1,0 +1,18 @@
+%META:TOPICINFO{author="ProjectContributor" date="1297286796" format="1.1" version="1"}%
+%META:TOPICPARENT{name="EmptyPlugin"}%
+---+!! Testing !EmptyPlugin 
+
+SOME EXAMPLES OF THE PLUGIN
+
+__Related:__ %SYSTEMWEB%.EmptyPlugin
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="ProjectContributor"}%
+%META:FIELD{name="Copyright" title="Copyright" value=""}%
+%META:FIELD{name="Description" title="Description" value="%$CREATED_SHORTDESCRIPTION%"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/EmptyPlugin"}%
+%META:FIELD{name="License" title="License" value=""}%
+%META:FIELD{name="Release" title="Release" value="%$CREATED_DATE%"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/EmptyPlugin"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/EmptyPlugin"}%
+%META:FIELD{name="Version" title="Version" value="1.00"}%

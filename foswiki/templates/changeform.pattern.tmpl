@@ -1,0 +1,17 @@
+%TMPL:INCLUDE{"changeform"}%
+%TMPL:DEF{"logo"}%%TMPL:END%%{ don't show a logo to make best use of screen estate }%
+
+
+%TMPL:DEF{"bodyclassname"}%patternNoViewPage patternChangeFormPage%TMPL:END%
+
+
+%TMPL:DEF{"content"}%%TMPL:P{"notes"}%
+
+%TMPL:P{"formstart"}%
+<div class="foswikiFormSteps">
+<div class="foswikiFormStep">
+---+++ %MAKETEXT{"Available form templates"}%   
+%FORMLIST%
+</div>
+%TMPL:P{"topicactionbuttonsrow"}%
+</div>%TEXT% %EDITACTION% %TMPL:P{"hiddenformfields"}%%TMPL:P{"formend"}%%TMPL:END%

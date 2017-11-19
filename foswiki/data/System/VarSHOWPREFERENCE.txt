@@ -1,0 +1,19 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434713255" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Macros"}%
+---+ SHOWPREFERENCE -- show where preferences are defined.
+Preference values are shown in a bulleted list, together with where they were defined.
+---++ Parameters
+     %TABLE{sort="off"}%
+     | *Parameter* | *Description* | *Default:* |
+     | ="name,name,name"= | Comma-separated list of preferences to show | |
+---++ Examples
+   * =%<nop>SHOWPREFERENCE%= will show all preferences
+   * =%<nop>SHOWPREFERENCE{"ATTACHFILESIZELIMIT"}%= expands to
+<pre class="tml">
+%SHOWPREFERENCE{"ATTACHFILESIZELIMIT"}%
+</pre>
+   * =%<nop>SHOWPREFERENCE{"DENYWEBCHANGE,ALLOWWEBCHANGE"}%= expands to
+<pre class="tml">
+%SHOWPREFERENCE{"DENYWEBCHANGE,ALLOWWEBCHANGE"}%
+</pre>
+<!--%JQREQUIRE{"chili"}%-->

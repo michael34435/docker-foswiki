@@ -1,0 +1,81 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1486602810" format="1.1" version="1"}%
+%META:TOPICPARENT{name="InterwikiPlugin"}%
+---+ <nop>Inter-Wiki Link Rules (or Links to other Sites)
+
+This topic lists all aliases needed to map inter-wiki links to external wikis/sites.
+
+Whenever you write ==ExternalSite:Page== it will be linked automatically to the page on the external site. The link points to the URL corresponding to the ==ExternalSite== alias below, concatenated to the ==Page== you choose. Example: Type ==Wiki<nop>:RecentChanges== to get <a href="http://c2.com/cgi/wiki?RecentChanges">Wiki:RecentChanges</a>, the <nop>RecentChanges page at the original Wiki site.
+
+<div class="foswikiHelp">%X% Note: This topic needs to be visible for all users, or the plugin will not work correctly.</div>
+
+---+++ How to define Inter-Wiki Links
+
+Inter-wiki links are defined in the tables below.  %INCLUDE{"%SYSTEMWEB%.InterwikiPlugin" section="aliasformat"}%
+
+The optional INTERLINKFORMAT override can incorporate the following tokens
+which are expanded when the link is generated:%INCLUDE{"%SYSTEMWEB%.InterwikiPlugin" section="formattokens"}%
+
+See %SYSTEMWEB%.InterwikiPlugin for more details on specifiying the INTERLINKFORMAT.
+
+#AddingYourOwn
+---+++ Adding your own Inter-Wiki Links
+
+Rather than adding your own inter-wiki links to this topic, the recommended approach is to create a topic in your %USERSWEB% Web, for example [[%USERSWEB%.InterWikis]]. You can then set the =INTERWIKIPLUGIN_RULESTOPIC= preference setting in [[%LOCALSITEPREFS%]] as follows:
+
+<verbatim class="tml">
+   * Set INTERWIKIPLUGIN_RULESTOPIC = %SYSTEMWEB%.InterWikis, %USERSWEB%.InterWikis
+</verbatim>
+
+Any inter-wikis you add to [[%USERSWEB%.InterWikis]] will then be available in the same way that the inter-wikis from here are. If you create a rule in [[%USERSWEB%.InterWikis]] which has the same alias as a rule in this topic, the rule from [[%USERSWEB%.InterWikis]] will take preference.
+
+---+++ General Inter-Site Links
+
+<noautolink>
+
+| *Alias:* | *URL:* | *Tooltip Text:* |
+| Acronym | http://www.acronymfinder.com/af-query.asp?Acronym=$page&String=exact | Look up '$page' on Acronym Finder site |
+| CPAN | https://metacpan.org/module/ | CPAN perl repository |
+| Dictionary | http://www.dictionary.com/cgi-bin/dict.pl?term= | Look up '$page' at Dictionary.com |
+| Google | https://google.com/search?q= | Search for '$page' on Google |
+| Group | https://groups.google.com/forum/#!search/ | News group '$page' at Google.com |
+| ISBN | http://www.bookfinder.com/search/?st=sr;ac=qr;isbn= | Book with ISBN $page |
+| News | https://news.google.com/news?q= | Search for '$page' on Google news |
+| RFC | http://www.faqs.org/rfcs/rfc$page.html | IETF RFC #$page |
+
+</noautolink>
+
+---+++ Inter-Wiki Links
+
+<noautolink>
+
+| *Alias:* | *URL:* | *Tooltip Text:* | *Format override:* |
+| Advogato | http://www.advogato.org/article/$page.html | '$page' on Advogato community site (with peer review) |
+| C2find | http://c2.com/cgi/wiki?FindPage&value= | Search '$page' on the original 'WikiWikiWeb' site |
+| DokuWiki | http://dokuwiki.org/ | '$page' on Doku Wiki site |
+| Foswiki | https://foswiki.org/ | '$page' on foswiki.org |
+| Foswikitask | https://foswiki.org/Tasks/ | '$page' on the 'Foswiki' issue tracking site |
+| FoxWiki | http://fox.wikis.com/wc.dll?Wiki~ | '$page' on Fox Wiki site |
+| HammondWiki | http://www.dairiki.org/HammondWiki/ | '$page' on 'HammondWiki' site |
+| MeatBall | http://www.usemod.com/cgi-bin/mb.pl? | '$page' on 'MeatBall' site, a 'UseMod' Wiki variant |
+| MoinMoin | https://moinmo.in/ | '$page' on 'MoinMoin' Wiki site |
+| PPR | http://c2.com/cgi/wiki? | '$page' on the original 'PortlandPatternRepository' site |
+| Squeak | http://wiki.squeak.org/squeak/ | '$page' on Squeak Smalltalk Wiki |
+| TWiki | http://twiki.org/cgi-bin/view/ | '$page' on TWiki.org |
+| TWikibug | http://develop.twiki.org/~twiki4/cgi-bin/view/Bugs/ | '$page' on the TWiki issue tracking site |
+| TWikirev | http://develop.twiki.org/trac/changeset/ | revision $page of TWiki svn |
+| UseMod | http://www.usemod.com/cgi-bin/wiki.pl? | '$page' on 'UseMod' Wiki site |
+| Wiki | http://c2.com/cgi/wiki? | '$page' on the original 'WikiWikiWeb' site |
+| Wikipedia | https://en.wikipedia.org/wiki/ | '$page' on 'Wikipedia' |
+| ZWiki | http://zwiki.org/ | '$page' on Zope's Wiki |
+
+</noautolink>
+
+*Note:* This topic configures the InterwikiPlugin.
+
+---
+*Related Topics:* [[%SYSTEMWEB%.Plugins][Plugins]], UserDocumentationCategory, AdminDocumentationCategory
+
+<!--
+%JQREQUIRE{"chili"}%
+-->
+%META:PREFERENCE{name="ALLOWTOPICVIEW" title="ALLOWTOPICVIEW" type="Set" value="*"}%

@@ -1,0 +1,42 @@
+%META:TOPICINFO{author="ProjectContributor" date="1485108858" format="1.1" version="1"}%
+%META:TOPICPARENT{name="PatternSkin"}%
+---+!! <nop>PatternSkin horizontal navigation example
+
+Include main navigation with:
+<verbatim class="tml">
+%INCLUDE{"PatternSkinHorizontalNavigationExample" section="main"}%
+</verbatim>
+This is done automatically in the templates by setting in the %USERSWEB%.SitePreferences:
+   * #Set PATTERNSKIN_NAVIGATION_TOPIC = %SYSTEMWEB%.PatternSkinHorizontalNavigationExample
+
+---++ Include sections
+<verbatim class="tml">
+%STARTSECTION{"main"}%<div id="patternTopBarButtons" class="clear"><ul>
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation"
+    section="topbarbutton"
+    ID=""
+    DESTWEB="%USERSWEB%"
+    DESTTOPIC="%HOMETOPIC%"
+    LABEL="%USERSWEB%"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation"
+    section="topbarbutton"
+    ID=""
+    DESTWEB="%SYSTEMWEB%"
+    DESTTOPIC="%HOMETOPIC%"
+    LABEL="%SYSTEMWEB%"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation"
+    section="topbarbutton"
+    ID=""
+    DESTWEB="%SANDBOXWEB%"
+    DESTTOPIC="%HOMETOPIC%"
+    LABEL="%SANDBOXWEB%"
+}%
+</ul></div>%ENDSECTION{"main"}%
+
+<!-- %JQREQUIRE{"chili"}% -->
+%META:PREFERENCE{name="ALLOWTOPICVIEW" title="ALLOWTOPICVIEW" type="Set" value="*"}%

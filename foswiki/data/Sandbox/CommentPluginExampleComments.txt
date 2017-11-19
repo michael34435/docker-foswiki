@@ -1,0 +1,17 @@
+%META:TOPICINFO{author="ProjectContributor" date="1404921098" format="1.1" version="1"}%
+%META:TOPICPARENT{name="CommentPlugin"}%
+---+!! Comments
+
+Example comment topic for [[%SANDBOXWEB%.CommentPluginExamples#return][CommentPluginExamples - "return"]]
+---
+%STARTINCLUDE%
+
+
+Target comment output 1
+
+-- %USERSWEB%.ProjectContributor - 03 Dec 2006
+
+
+Target comment output 2
+
+-- %USERSWEB%.ProjectContributor - 03 Dec 2006

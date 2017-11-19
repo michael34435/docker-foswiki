@@ -1,0 +1,270 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1491685944" format="1.1" version="1"}%
+---+!! %TOPIC%
+%FORMFIELD{"Description"}%
+
+%TOC%
+
+---++ Summary
+This package implements a [[http://en.wikipedia.org/wiki/JSON-RPC][JSON-RPC 2.0]] protocol to interface
+with Foswiki and its plugins. 
+
+In contrast to the normal REST interface of Foswiki, a JSON-RPC interface
+offers well defined calling semantics for requests and responses. The
+interface will also take care that any received data is recoded
+to the server's character encoding. JSON-RPC is normally called as part of
+some !JavaScript AJAX application.
+
+<nop>%TOPIC% also comes with a jQuery plugin to simplify working with
+JSON-RPC. This is a simple wrapper around jQuery's own
+AJAX capabilities.
+
+---++ Registering JSON-RPC procedures
+Foswiki plugins are able to register their own handler for a specific
+method in a given namespace, thus:
+
+<verbatim>
+use Foswiki::Contrib::JsonRpcContrib ();
+
+sub initPlugin {
+    ...
+    Foswiki::Contrib::JsonRpcContrib::registerMethod(
+        "MyNamespace", 
+        "someMethod", 
+        \$jsonRpcSomeMethod
+    );
+    ...
+}
+
+# Plugin's implementation
+sub jsonRpcSomeMethod {
+    my ($session, $request) = @_;
+    ...
+   # Return some result
+   return $result;
+}
+</verbatim>
+
+---++ Handler functions
+The handler function in your plugin takes two parameters, =$session= and =$request=. =$session= is a reference to the Foswiki session; most implementers should simply ignore this. =$request= is a reference to the JSON request object. The following methods are available on this object:
+   * =param('param1')= - returns the value of a single named parameter
+   * =params()= - returns a reference to the entire parameter hash
+   * =method()= - returns the method
+   * =namespace()= - returns the namespace
+The handler function can return a scalar or a reference to an acyclic graph (a tree structure). The structure may contain blessed data (perl objects) if (and only if) those objects implement the =TO_JSON= method described in the documentation for the CPAN JSON module.
+
+Errors can be signalled using a simple =die=. Such errors will be returned to the caller with an =errorCode= of 1. If you need to pass back extended error information, you will have to encode it in the =die= message.
+
+---++ Calling using a POST
+Once a handler is registered it may be called using an URL of the format:
+
+=%SCRIPTURL{"jsonrpc"}%/MyNamespace=
+
+... while POSTing a JSON-encoded request according to the JSON-RPC 2.0 specification,
+like,
+
+<verbatim>
+{
+  jsonrpc: "2.0", 
+  method: "someMethod", 
+  params: {
+     topic: "Web.Topic",
+     ...
+     param1: "value1",
+     param2: "value2",
+     ...
+  }, 
+  id: "caller's id"
+}
+</verbatim>
+
+---++ Calling using jQuery
+The jQuery plugin can be used by requesting it via
+=%<nop>JQREQUIRE{"jsonrpc"}%=. JSON-RPC can now be called like this:
+
+<verbatim>
+$.jsonRpc(
+  endpoint, /* %SCRIPTURL{"jsonrpc"}% */
+  {
+    namespace: "MyNamespace",
+    method: "someMethod",
+    id: "some caller's id",
+    params: {
+     topic: "Web.Topic",
+     ...
+     param1: "value1",
+     param2: "value2", 
+    },
+    beforeSend: function(xhr) { ... },
+    error: function(jsonResponse, textStatus, xhr) { ... },
+    success: function(jsonResponse, textStatus, xhr) { ... }
+  }
+);
+</verbatim>
+
+---++ Error response
+
+If the procedure fails for any reason the JSON response will have the format
+
+<verbatim>
+{
+  jsonrpc: "2.0",
+  error: {
+    code: errorCode,
+    message: "error description"
+  },
+  id: "caller's id"
+}
+</verbatim>
+
+The following error codes are defined:
+   * -32700: Parse error - Invalid JSON was received by the server.
+   * -32600: Invalid Request - The JSON sent is not a valid Request object.
+   * -32601: Method not found - The method does not exist / is not available.
+   * -32602: Invalid params - Invalid method parameter(s).
+   * -32603: Internal error - Internal JSON-RPC error.
+   * -32099 to -32000: Server error - Reserved for implementation-defined server-errors.
+   * 1: unknown error - a =die= in the handler will return this
+   * 401: access denied - returned if provided credentials are incorrect
+
+---++ Success response
+
+If the call is successful the JSON response will be of the format:
+
+<verbatim>
+{
+   jsonrpc: "2.0",
+   result: some-result-object,
+   id: "caller's id"
+}
+</verbatim>
+
+---++ Authentication
+If there is an existing login session then JSON-RPC calls will be authenticated using that session. Alternatively, requests can be authenticated by passing in =username= and =password= URL parameters. It is strongly recommended that this is only done if the communications links is secure (https:), as these parameters are sent in plain text.
+
+---++ Extensions to the standard
+
+JSON-RPC 2.0 normally only allows you to pass parameters to a remote
+procedure using a well formed request object as described
+above. However in real-live web applications, data to be transmitted to
+a specific endpoint is most conveniently sent using URL parameters (as is
+the case for normal HTML forms).
+
+Instead of requiring all form fields to be converted into a
+JSON-RPC request object on the client side, the JsonRpcContrib
+converts form data to a proper request object transparently. 
+This way you can call a JSON-RPC function using a simple form submission
+from the client.
+
+The called namespace and method can thus be specified much like a
+subject/verb url to a REST interface. These calls are equivalent:
+
+<verbatim>
+$.jsonRpc(
+  "%SCRIPTURL{"jsonrpc"}%" 
+  namespace: "MyNamespace",
+  method: "someMethod",
+  ...
+);
+</verbatim>
+
+<verbatim>
+$.jsonRpc(
+  "%SCRIPTURL{"jsonrpc"}%/MyNamespace",
+  method: "someMethod",
+  ...
+);
+</verbatim>
+
+<verbatim>
+$.jsonRpc(
+  "%SCRIPTURL{"jsonrpc"}%/MyNamespace/someMethod" 
+  ...
+);
+</verbatim>
+
+You can also use an HTML form:
+
+<verbatim>
+<form action="%SCRIPTURL{"jsonrpc"}%" method="post">
+<input type="hidden" name="namespace" value="MyNamespace" />
+<input type="hidden" name="method" value="someMethod" />
+...
+</form>
+</verbatim>
+
+<verbatim>
+<form action="%SCRIPTURL{"jsonrpc"}%/Mynamespace" method="post">
+<input type="hidden" name="method" value="someMethod" />
+...
+</form>
+</verbatim>
+
+<verbatim>
+<form action="%SCRIPTURL{"jsonrpc"}%/Mynamespace/someMethod" method="post">
+...
+</form>
+</verbatim>
+
+Forms of this type can easily be sent to the server using %SYSTEMWEB%.JQueryForm's =$.ajaxSubmit()= method.
+
+If a namespace, method, or parameters are specified as part of a JSON-RPC request object as well as using URL parameters, the URL parameters take higher precedence and are merged into the request object.
+
+---++ Installation Instructions
+You do not need to install anything in the browser to use this extension. The following instructions are for the administrator who installs the extension on the server.
+
+Open configure, and open the "Extensions" section. "Extensions Operation and Maintenance" Tab -&gt; "Install, Update or Remove extensions" Tab.  Click the "Search for Extensions" button.  
+Enter part of the extension name or description and press search.   Select the desired extension(s) and click install. If an extension is already installed, it will *not* show up in the
+search results.
+
+You can also install from the shell by running the extension installer as the web server user: (Be sure to run as the webserver user, not as root!)
+<verbatim>
+cd /path/to/foswiki
+perl tools/extension_installer <NameOfExtension> install
+</verbatim>
+
+If you have any problems, or if the extension isn't available in =configure=, then you can still install manually from the command-line. See https://foswiki.org/Support/ManuallyInstallingExtensions for more help.
+
+
+---++ Dependencies
+<table border="1" class="foswikiTable"><tr><th>Name</th><th>Version</th><th>Description</th></tr><tr><td align="left">JSON</td><td align="left">&gt;=2.59</td><td align="left">Required.</td></tr></table>
+
+---++ Change History
+|  08 Apr 2017: (2.28) | Foswikitask:Item14366: Reorder initialization to allow local CGI::Carp. |
+|  26 Nov 2016: (2.27) | Released with Foswiki 2.1.3.<br>\
+                         Foswikitask:Item14204: redirectto incorrectly encodes Anchors. |
+|  04 Apr 2016: (2.26) | Foswikitask:Item14025: Fix issues with JSON::XS 3.02 in some environments. |
+|  18 Mar 2016: (2.25) | Foswikitask:Item14011: Make sure HTTP2 is always compressing. |
+|  03 Feb 2016: (2.24) | Foswikitask:Item13405: Add NFC normalization of Unicode strings. |
+|  14 Jul 2015: (2.23) | fixed encoding of compressed responses Foswikitask:Item13521 |
+|  14 Jun 2015: (2.22) | Release with Foswiki 2.0.<br />\
+                  Foswikitask:Item13378: Implement UNICODE support,<br />\
+                  Foswikitask:Item13323: Use /usr/bin/env perl.<br />\
+                  Foswikitask:Item13412: Don't utf-8 encode response |
+|  29 Jan 2015: | Foswikitask:Item13238: fix content-type of response |
+|  17 Dec 2014: | Foswikitask:Item13164: added support for gzip compression of http response<br />\
+                  Foswikitask:Item13125: CGI changes for multi_param calls<br />\
+                  Foswikitask:Item13065: Log jsonrpc events to Foswiki event.log |
+|  28 Aug 2014: | don't use DEBUG constant to toggle local debug messages as it conflicts with Assert.pm |
+|  11 Dec 2013: | removed dependency on JSON::XS |
+|  30 May 2013: | added support for serialising objects, and rewrote some of the documentation (Foswiki:Main/CrawfordCurrie) |
+|  20 Mar 2013: | added feature to define handlers in !LocalSite.cfg (Config.spec) so that pure contribs can implement backends now |
+|   1 Oct 2012: | added the async flag to the =$.jsonRpc= frontend to =$.ajax= |
+|   2 Aug 2012: | fixed json2 not loaded in IE7 (Foswiki:Main/JanKrueger) |
+|  16 Apr 2012: | fixed =jsonrpc= for apache's suexec |
+|  10 Jan 2012: | fixed perl dependencies; \
+                  added =redirectto= url parameter similar to the standard foswiki rest handler |
+|  10 May 2011: | fixed jsonrpc script to work on old foswikis; \
+                  fixed multi-value params; \
+                  fixed compatibility with various JSON cpan libraries |
+|  29 Apr 2011: | initial release |
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="Michael Daum"}%
+%META:FIELD{name="Version" title="Version" value="2.28"}%
+%META:FIELD{name="Release" title="Release" value="08 Apr 2017"}%
+%META:FIELD{name="Description" title="Description" value="JSON-RPC interface for Foswiki"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/distro"}%
+%META:FIELD{name="Copyright" title="Copyright" value="&copy; 2011-2016 Michael Daum http://michaeldaumconsulting.com and Foswiki Contributors"}%
+%META:FIELD{name="License" title="License" value="[[http://www.gnu.org/licenses/gpl.html][GPL (Gnu General Public License)]]"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/JsonRpcContrib"}%
+%META:FIELD{name="Support" title="Support" value="Foswiki:Support/JsonRpcContrib"}%

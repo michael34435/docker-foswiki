@@ -1,0 +1,11 @@
+
+/* 1 */
+.foswikiTopic .editTableInput,
+.foswikiTopic .editTableTextarea {
+	font-family:georgia,times;
+	background:#ffc;
+}
+/* 2 */
+.foswikiTopic .editTable .foswikiTable td {
+	vertical-align:top;
+}

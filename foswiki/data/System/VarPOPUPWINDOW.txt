@@ -1,0 +1,28 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1473163788" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Macros"}%
+---+ POPUPWINDOW -- opens a topic or url in a new window
+---++ Parameters
+     %TABLE{sort="off"}%
+     | *Parameter* | *Description* | *Default* |
+     | ="topic"= <br> =topic="topic"= <br> =topic="web.topic"= | Topic to open | |
+     | =url= | URL to open (if topic is not used) | |
+     | =label= | Link label | the topic or the url | 
+     | =template= | View template to call when viewing a topic; not used for URLs  | ="viewplain"=  | 
+     | =width= | Width of window | ="600"= | 
+     | =height= | Height of window | ="480"= |
+     | =toolbar= | Show toolbars? | ="0"= |
+     | =scrollbars= | Show scrollbars? | ="1"= |
+     | =status= | Show status? | ="1"= |
+     | =location= | Show location bar? | ="0"= |
+     | =resizable= | Is the window resizable? | ="1"= |
+     | =left= | Left position | ="0"= |
+     | =top= | Top position | ="0"= |
+     | =center= | Center the window? | ="0"= |
+     | =menubar= | Show menubar? | ="0"= |
+     | =createnew= | Create a new window for each popup? | ="1"= |
+---++ Examples
+   * Example with topic link: <pre class="tml">%<nop>POPUPWINDOW{"%BASETOPIC%" label="Open this topic in a new window"}%</pre> Generates: %POPUPWINDOW{"%BASETOPIC%" label="Open this topic in a new window"}%
+   * Example with URL: <pre class="tml">%<nop>POPUPWINDOW{url="https://foswiki.org"}%</pre> Generates: %POPUPWINDOW{url="https://foswiki.org"}%
+   * Enable =POPUPWINDOW= by writing =%<nop>JQREQUIRE{"popupwindow"}%= on the page
+%STOPINCLUDE%
+<!--%JQREQUIRE{"chili"}%-->

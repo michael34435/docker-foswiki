@@ -1,0 +1,109 @@
+%META:TOPICINFO{author="ProjectContributor" date="1446958002" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Contribs"}%
+---+!! Tips Contrib Package
+
+Displays a rotating "Tip of the Day" to help familiarize new users with Foswiki features. Includes an application for creating custom tips for local installation.
+
+%TOC%
+
+---++ Summary of Contents
+   * Set on =TipTopic= topics providing brief lessons on Foswiki features. See %SYSTEMWEB%.TipsTopics.
+   * Set of topics for creating and managing =TipTopicXXX= topics. See %SYSTEMWEB%.TipsOfTheDayAdmin.
+
+---++ Detailed Documentation
+   * See %SYSTEMWEB%.TipsOfTheDayAdmin for instructions on managing and displaying tips.
+   * See %SYSTEMWEB%.TipsOfTheDayAddNew for instructions for adding new custom tips.
+
+<!--
+   * Set SHORTDESCRIPTION = Displays rotating list of "Tip-of-the-day"
+-->
+
+---++ CSS used by !TipsContrib
+
+   * .tipsOfTheDay - overall container
+   * .tipsOfTheDayContents - container for tipsOfTheDayHeader and tipsOfTheDayText
+   * strong.tipsOfTheDayHeader - header that says "Tip of the Day"
+   * .tipsOfTheDayText - the tip; contains title and tip summary and link "Read on"
+   * .tipsOfTheDayTitle - title of the tip; the link to the tip topic
+
+---++ Installation Instructions
+
+*Note:* You do not need to install anything on the browser to use this contrib package. The following instructions are for the administrator who installs the package on the server where Foswiki is running.
+
+   * Download the ZIP file from the Plugin web (see below)
+   * Unzip ==%TOPIC%.zip== in your Foswiki installation directory. Content:
+     | *File:* | *Description:* |
+        | ==lib/Foswiki/Contrib/TipsContrib.pm== |  (noci) |
+   | ==lib/Foswiki/Contrib/TipsContrib/DEPENDENCIES== |  (noci) |
+   | ==data/System/TipsContrib.txt== |  (noci) |
+   | ==data/System/TipTopic001.txt== |  (noci) |
+   | ==data/System/TipTopic002.txt== |  (noci) |
+   | ==data/System/TipTopic003.txt== |  (noci) |
+   | ==data/System/TipTopic004.txt== |  (noci) |
+   | ==data/System/TipTopic005.txt== |  (noci) |
+   | ==data/System/TipTopic006.txt== |  (noci) |
+   | ==data/System/TipTopic007.txt== |  (noci) |
+   | ==data/System/TipTopic008.txt== |  (noci) |
+   | ==data/System/TipTopic009.txt== |  (noci) |
+   | ==data/System/TipTopic010.txt== |  (noci) |
+   | ==data/System/TipTopic011.txt== |  (noci) |
+   | ==data/System/TipTopic012.txt== |  (noci) |
+   | ==data/System/TipTopic013.txt== |  (noci) |
+   | ==data/System/TipTopic014.txt== |  (noci) |
+   | ==data/System/TipTopic015.txt== |  (noci) |
+   | ==data/System/TipTopic016.txt== |  (noci) |
+   | ==data/System/TipTopic017.txt== |  (noci) |
+   | ==data/System/TipTopic018.txt== |  (noci) |
+   | ==data/System/TipTopic019.txt== |  (noci) |
+   | ==data/System/TipTopic020.txt== |  (noci) |
+   | ==data/System/TipTopic021.txt== |  (noci) |
+   | ==data/System/TipTopic022.txt== |  (noci) |
+   | ==data/System/TipTopic023.txt== |  (noci) |
+   | ==data/System/TipTopic024.txt== |  (noci) |
+   | ==data/System/TipTopic025.txt== |  (noci) |
+   | ==data/System/TipTopic026.txt== |  (noci) |
+   | ==data/System/TipTopic027.txt== |  (noci) |
+   | ==data/System/TipTopic028.txt== |  (noci) |
+   | ==data/System/TipTopic029.txt== |  (noci) |
+   | ==data/System/TipsTopics.txt== |  (noci) |
+   | ==data/System/TipsOfTheDay.txt== |  (noci) |
+   | ==data/System/TipsOfTheDayAddNew.txt== |  (noci) |
+   | ==data/System/TipsOfTheDayAdmin.txt== |  (noci) |
+   | ==data/System/TipsOfTheDayInclude.txt== |  (noci) |
+   | ==data/System/TipsOfTheDayTemplate.txt== |  (noci) |
+
+
+---++ Contrib Info
+
+|  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  06 Nov 2015: (1.26) | Foswikitask:Item13796: Rewrite TipsOfTheDayInclude to avoid generating HTML from the CALCULATE macro. |
+|  02 Oct 2015: (1.25) | Foswikitask:Item13781: Update dependency on SpreadSheetPlugin version for better Foswiki 1.1 compatibility |
+|  29 Sep 2015: (1.24) | Released with Foswiki 2.0.2 Foswikitask:Item13741: Encode search strings |
+|  15 Jul 2015: (1.22) | Released with Foswiki 2.0.1 Foswikitask:Item13526: Improve search performance. |
+|  14 Jun 2015: (1.21) | Released with Foswiki 2.0. Foswikitask:Item12864: use simple decimal version strings.<br />\
+                  Foswikitask:Item9693: Documentation improvements. <br />\
+                  Foswikitask:Item12888: Use preference variables, not topic explicit topic names. |
+|  28 Nov 2012: (1.2.0) | Version released with Foswiki 1.1.6. Convert to perl version strings. |
+|  06 Apr 2012: | Version released with Foswiki 1.1.5. Minor html cleanup and modernization. |
+|  05 Dec 2011: | Version released with Foswiki 1.1.4. Minor code cleanup and documentation updates. |
+|  11 Apr 2011: | Version released with Foswiki 1.1.3. Only a minor change related to how the contrib is being upgraded |
+|  06 Nov 2010: | Foswikitask:Item9963 - Revert usage of =$<nop>percent= back to =$<nop>percnt= |
+|  31 Jul 2010: | Foswikitask:Item9415 - Documentation updates |
+|  14 Apr 2010: | Fix the "Add tip for plugin" form; Fix styles; Set correct parent on a new custom tip |
+|  16 Dec 2008: | Foswiki version |
+|  04 Jan 2007: | Performance improvement |
+|  10 Oct 2005: | Initial version - Packaging by TWiki:Main.LynnwoodBrown |
+|  Dependencies: | Foswiki:Extensions.SpreadSheetPlugin 18 Dec 2006 (r12315) |
+
+---
+*Related Topics:* %LOCALSITEPREFS%
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="ProjectContributor"}%
+%META:FIELD{name="Copyright" title="Copyright" value="Copyright (C) 2005-2007 Peter Thoeny, peter@thoeny.org and TWiki Contributors, 2008-2015 Foswiki Contributors."}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/TipsContrib"}%
+%META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
+%META:FIELD{name="Release" title="Release" value="1.26"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/TipsContrib"}%
+%META:FIELD{name="Version" title="Version" value="1.26"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/distro"}%

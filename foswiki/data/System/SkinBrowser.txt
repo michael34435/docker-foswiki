@@ -1,0 +1,30 @@
+%META:TOPICINFO{author="ProjectContributor" date="1394718136" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Skins"}%
+---+ Skin Browser
+
+You can try out the [[Skins]] currently installed on this system:
+
+<div class="skinstable">
+%SEARCH{
+    "1"
+    topic="*Skin"
+    scope="topic"
+    web="%SYSTEMWEB%,TWiki"
+    type="query"
+    nosearch="on"
+    casesensitive="on"
+    nototal="on"
+    expandvariables="on"
+    format="| $pattern(.*\| *Screenshot\:[^\|]*\|([^\|]*).*) | *[[$web.$topic][$topic]]*: $pattern(.*\| *Description\:[^\|]*\|([^\|]*).*)<br /><br />[[%SCRIPTURLPATH{"view"}%/%WEB%/%TOPIC%?skin=$pattern(.*\| *Base Name\:[^\|]*\| *(\S*).*)][preview with this topic]] |"
+}%
+</div>
+<style type="text/css" media="all">
+.skinstable td {border-top:2px solid #444; padding:0.75em 0.5em;}
+</style>
+
+*Tip:* Additional skins can be downloaded from Foswiki:Extensions.SkinPackage
+
+*Note:* [[Skins]] describes how to install and activate a skin
+
+---
+*Related Topics:* [[Skins]], AdminDocumentationCategory, AdminToolsCategory, UserDocumentationCategory

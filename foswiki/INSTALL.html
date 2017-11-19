@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>InstallationGuide</title></head> 
+<body class="foswikiNoJs  foswikiHasChangePermission foswikiLoggedIn"><div class="foswikiPage">
+<span id="PageTop"></span> <h1 id="Installation_Guide">  Installation Guide </h1>
+<div class='foswikiHelp' style='border:2px orange solid' >
+This guide describes the steps for installing Foswiki, with <strong><em>specific steps for installations on Linux with the Apache web server</em></strong>.<br />
+If you would prefer to use a different web server, please refer to supplemental documentation when you reach the Apache-specific steps: <ul>
+<li> <strong>Nginx:</strong> <a href="https://foswiki.org/System/FastCGIEngineContrib#Nginx">FastCGIEngineContrib#Nginx</a> and<a href="https://foswiki.org/Support/FoswikiOnNginx">Foswiki on Nginx</a>
+</li> <li> <strong>Lighttpd:</strong> <a href="https://foswiki.org/Support/LighttpdBestPractice">Foswiki on Lighttpd</a>
+</li></ul> 
+</div>
+<p></p>
+<div class="foswikiToc" id="foswikiTOC"><span class="foswikiTocTitle">Contents</span> <ul>
+<li> <a href="#Before_you_start"> Before you start </a>
+</li> <li> <a href="#A_5_45Minute_Install"> 5-Minute Install </a>
+</li> <li> <a href="#Detailed_Instructions"> Detailed Instructions </a> <ul>
+<li> <a href="#Step_1:_Download_and_unpack_Foswiki"> Step 1: Download and unpack Foswiki </a>
+</li> <li> <a href="#Step_2:_Confirm_file_and_directory_ownership_and_permissions"> Step 2: Confirm file and directory ownership and permissions </a>
+</li> <li> <a href="#Step_3:_Configure_location_of_the_Perl_executable"> Step 3: Configure location of the Perl executable </a>
+</li> <li> <a href="#Step_4:_Configure_the_web_server"> Step 4: Configure the web server </a>
+</li> <li> <a href="#Step_5:_Bootstrap_your_configuration"> Step 5: Bootstrap your configuration </a>
+</li> <li> <a href="#Step_6:_Configure_email"> Step 6: Configure email </a>
+</li> <li> <a href="#Step_7:_Check_Authentication_and_Register_Yourself"> Step 7: Check Authentication and Register Yourself </a>
+</li> <li> <a href="#Step_8:_Establish_an_Administrator_user"> Step 8: Establish an Administrator user </a>
+</li> <li> <a href="#Step_9._Save_your_configuration_33"> Step 9. Save your configuration! </a>
+</li> <li> <a href="#Congratulations_33_Your_Foswiki_Installation_is_Ready_to_Use_33"> Congratulations! Your Foswiki Installation is Ready to Use! </a>
+</li></ul> 
+</li> <li> <a href="#Troubleshooting"> Troubleshooting </a>
+</li> <li> <a href="#Supplemental_Information_For_Installation"> Supplemental Information For Installation </a> <ul>
+<li> <a href="#System_Requirements"> System Requirements </a>
+</li></ul> 
+</li> <li> <a href="#Server_Requirements"> Server Requirements </a>
+</li> <li> <a href="#Specific_distribution_details"> Specific distribution details </a>
+</li> <li> <a href="#Client_Requirements"> Client Requirements </a> <ul>
+<li> <a href="#Uploading_the_Foswiki_distribution_to_your_web_server_host"> Uploading the Foswiki distribution to your web server host </a>
+</li> <li> <a href="#About_Administrators"> About Administrators </a> <ul>
+<li> <a href="#Options_to_Protect_the_Configure_Script"> Options to Protect the Configure Script </a>
+</li> <li> <a href="#Establishing_an_internal_admin_login_40optional_41"> Establishing an internal admin login  (optional) </a>
+</li></ul> 
+</li> <li> <a href="#User_Authentication_Options"> User Authentication Options </a> <ul>
+<li> <a href="#Template_Login_authentication"> Template Login authentication </a>
+</li> <li> <a href="#Enabling_Template_Login"> Enabling Template Login </a>
+</li> <li> <a href="#Apache_Login_authentication"> Apache Login authentication </a>
+</li> <li> <a href="#Testing_your_authentication_configuration:"> Testing your authentication configuration: </a>
+</li></ul> 
+</li> <li> <a href="#Configuring_Foswiki_manually_40without_using_the_61configure_61_page_41"> Configuring Foswiki manually (without using the configure page) </a>
+</li> <li> <a href="#TWiki_Compatibility"> TWiki Compatibility </a>
+</li></ul> 
+</li></ul> 
+</div>
+<p></p>
+<strong>Rather not install manually?</strong> Visit <a class="interwikiLink" href="https://foswiki.org/Download.OtherFoswikiInstallers" title="'Download.OtherFoswikiInstallers' on foswiki.org">Foswiki:Download.OtherFoswikiInstallers</a> for automated installers, and virtual machine images. These automate much of the installation process and may help some users get started more easily. For instructions using those packages, refer to the documentation provided there. Note that the installers are optimized for the target system, and do not necessarily follow the normal Foswiki directory structure documented below.
+<p></p>
+<strong>Upgrading?</strong> Please see the <a class="interwikiLink" href="https://foswiki.org/System.UpgradeGuide" title="'System.UpgradeGuide' on foswiki.org">upgrade guide</a>.
+<p></p>
+<strong>Need further information?</strong> Visit <a class="interwikiLink" href="https://foswiki.org/Support.SupplementalDocuments" title="'Support.SupplementalDocuments' on foswiki.org">Foswiki:Support.SupplementalDocuments</a> for additional notes on installing on different operating systems or shared web-hosting environments, performance tuning, security hardening and more.
+<p></p>
+<strong>Need help?</strong> Visit <a class="interwikiLink" href="https://foswiki.org/Support" title="'Support' on foswiki.org">Foswiki:Support</a> web or <a class="interwikiLink" href="https://foswiki.org/Community.InternetRelayChat" title="'Community.InternetRelayChat' on foswiki.org">Foswiki:Community.InternetRelayChat</a> (irc.freenode.net, channel #foswiki).
+<p></p>
+<h2 id="Before_you_start">  Before you start </h2>
+<p></p> <ul>
+<li> This guide assumes the a basic knowledge of server administration on the system being used. For more information, see <a class="interwikiLink" href="https://foswiki.org/System.AdminSkillsAssumptions" title="'System.AdminSkillsAssumptions' on foswiki.org">Foswiki:System.AdminSkillsAssumptions</a>.
+</li> <li> Review the <a class="foswikiCurrentTopicLink" href="#SystemRequirements">System Requirements</a> (below) to make sure you have server prerequisites installed.
+</li> <li> Review the <a class="interwikiLink" href="https://foswiki.org/System.ReleaseNotes02x01" title="'System.ReleaseNotes02x01' on foswiki.org">release notes</a>.
+</li> <li> If you need to install any Perl libraries from CPAN, see <a class="interwikiLink" href="https://foswiki.org/Support.HowToInstallCpanModules" title="'Support.HowToInstallCpanModules' on foswiki.org">Foswiki:Support.HowToInstallCpanModules</a> for more information.
+</li></ul> 
+<p></p>
+<h2 id="A_5_45Minute_Install">  5-Minute Install </h2>
+<p></p>
+Here's the quick version of the instructions, for <strong>those that are already comfortable</strong> with performing such installations. More detailed instructions follow.
+<p></p> <ol>
+<li> <a class="interwikiLink" href="https://foswiki.org/Download/" title="'Download/' on foswiki.org">Download</a> and unpack the latest version of Foswiki.
+</li> <li> Configure Apache using the <a class="interwikiLink" href="https://foswiki.org/Support.ApacheConfigGenerator" title="'Support.ApacheConfigGenerator' on foswiki.org">Foswiki:Support.ApacheConfigGenerator</a> tool to generate a safe, working config file for your Foswiki installation. <ul>
+<li> Install the generated file and restart Apache.
+</li> <li> In shared hosting environment where you don't have access to Apache config files, see <a class="foswikiCurrentTopicLink" href="#ConfigWithHtaccess">the instructions in step 4 below for configuring using <code>.htaccess</code> files</a>.
+</li></ul> 
+</li> <li> Bootstrap your the install by browsing to the default view URL for your site in your web browser. Depending upon your Apache configuration, your view URL might look something like: <ul>
+<li> <code>http://yoursite.com</code>
+</li> <li> <code>http://yoursite.com/bin/view</code>
+</li> <li> <code>http://yoursite.com/foswiki/bin/view</code>
+</li></ul> 
+</li> <li> Follow the link in the Bootstrap banner of the returned page to the bin/configure tool, address any warnings and save your configuration.
+</li> <li> Return from configure (button at top of page), and register your first user.
+</li></ol> 
+<p></p>
+<div class='foswikiHelp'>Note: If you are using SSL (<code>https://</code>), and access Foswiki via a proxy server, you may need to give bootstrap a "hint" that SSL is in use. Add
+<code>SSL=1</code> to the URL,  eg: <code>https://yoursite.com?SSL=1</code>.  From there, bootstrap should function correctly.  You only need to do this if the initial view screen displays without any
+styling and the links on the page point to non-SSL <code>http</code> locations.
+</div>
+<p></p>
+That's it! You Foswiki should now be installed. Browse to <code>/bin/view</code> and start editing!
+<p></p>
+At some point, you will want to re-visit <a class="foswikiCurrentTopicLink" href="#ConfigureFoswiki">Configuring Foswiki</a> to enable out-going emails, create administrators and properly secure your installation.
+<p></p>
+<h2 id="Detailed_Instructions">  Detailed Instructions </h2>
+<p></p>
+<h3 id="Step_1:_Download_and_unpack_Foswiki">  Step 1: Download and unpack Foswiki </h3>
+<p></p> <ol>
+<li> <strong>Go to your site's root directory</strong> as set by Apache (typically within the <code>/var/www</code> or <code>/srv/www</code> directory) or as set by your hosting company.
+</li> <li> <strong>Download</strong> the Foswiki distribution from <a href="https://foswiki.org/Download">https://foswiki.org/Download</a> <ul>
+<li> If you have shell access, you can download the distribution directly using using this command: <pre>wget  https://sourceforge.net/projects/foswiki/files/latest/download</pre>
+</li> <li> If you do not have shell access to your web server host, see the section <a class="foswikiCurrentTopicLink" href="#UploadingFoswikiDistribution">Uploading the Foswiki distribution to your web server host</a> below.
+</li></ul> 
+</li> <li> <strong>Unpack the distribution file:</strong> <ul>
+<li> go to your web directory (usually /var/www) or in any directory you what to install Foswiki (designed after by  /path/to/foswiki/)
+</li> <li> Untar and gunzip the distribution using this command: (modify to match version number)<verbartim>       tar -xzvf foswiki-VERSION.tgz      </verbatim>A new subdirectory called Foswiki-VERSION will be created.
+</li> <li> You can rename this subdirectory to a shorter name. For the rest of this document, this subdirectory is assumed to be at <code>/path/to/foswiki</code>.
+</li> <li> <strong>Note:</strong> Foswiki does not support directory paths that contain spaces, so ensure that all of its directory paths do not contain any spaces (particularly on Windows).
+</li></ul> 
+</li></ol> 
+<p></p>
+<h3 id="Step_2:_Confirm_file_and_directory_ownership_and_permissions">  Step 2: Confirm file and directory ownership and permissions </h3>
+<p></p>
+<em>Note: Installers on shared hosting sites and Windows can <a class="foswikiCurrentTopicLink" href="#ConfigurePerl">skip to next step</a>.</em>
+<p></p>
+The general command in Linux distributions to set file ownership to the Apache system user is: <pre>sudo chown -R {user}:{group} /path/to/foswik</pre>
+<p></p>
+The appropriate user/group ownership varies, depending upon the operating system and distribution:
+<table border="1" class="foswikiTable" rules="none">
+	<tbody>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> RedHat, Fedora, CentOS, Gentoo, Mandriva </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> <code>apache:apache</code> </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> debian, Ubuntu, Kubuntu </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> <code>www-data:www-data</code> </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Suse </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> <code>wwwrun:www</code> </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> FreeBSD </td>
+			<td class="foswikiTableCol1 foswikiLastCol foswikiLast"> <code>www:wwwadmin</code> </td>
+		</tr>
+	</tbody></table>
+<p></p>
+The default file and directory access permissions as set by the distribution define a reasonable security level that will work for many types of installations, including shared hosting. Nonetheless, you should verify that the web server user has read access to all files and directories beneath the <code>foswiki</code> directory, and execute access for all directories. Also verify that the <code>data</code> and <code>pub</code> directories and all the subdirectories and files beneath them allow write access for the web server user.
+<p></p>
+If for some reason the file permissions have been modified, the shell script
+<code>tools/fix_file_permissions.sh</code> can be used to repair the installation.
+<pre>
+cd /path/to/foswiki
+sh tools/fix&#95;file&#95;permissions.sh
+</pre>
+<p></p>
+<p></p>
+For more information on the appropriate permissions to ensure security for your Foswiki data, see <a class="interwikiLink" href="https://foswiki.org/Support.SecuringYourSite" title="'Support.SecuringYourSite' on foswiki.org">Foswiki:Support.SecuringYourSite</a>.
+<p></p>
+<span id="ConfigurePerl"></span>
+<h3 id="Step_3:_Configure_location_of_the_Perl_executable">  Step 3: Configure location of the Perl executable </h3>
+<p></p>
+If you are running a Linux system with Perl found on the default path or are on a shared hosting site, then you can <a class="foswikiCurrentTopicLink" href="#Configure_the_web_server">jump to this step</a>. This step is <strong>required</strong> on Windows installations.
+<p></p>
+The easiest way to fix up the bin scripts is to run the <code>tools/rewriteshebang.pl</code> script: <pre class='bash'>
+cd /path/to/foswiki/tools
+perl rewriteshebang.pl</pre>
+or for Windows users: <pre class='bash'>
+cd C:\path\to\foswiki\tools
+perl rewriteshebang.pl</pre>
+The script will determine the location of the Perl interpreter and will prompt to update both the bin and tools scripts in a single step.   The changed files will be reported, and it is safe to rerun the script.
+<p></p>
+If you get an error about perl command not found,  the you need to find where your perl command is installed and include that in your command.  For example: <pre class='bash'>C:\path\to\perl rewriteshebang.pl</pre>
+<p></p>
+<span id="Configure_the_web_server">
+<h3 id="Step_4:_Configure_the_web_server">  Step 4: Configure the web server </h3>
+<p></p>
+Foswiki provides several methods to configure Apache depending of your access to <strong>root and sudo</strong> and your preference to set all in one file or several files.
+<p></p>
+Method 1 and 2 provide <strong>better performance and requires editing only one file</strong>. However, they <strong>require root or sudo</strong> access. Method 3 is for <strong>cases where you do not have root access</strong> (such as on hosted sites).
+<p></p>
+In details:
+<p></p>
+<strong>Method 1: Use Foswiki's configuration generator</strong> <em>(Needs root access)</em> <ul>
+<li> See <a class="interwikiLink" href="https://foswiki.org/Support.ApacheConfigGenerator" title="'Support.ApacheConfigGenerator' on foswiki.org">Foswiki:Support.ApacheConfigGenerator</a>.
+</li> <li> This is the easiest and best way to generate a smooth-running and secure configuration file.
+</li> <li> After installing the config file as per your distribution's guidelines, remember to restart or reload Apache each time you edit the file to apply your changes.
+</li></ul> 
+<p></p>
+<strong>Method 2: Customize the Apache config template file included in distribution</strong> <em>(Needs root access)</em> <ul>
+<li> A sample config file called <code>foswiki_httpd_conf.txt</code> can be found in the root of the foswiki installation.
+</li> <li> This is provided in case you can not access the online configuration generator.
+</li> <li> Instructions are provided in the file for tailoring the configuration to you server.
+</li> <li> <strong>Be carefull!</strong> The configuration shipped with Foswiki is for Apache 2.2 or earlier. Apache 2.4 has changed the syntax of the configuration file. Ensure that <code>mod_access_compat</code> is enabled for backwards compatibility when using Apache 2.4
+</li> <li> As with Method 1, remember to restart or reload Apache each time you edit the file to apply your changes.
+</li></ul> 
+<p></p>
+<span id="ConfigWithHtaccess"></span>
+<strong>Method 3: Customize the <code>.htaccess</code> template files included in distribution</strong> <em>(Useful on shared hosting sites)</em> <ul>
+<li> Sample <code>.htaccess</code> files for the Foswiki root and each subdirectory are included in the root of your installation. Each file contains instructions on modifying it for your installation. For more information, see <a class="interwikiLink" href="https://foswiki.org/Support.SupplementalDocuments" title="'Support.SupplementalDocuments' on foswiki.org">Foswiki:Support.SupplementalDocuments</a>. 
+</li></ul> 
+         <table border="1" class="foswikiTable" id="tableInstallationGuide2" rules="none">   
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> location and name of sample .htaccess file </th>
+			<th class="foswikiTableCol1"> copy sample file to the following location </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> tailoring required (Detailed instuctions in each file) </th>
+		</tr>
+	</thead>   
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/root-htaccess.txt</code> </td>
+			<td class="foswikiTableCol1"> <code>foswiki/.htaccess</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> <em>Optional:</em> redirect to a default page for empty URL. </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/bin-htaccess-basic.txt</code> </td>
+			<td class="foswikiTableCol1"> <code>foswiki/bin/.htaccess</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> <em>Optional:</em> In most cases this file will "just work" without tailoring. </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/bin-htaccess-advanced.txt</code> </td>
+			<td class="foswikiTableCol1"> <code>foswiki/bin/.htaccess</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> <strong>Yes</strong>. Use this file for configuring Apache login, LDAP authentication and other advanced configurations. Must find/replace all instances of <code>{DataDir}</code>, <code>{DefaultUrlHost}</code> and <code>{ScriptUrlPath}</code> with valid information. The setting <code>SetHandler cgi-script</code> is critical to make sure that scripts in the <code>bin</code> directory will be executed by Apache. </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/pub-htaccess.txt</code> </td>
+			<td class="foswikiTableCol1"> <code>foswiki/pub/.htaccess</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> <em>Optional:</em> - Uncomment and set correct URL path on the <code>ErrorDocument</code> statement for friendly handling of file-not-found errors. </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> <code>foswiki/subdir-htaccess.txt</code> </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>foswiki/&lt;subdir&gt;/.htaccess</code> <br />Copy to all other subdirectories below <code>foswiki</code>, including<br/>                                     <code>data</code>, <code>lib</code>, <code>locale</code>, <code>templates</code>, <code>tools</code>, <code>working</code>.<br/>                                     <em>All</em> directories except for <code>bin</code> and  <code>pub</code> addressed above. </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> No </td>
+		</tr>
+	</tbody>   </table>
+<p></p>
+<div class='foswikiHelp'>
+ <strong>General points to keep in mind with any of the above Apache configuration approaches:</strong> <ul>
+<li> For security purposes, it's important to check that web access is denied to all Foswiki subdirectories other than <code>bin</code> and <code>pub</code>. All three of the approaches described above (<a class="interwikiLink" href="https://foswiki.org/Support.ApacheConfigGenerator" title="'Support.ApacheConfigGenerator' on foswiki.org">Foswiki:Support.ApacheConfigGenerator</a>, the sample <code>foswiki_httpd_conf.txt</code> file included in the distribution, or <code>.htaccess</code> files) should provide for this but it should be confirmed by using web browser to confirm that direct access to the other directories is blocked.
+</li> <li> Also for security purposes, be sure to turn off any kind of PHP, Perl, Python, Server Side Includes, or other software execution mechanisms supported by your web server in the <code>pub</code> directory. Again, the three approaches described above all provide for this. However, different script execution mechanisms are disabled in different ways so refer see your web server configuration and documentation for more details.
+</li> <li> The configuration shipped with Foswiki is for Apache 2.2 or earlier. Apache 2.4 has changed the syntax of the configuration file. Ensure that <code>mod_access_compat</code> is enabled for backwards compatibility when using Apache 2.4, or use the <a class="interwikiLink" href="https://foswiki.org/Support.ApacheConfigGenerator" title="'Support.ApacheConfigGenerator' on foswiki.org">Foswiki:Support.ApacheConfigGenerator</a> config generator.
+</li> <li>  <strong>New with Foswiki 2.0</strong> The <code>configure</code> script no longer needs any special protection within the Apache configuration.</div>
+</li></ul> 
+<p></p>
+<span id="ConfigureFoswiki"></span>
+<h3 id="Step_5:_Bootstrap_your_configuration">  Step 5: Bootstrap your configuration </h3>
+<p></p> <ol>
+<li> Using your web browser, enter the default "view" url for your site. Depending upon your Apache configuration, this might look something like: <ul>
+<li> <code>http://yoursite.com/foswiki/bin/view</code>
+</li> <li> <code>http://yoursite.com/bin/view</code>
+</li> <li> <code>http://yoursite.com</code> <br />This will Bootstrap your configuration and help Foswiki determine whether or not you are using Short URLs. It also logs you in as a the admin user. <strong>Don't close your browser until you've completed the configuration process and registered your first user.</strong>
+</li></ul> 
+</li> <li> <strong>Follow the link to configure rendered in the Bootstrap banner.</strong> (<strong>Do not</strong> manually enter the <code>bin/configure</code> URL or Foswiki will not correctly detect the URL configuration).
+</li> <li> Make any required changes, and save the settings. <ul>
+<li> This will create the initial configuration and end the bootstrap process.
+</li> <li> Configuration items which may require further attention will be highlighted.
+</li> <li> <strong>Save as soon as possible</strong>, especially if your site is exposed. Anyone accessing Foswiki before the configuration has been saved will be granted admin rights.
+</li></ul> 
+</li></ol> 
+<p></p>
+<div class='foswikiHelp'> <ul>
+<li>  If the Foswiki installation can be accessed by more than one protocol://domain, ensure the additional alternative URLs are set in <code>{PermittedRedirectHostUrls}</code>. <strong>Example:</strong> if <code>{DefaultUrlHost}</code> is set to <code>https://wiki.company.com</code>, an example <code>{PermittedRedirectHostUrls}</code> might contain: <pre class='html'>https://company.com, http://111.222.123.234</pre>
+</li> <li> If your server requires a Proxy in order to access external resources like your mail server, this is configured on the "Security and Authentication" tab, "Proxies" sub-tab. Complete that before proceeding with the E-mail configuration.
+</li> <li> If you do not want to or are unable to configure from the web interface, there is an alternate command line configuration documented in System.InstallationGuide#ConfiguringFoswikiManually in your installation.
+</li></ul> 
+</div>
+<p></p>
+<div class='foswikiHelp' style='border:2px orange solid' >Now that your Foswiki installation is functional, you are encouraged to view this installation guide on your Foswiki site rather than the static <code>INSTALL.html</code> file included in the distribution. This will make it easier to implement the steps which follow because you will be able to use the embedded hyperlinks to jump directly to the referenced pages in your installation. To view this guide in your installation, follow the link provided in the bootstrap banner, or enter <code>System.InstallationGuide</code> in the jump-box.</div>
+<p></p>
+<h3 id="Step_6:_Configure_email">  Step 6: Configure email </h3>
+<p></p>
+Outgoing e-mail is required for Foswiki to send registration confirmations, notifications of changes, password reset requests, etc.
+<p></p> <ol>
+<li> Select the <code>Mail</code> tab in left bar of confgiure and fill out the following parameters: <ul>
+<li> The <code>{WebMasterEmail}</code> should be set to a valid e-mail address. This will be the From: ID used to send Foswiki Emails and will also appear on webmaster mailto: links. <div class='foswikiHelp'>If you are running on a *nix server with a configured local mail transport agent, you can try pressing the "auto-configure email" button. If auto-configure succeeds, proceed to the next step, to send a test email. If your server is a Windows server, if auto-configure failed, or you know a local transport agent is not available, continue with the SMTP e-mail configuration:</div>
+</li> <li> The <code>{SMTP}{MAILHOST}</code> should be set to your e-mail server hostame: ex: <code>smtp.gmail.com</code>
+</li> <li> On most systems, you will also have to configure <code>{SMTP}{Username}</code> and <code>{SMTP}{Password}</code>. These are used so that Foswiki can sign into the e-mail server for purposes of sending e-mail.
+</li> <li> Click the "auto-configure email" button. (<strong><em>This can run a long time as Foswiki probes all possible e-mail configurations</em></strong>) This will probe the mail server to discover it's configuration, and will finish the configuration. If all goes well, the settings will have been fine tuned for your e-mail server and e-mail is automatically enabled.
+</li></ul> 
+</li> <li> Once auto-configure completes, <strong>Click the "Send test email" button. located on the <code>{WebMasterEmail}</code> field</strong> This will verify if the configuration is correct and able to send mail. If e-mail is enabled, but not functional, you will be unable to register users.
+</li> <li> Click the Save button in the upper right corner of the configuration page.
+</li></ol> 
+<p></p>
+ <div class='foswikiHelp'>If auto-configure fails to complete, you can use the "Advanced settings" tab to manually configure the e-mail server. You will also need to configure the basic information tab.
+Although outgoing email is necessary for user registration, it is not <em>required</em> for Foswiki to run otherwise, so if you are setting up a test installation or don't plan on enabling user registration, you can skip this step.</div>
+<p></p>
+<span id="FirstUser"></span>
+<h3 id="Step_7:_Check_Authentication_and_Register_Yourself">  Step 7: Check Authentication and Register Yourself </h3>
+<p></p>
+Authentication of users means their activity can be tracked, and access to your site can be controlled. <strong>This is particularly important for sites that are publicly accessible on the web.</strong>  Foswiki is pre-configured with a flexible and user-friendly authentication set-up that fits most common use-cases. To learn more about this set-up and available alternatives, see <a class="foswikiCurrentTopicLink" href="#AuthenticationOfUsers">User Authentication Options</a>. You can also revisit this later and switch to an alternative authentication set-up.
+<p></p>
+Test if authentication is working by going to System.UserRegistration in your installation and registering yourself.
+<p></p>
+If there are problems, see <a class="foswikiCurrentTopicLink" href="#TestingAuthentication">authentication trouble-shooting tips</a>.
+<p></p>
+<div class='foswikiHelp'> After completing initial installation, you are strongly encouraged to read System.UserAuthentication in your installation  and <a class="interwikiLink" href="https://foswiki.org/Support.UserAuthenticationSupplement" title="'Support.UserAuthenticationSupplement' on foswiki.org">Foswiki:Support.UserAuthenticationSupplement</a> for further information about managing users and access controls for your Foswiki site.</div>
+<p></p>
+<span id="ProtectConfigure"></span>
+<h3 id="Step_8:_Establish_an_Administrator_user">  Step 8: Establish an Administrator user  </h3>
+The last step in your configuration is to create and user with administration rights.
+<p></p>
+<div class='foswikiHelp'> The steps outlined below are recommended for initial configuration. <strong>You should complete this before closing the browser after the bootstrap process.</strong> Once you close the browser you will lose your temporary admin status. Later on, you can review the further notes below regarding <a class="foswikiCurrentTopicLink" href="#AboutAdminUsers">about administrators</a> and <a class="foswikiCurrentTopicLink" href="#WaysToProtectConfigure">options to protect configure</a> and consider one of the more restrictive options.</div>
+Once the Foswiki bootstrap process is completed and you've logged out, configure will be restricted to Foswiki's "AdminGroup".  Therefor you must add the user you just registered to the administrators group.
+<p></p>
+If you have not yet registered your first user, return to <a class="foswikiCurrentTopicLink" href="#FirstUser">InstallationGuide#FirstUser</a> and follow the steps to register a user.  Once that is completed, return to  <ol>
+<li> Go to Main.AdminGroup in your installation.
+</li> <li> Scroll down to the "Administration" section and click on "Add Members" link. <ul>
+<li> If you do not see the Admistration section, then you don't have authorization to change this group. See <a class="foswikiCurrentTopicLink" href="#InternalAdmin">#InternalAdmin</a> for instructions on establishing an <em>internal admin</em> user.
+</li></ul> 
+</li> <li> Enter your "WikiName" as defined when you registered yourself in Step 7.
+</li> <li> Click the Add Member button
+</li> <li> Return to the AdminGroup by clicking the group name on the confirmation page and look under "Members" to confirm you have been added.
+</li></ol> 
+<p></p>
+<p></p>
+<div class="foswikiHelp">Foswiki provides multiple ways to protect configure. See <a class="foswikiCurrentTopicLink" href="#AboutAdminUsers">#AboutAdminUsers</a> for more details on how to protect your configuration.</div>
+<p></p>
+<h3 id="Step_9._Save_your_configuration_33">  Step 9. Save your configuration! </h3>
+<p></p>
+Click the Save button in the upper right corner of the configuration page.
+<p></p>
+Refer back to any page in your installation (such as the "AdminGroup" page you were at in the previous step). The login section at the top of the left-hand menu should show that you are still be logged in as a temporary Admin user.  Click on the "Log Out" link to exit that user.
+<p></p>
+<h3 id="Congratulations_33_Your_Foswiki_Installation_is_Ready_to_Use_33">  Congratulations! Your Foswiki Installation is Ready to Use! </h3>
+<p></p>
+You now have set up your Foswiki installation! At this point you can start creating and editing pages. See InstallationGuidePart2 to proceed with further tailoring your site.
+<p></p>
+In order to keep your user, group, and site configuration information separate from the actual content of your site, it is recommended that you create a new web in which your site's pages will reside. See System.ManagingWebs in your installation for more information on Wiki webs and how to create one.
+<p></p>
+<span id="TroubleshootingInstall"></span>
+<h2 id="Troubleshooting">  Troubleshooting </h2>
+<p></p>
+If you are having problems with your installation, try the following:
+<p></p> <ul>
+<li> Review the System.PerlDependencyReport in your installation and sure all dependencies are correctly resolved.
+</li> <li> Run the <code>configure</code> script and ensure you have resolved all errors and are satisfied that you understand any warnings. <ul>
+<li> You can also access the dependency report from the command line: <pre class='bash'>
+cd /path/to/foswiki
+perl tools/dependencies </pre>
+</li></ul> 
+</li> <li> Consult the topics at <a class="interwikiLink" href="https://foswiki.org/Support.SupplementalDocuments" title="'Support.SupplementalDocuments' on foswiki.org">Foswiki:Support.SupplementalDocuments</a> and <a class="interwikiLink" href="https://foswiki.org/Support.AskedQuestions" title="'Support.AskedQuestions' on foswiki.org">Foswiki:Support.AskedQuestions</a>.
+</li> <li> Ask for help on <a class="interwikiLink" href="https://foswiki.org/Community.InternetRelayChat" title="'Community.InternetRelayChat' on foswiki.org">IRC</a> (irc.freenode.net, channel #foswiki). There are often a number of people waiting to help.
+</li> <li> Ask a question in the <a class="interwikiLink" href="https://foswiki.org/Support" title="'Support' on foswiki.org">Foswiki:Support</a> web
+</li></ul> 
+<p></p>
+<p></p>
+<h2 id="Supplemental_Information_For_Installation">  Supplemental Information For Installation </h2>
+<p></p>
+<span id="SystemRequirements"></span>
+<h3 id="System_Requirements">  System Requirements </h3>
+<p></p>
+<p></p>
+<h2 id="Server_Requirements">  Server Requirements </h2>
+<p></p>
+Foswiki is written in Perl 5, which is supported on Microsoft Windows as well as Unix and Unix-like systems (including Linux and OSX).  On Unix-like systems, it uses a number of shell commands. It should be able to run out-of-the-box on any server platform that meets the following requirements.
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide3" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Resource </th>
+			<th class="foswikiTableCol1 foswikiLastCol"> Required Server Environment </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Perl </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> 5.8.8 or higher. A minimum of perl 5.12 is recommended. </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> External programs </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> GNU <code>diff</code> 2.7 or higher, <code>fgrep</code>, and <code>egrep</code> (not required on Windows) </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> Web server </td>
+			<td class="foswikiTableCol1 foswikiLastCol foswikiLast"> Apache, Nginx and Lighttpd are all well supported; Apache sample configs are provided. For information on other servers, see <a class="interwikiLink" href="https://foswiki.org/Support.InstallingOnSpecificPlatforms" title="'Support.InstallingOnSpecificPlatforms' on foswiki.org">Foswiki:Support.InstallingOnSpecificPlatforms</a>. </td>
+		</tr>
+	</tbody></table>
+<p></p>
+Foswiki is designed to automatically detect the platform and generate a basic configuration the first time the <code>configure</code> script is run, but start from your expected default "view" URL, so that Foswiki can figure out your URL scheme.
+<p></p>
+Prior versions of Foswiki shipped with the important CPAN modules. Foswiki 2.0 does not, and <strong>you must ensure that the perl dependencies listed below are installed before attempting to use Foswiki.</strong> For a detailed report, System.PerlDependencyReport in your installation (admin access only!) or the shell script <code>tools/dependencies</code>.
+<p></p>
+If you are unable to install CPAN modules, see <a class="interwikiLink" href="https://foswiki.org/Extensions.CpanContrib" title="'Extensions.CpanContrib' on foswiki.org">Foswiki:Extensions.CpanContrib</a>. Install this extension into your Foswiki installation directory if you cannot install Perl modules otherwise.
+<p></p>
+You can check the dependencies before Foswiki is fully operational with the following command.  It will list all potentially missing dependencies.  Not all listed dependences are required on all installations, Refer to the usage message that accompanies each missing dependency in the report.
+<p></p>
+<pre>
+cd /path/to/foswiki
+perl tools/dependencies
+</pre>
+<p></p>
+<h2 id="Specific_distribution_details">  Specific distribution details </h2>
+<p></p>
+<strong>Find the closest match to your installed system. and click on the "Show ..." link to reveal the details.</strong>
+<p></p>
+<h3 id="Ubuntu_and_other_Debian_derived_distributions">  Ubuntu and other Debian derived distributions </h3>
+<p></p>
+<div class="twistyPlugin foswikiMakeVisible"><span id="twistyIdSystemSystemRequirements5182show" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Show Debian / Ubuntu information</span></a></span><span id="twistyIdSystemSystemRequirements5182hide" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Hide Debian details</span></a></span></div><div class="twistyPlugin"><div id="twistyIdSystemSystemRequirements5182toggle" style="" class="twistyContent twistyInited">
+<p></p>
+<h4 id="Minimum_requirements">  Minimum requirements </h4>
+<p></p>
+Install apache and rcs: <code><b>apt-get install apache2 rcs</b></code>
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide4" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Algorithm::Diff </td>
+			<td class="foswikiTableCol1"> <code>libalgorithm-diff-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Archive::Tar </td>
+			<td class="foswikiTableCol1"> <code>libarchive-tar-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Authen::SASL </td>
+			<td class="foswikiTableCol1"> <code>libauthen-sasl-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI </td>
+			<td class="foswikiTableCol1"> <code>libcgi-pm-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI::Session </td>
+			<td class="foswikiTableCol1"> <code>libcgi-session-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::PasswdMD5 </td>
+			<td class="foswikiTableCol1"> <code>libcrypt-passwdmd5-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Digest::SHA </td>
+			<td class="foswikiTableCol1"> <code>libdigest-sha-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> *First shipped in perl 5.9.3 </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Email::MIME </td>
+			<td class="foswikiTableCol1"> <code>libemail-mime-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Encode </td>
+			<td class="foswikiTableCol1"> <code>libencode-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Error </td>
+			<td class="foswikiTableCol1"> <code>liberror-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> File::Copy::Recursive </td>
+			<td class="foswikiTableCol1"> <code>libfile-copy-recursive-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Parser </td>
+			<td class="foswikiTableCol1"> <code>libhtml-parser-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Tree </td>
+			<td class="foswikiTableCol1"> <code>libhtml-tree-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::IP </td>
+			<td class="foswikiTableCol1"> <code>libio-socket-ip-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> First shipped perl 5.19.8 </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::SSL </td>
+			<td class="foswikiTableCol1"> <code>libio-socket-ssl-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> JSON </td>
+			<td class="foswikiTableCol1"> <code>libjson-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext </td>
+			<td class="foswikiTableCol1"> <code>liblocale-maketext-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext::Lexicon </td>
+			<td class="foswikiTableCol1"> <code>liblocale-maketext-lexicon-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Msgfmt </td>
+			<td class="foswikiTableCol1"> <code>liblocale-msgfmt-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP </td>
+			<td class="foswikiTableCol1"> <code>libwww-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP::Protocol::https </td>
+			<td class="foswikiTableCol1"> <code>liblwp-protocol-https-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> URI </td>
+			<td class="foswikiTableCol1"> <code>liburi-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> version </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>libversion-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Must be version 0.77 or newer, included with perl 5.10.1 and newer. </td>
+		</tr>
+	</tbody></table>
+<p></p>
+Note: to install all the above:
+<blockquote>
+<code>apt-get install</code> <code>libalgorithm-diff-perl</code> <code>libarchive-tar-perl</code> <code>libauthen-sasl-perl</code> <code>libcgi-pm-perl</code> <code>libcgi-session-perl</code> <code>libcrypt-passwdmd5-perl</code> <code>libdigest-sha-perl</code> <code>libemail-mime-perl</code> <code>libencode-perl</code> <code>liberror-perl</code> <code>libfile-copy-recursive-perl</code> <code>libhtml-parser-perl</code> <code>libhtml-tree-perl</code> <code>libio-socket-ip-perl</code> <code>libio-socket-ssl-perl</code> <code>libjson-perl</code> <code>liblocale-maketext-perl</code> <code>liblocale-maketext-lexicon-perl</code> <code>liblocale-msgfmt-perl</code> <code>libwww-perl</code> <code>liblwp-protocol-https-perl</code> <code>liburi-perl</code> <code>libversion-perl</code>
+</blockquote>
+<p></p>
+<h4 id="Optional_dependencies">  Optional dependencies </h4>
+<p></p>
+Install as needed.
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide5" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Apache2::Request </td>
+			<td class="foswikiTableCol1"> <code>libapache2-request-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Required if using Apache 2 and mod_perl </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBI </td>
+			<td class="foswikiTableCol1"> <code>libdbi-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for the Foswiki Page cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::mysql </td>
+			<td class="foswikiTableCol1"> <code>libdbd-mysql-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for MySQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::Pg </td>
+			<td class="foswikiTableCol1"> <code>libdbd-pg-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for PostgreSQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::SQLite </td>
+			<td class="foswikiTableCol1"> <code>libdbd-sqlite3-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for SQLite based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI </td>
+			<td class="foswikiTableCol1"> <code>libfcgi-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi apache modules </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI::ProcManager </td>
+			<td class="foswikiTableCol1"> <code>libfcgi-procmanager-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi process management </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::SMIME </td>
+			<td class="foswikiTableCol1"> <code>libcrypt-smime-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::X509 </td>
+			<td class="foswikiTableCol1"> <code>libcrypt-x509-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> Convert::PEM </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>libconvert-pem-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Optional, used for S/MIME email signing </td>
+		</tr>
+	</tbody></table>
+<p></p>
+After expanding the Foswiki archive, change the ownership of the files: <ul>
+<li> Debian, Ubuntu, Kubunto: <code>chown -R www-data:www-data /path/to/foswiki</code>
+</li></ul> 
+<p></p>
+Apache user should issue the following commands: <dl>
+<dt> <code>a2enmod rewrite</code> </dt><dd> Enables mod_rewrite
+</dd> <dt> <code>a2enmod cgi</code> OR <code>a2enmod cgid</code> </dt><dd> Enables CGI.  May need cgid if using a threaded mpm.
+</dd> <dt> <code>a2enmod access_compat</code> </dt><dd> Apache 2.4: Enables compatibility with foswiki example apache configurations.
+</dd></dl> 
+<p></p>
+</div></div>
+<p></p>
+<h3 id="RedHat_44_SuSE_44_CentOS_and_other_RPM_based_distributions">  RedHat, SuSE, CentOS and other RPM based distributions </h3>
+<p></p>
+<div class="twistyPlugin foswikiMakeVisible"><span id="twistyIdSystemSystemRequirements9131show" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Show RedHat, SuSE and other RPM details</span></a></span><span id="twistyIdSystemSystemRequirements9131hide" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Hide RPM details</span></a></span></div><div class="twistyPlugin"><div id="twistyIdSystemSystemRequirements9131toggle" style="" class="twistyContent twistyInited">
+<p></p>
+<h4 id="Minimum_requirements_AN1">  Minimum requirements </h4>
+<p></p>
+Install apache2, rcs, and perl-CPAN
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide6" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Algorithm::Diff </td>
+			<td class="foswikiTableCol1"> <code>perl-Algorithm-Diff</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Archive::Tar </td>
+			<td class="foswikiTableCol1"> <code>perl-Archive-Tar</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> *First shipped in perl 5.9.3 </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Authen::SASL </td>
+			<td class="foswikiTableCol1"> <code>perl-Authen-SASL</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI </td>
+			<td class="foswikiTableCol1"> <code>perl-CGI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI::Session </td>
+			<td class="foswikiTableCol1"> <code>perl-CGI-Session</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::PasswdMD5 </td>
+			<td class="foswikiTableCol1"> <code>perl-Crypt-PasswdMD5</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Digest::SHA </td>
+			<td class="foswikiTableCol1"> <code>perl-Digest-SHA</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> *First shipped in perl 5.9.3 </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Email::MIME </td>
+			<td class="foswikiTableCol1"> <code>perl-Email-MIME</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Encode </td>
+			<td class="foswikiTableCol1"> <code>perl-Encode</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Error </td>
+			<td class="foswikiTableCol1"> <code>perl-Error</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> File::Copy::Recursive </td>
+			<td class="foswikiTableCol1"> <code>perl-File-Copy-Recursive</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Parser </td>
+			<td class="foswikiTableCol1"> <code>perl-HTML-Parser</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Tree </td>
+			<td class="foswikiTableCol1"> <code>perl-HTML-Tree</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::IP </td>
+			<td class="foswikiTableCol1"> <code>perl-IO-Socket-IP</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> First shipped perl 5.19.8 </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::SSL </td>
+			<td class="foswikiTableCol1"> <code>perl-IO-Socket-SSL</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> JSON </td>
+			<td class="foswikiTableCol1"> <code>perl-JSON</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Language </td>
+			<td class="foswikiTableCol1"> <code>perl-Locale-Codes</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext </td>
+			<td class="foswikiTableCol1"> <code>perl-Locale-Maketext</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext::Lexicon </td>
+			<td class="foswikiTableCol1"> <code>perl-Locale-Maketext-Lexicon</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization ** </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Msgfmt </td>
+			<td class="foswikiTableCol1"> <code>perl-Locale-Msgfmt</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization ** </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP </td>
+			<td class="foswikiTableCol1"> <code>perl-libwww-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP::Protocol::https </td>
+			<td class="foswikiTableCol1"> <code>perl-LWP-Protocol-https</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> URI </td>
+			<td class="foswikiTableCol1"> <code>perl-URI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> version </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>perl-version</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Must be version 0.77 or newer, included with perl 5.10.1 and newer. </td>
+		</tr>
+	</tbody></table>
+<p></p>
+<h5 id="To_install_the_above_packages_on_CentOS">  To install the above packages on CentOS </h5>
+Note, <code>Locale::Maketext::Lexicon</code> and <code>Locale::Msgfmt</code> are not available on
+Centos. Install using CPAN if Internationalization is required.
+<p></p>
+First add the appropriate perl module repository, and then install the packages.
+<blockquote>
+<code>yum install -y epel-release</code> <br />
+<code>yum install</code> <code>perl-Algorithm-Diff</code> <code>perl-Archive-Tar</code> <code>perl-Authen-SASL</code> <code>perl-CGI</code> <code>perl-CGI-Session</code> <code>perl-Crypt-PasswdMD5</code> <code>perl-Digest-SHA</code> <code>perl-Email-MIME</code> <code>perl-Encode</code> <code>perl-Error</code> <code>perl-File-Copy-Recursive</code> <code>perl-HTML-Parser</code> <code>perl-HTML-Tree</code> <code>perl-IO-Socket-IP</code> <code>perl-IO-Socket-SSL</code> <code>perl-JSON</code> <code>perl-Locale-Codes</code> <code>perl-Locale-Maketext</code> <code>perl-Locale-Maketext-Lexicon</code> <code>perl-Locale-Msgfmt</code> <code>perl-libwww-perl</code> <code>perl-LWP-Protocol-https</code> <code>perl-URI</code> <code>perl-version</code>
+</blockquote>
+<p></p>
+<h5 id="To_install_the_above_packages_on_SuSE">  To install the above packages on SuSE </h5>
+First add the appropriate SuSE perl-modules repository, and then install the packages. Note: Not all listed packages will install on SuSE, but all dependences are resolved.
+<blockquote>
+<code>zypper ar -f -n perl-modules http://download.opensuse.org/repositories/devel:/languages:/perl/openSUSE_13.1 perl-modules</code> <br />
+<code>zypper install</code> <code>perl-Algorithm-Diff</code> <code>perl-Archive-Tar</code> <code>perl-Authen-SASL</code> <code>perl-CGI</code> <code>perl-CGI-Session</code> <code>perl-Crypt-PasswdMD5</code> <code>perl-Digest-SHA</code> <code>perl-Email-MIME</code> <code>perl-Encode</code> <code>perl-Error</code> <code>perl-File-Copy-Recursive</code> <code>perl-HTML-Parser</code> <code>perl-HTML-Tree</code> <code>perl-IO-Socket-IP</code> <code>perl-IO-Socket-SSL</code> <code>perl-JSON</code> <code>perl-Locale-Codes</code> <code>perl-Locale-Maketext</code> <code>perl-Locale-Maketext-Lexicon</code> <code>perl-Locale-Msgfmt</code> <code>perl-libwww-perl</code> <code>perl-LWP-Protocol-https</code> <code>perl-URI</code> <code>perl-version</code>
+</blockquote>
+<p></p>
+<h4 id="Optional_dependencies_AN1">  Optional dependencies </h4>
+<p></p>
+Install as needed.
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide7" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Apache2::Request </td>
+			<td class="foswikiTableCol1"> <code>perl-libapreq2</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Required if using Apache 2 and mod_perl </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBI </td>
+			<td class="foswikiTableCol1"> <code>perl-DBI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for the Foswiki Page cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::mysql </td>
+			<td class="foswikiTableCol1"> <code>perl-DBD-mysql</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for MySQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::Pg </td>
+			<td class="foswikiTableCol1"> <code>perl-DBD-Pg</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for PostgreSQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::SQLite </td>
+			<td class="foswikiTableCol1"> <code>perl-DBD-SQLite</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Used for SQLite based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI </td>
+			<td class="foswikiTableCol1"> <code>perl-FCGI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi apache modules </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI::ProcManager </td>
+			<td class="foswikiTableCol1"> <code>perl-FCGI-ProcManager</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi process management </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::SMIME </td>
+			<td class="foswikiTableCol1"> <code>perl-Crypt-SMIME</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing<br /> <em>(Not available in default repositories)</em> </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::X509 </td>
+			<td class="foswikiTableCol1"> <code>perl-Crypt-X509</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> Convert::PEM </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>perl-Convert-PEM</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Optional, used for S/MIME email signing </td>
+		</tr>
+	</tbody></table>
+<p></p>
+After expanding the Foswiki archive, change the ownership of the files: <ul>
+<li> RedHat, Fedora, CentOS Mandriva: chown -R apache:apache /path/to/foswiki=
+</li> <li> Suse: <code>chown -R wwwrun:www /path/to/foswiki</code>
+</li></ul> 
+<p></p>
+</div></div>
+<p></p>
+<h3 id="Gentoo_40ebuild_41_based_distributions">  Gentoo (ebuild) based distributions </h3>
+<p></p>
+<div class="twistyPlugin foswikiMakeVisible"><span id="twistyIdSystemSystemRequirements2501show" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Show Gentoo details</span></a></span><span id="twistyIdSystemSystemRequirements2501hide" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Hide Gentoo details</span></a></span></div><div class="twistyPlugin"><div id="twistyIdSystemSystemRequirements2501toggle" style="" class="twistyContent twistyInited">
+<p></p>
+<h4 id="Minimum_requirements_AN2">  Minimum requirements </h4>
+<p></p>
+Install <code>www-servers/apache</code>, <code>dev-vcs/rcs</code>, and <code>dev-lang/perl</code>
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide8" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Algorithm::Diff </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Algorithm-Diff</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Archive::Tar </td>
+			<td class="foswikiTableCol1"> <code>perl-Archive-Tar</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> *First shipped in perl 5.9.3 </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Authen::SASL </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Authen-SASL</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for authenticated SMTP </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/CGI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI::Session </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/CGI-Session</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::PasswdMD5 </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Crypt-PasswdMD5</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Digest::SHA </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Included with perl </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Email::MIME </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Email-MIME</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Error </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Error</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Encode </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Included with perl </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> File::Copy::Recursive </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/File-Copy-Recursive</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Parser </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/HTML-Parser</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Tree </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/HTML-Tree</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::IP </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Ebuild not avaiable. Install with g-cpan if IPv6 is needed. </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::SSL </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/IO-Socket-SSL</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, support encrypted email connection: STARTTLS or SSL </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> JSON </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/JSON</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Included with perl </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext::Lexicon </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Locale-Maketext-Lexicon</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Msgfmt </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Locale-Msgfmt</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/libwww-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP::Protocol::https </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/LWP-Protocol-https</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> URI </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/URI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> version </td>
+			<td class="foswikiTableCol1 foswikiLast"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Must be version 0.77 or newer, included with perl 5.10.1 and newer. </td>
+		</tr>
+	</tbody></table>
+<h5 id="To_install_the_above_packages_on_Gentoo">  To install the above packages on Gentoo </h5>
+<p></p>
+<blockquote>
+<code>emerge</code> <code>dev-perl/Algorithm-Diff</code> <code>perl-Archive-Tar</code> <code>dev-perl/Authen-SASL</code> <code>dev-perl/CGI</code> <code>dev-perl/CGI-Session</code> <code>dev-perl/Crypt-PasswdMD5</code>  <code>dev-perl/Email-MIME</code> <code>dev-perl/Error</code>  <code>dev-perl/File-Copy-Recursive</code> <code>dev-perl/HTML-Parser</code> <code>dev-perl/HTML-Tree</code>  <code>dev-perl/IO-Socket-SSL</code> <code>dev-perl/JSON</code>  <code>dev-perl/Locale-Maketext-Lexicon</code> <code>dev-perl/Locale-Msgfmt</code> <code>dev-perl/libwww-perl</code> <code>dev-perl/LWP-Protocol-https</code> <code>dev-perl/URI</code>
+</blockquote>
+<p></p>
+<h4 id="Optional_dependencies_AN2">  Optional dependencies </h4>
+<p></p>
+Install as needed.
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide9" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Apache2::Request </td>
+			<td class="foswikiTableCol1"> <code>libapache2-request-perl</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Required if using Apache 2 and mod_perl </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBI </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/DBI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for the Foswiki Page cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::mysql </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/DBD-mysql</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for MySQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::Pg </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/DBD-Pg</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for PostgreSQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::SQLite </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/DBD-SQLite</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for SQLite based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/FCGI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi apache modules </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI::ProcManager </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/FCGI-ProcManager</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi process management </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::SMIME </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Crypt-SMIME</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::X509 </td>
+			<td class="foswikiTableCol1"> <code>dev-perl/Crypt-X509</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> Convert::PEM </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>dev-perl/convert-pem</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Optional, used for S/MIME email signing </td>
+		</tr>
+	</tbody></table>
+<p></p>
+After expanding the Foswiki archive, change the ownership of the files: <ul>
+<li> <code>chown -R apache:apache /var/www/path-to-foswiki</code>
+</li></ul> 
+<p></p>
+</div></div>
+<p></p>
+<h3 id="FreeBSD_40pkg_41_based_distributions"> FreeBSD (pkg) based distributions </h3>
+<p></p>
+<div class="twistyPlugin foswikiMakeVisible"><span id="twistyIdSystemSystemRequirements6041show" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Show FreeBSD details</span></a></span><span id="twistyIdSystemSystemRequirements6041hide" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Hide FreeBSD details</span></a></span></div><div class="twistyPlugin"><div id="twistyIdSystemSystemRequirements6041toggle" style="" class="twistyContent twistyInited">
+<p></p>
+<h4 id="Minimum_requirements_AN3">  Minimum requirements </h4>
+<p></p>
+Install <code>apache24</code>, <code>rcs</code>, and <code>perl5</code>
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide10" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Algorithm::Diff </td>
+			<td class="foswikiTableCol1"> <code>p5-Algorithm-Diff</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Archive::Tar </td>
+			<td class="foswikiTableCol1"> <code>p5-Archive-Tar</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Authen::SASL </td>
+			<td class="foswikiTableCol1"> <code>p5-Authen-SASL</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI </td>
+			<td class="foswikiTableCol1"> <code>p5-CGI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI::Session </td>
+			<td class="foswikiTableCol1"> <code>p5-CGI-Session</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::PasswdMD5 </td>
+			<td class="foswikiTableCol1"> <code>p5-Crypt-PasswdMD5</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Digest::SHA </td>
+			<td class="foswikiTableCol1"> <code>p5-Digest-SHA</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> *First shipped in perl 5.9.3 </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Email::MIME </td>
+			<td class="foswikiTableCol1"> <code>p5-Email-MIME</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Encode </td>
+			<td class="foswikiTableCol1"> <code>p5-Encode</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Error </td>
+			<td class="foswikiTableCol1"> <code>p5-Error</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> File::Copy::Recursive </td>
+			<td class="foswikiTableCol1"> <code>p5-File-Copy-Recursive</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Parser </td>
+			<td class="foswikiTableCol1"> <code>p5-HTML-Parser</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Tree </td>
+			<td class="foswikiTableCol1"> <code>p5-HTML-Tree</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::IP </td>
+			<td class="foswikiTableCol1"> <code>p5-IO-Socket-IP</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> First shipped perl 5.19.8 </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::SSL </td>
+			<td class="foswikiTableCol1"> <code>p5-IO-Socket-SSL</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> JSON </td>
+			<td class="foswikiTableCol1"> <code>p5-JSON</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext </td>
+			<td class="foswikiTableCol1"> <code>p5-Locale-Maketext</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext::Lexicon </td>
+			<td class="foswikiTableCol1"> <code>p5-Locale-Maketext-Lexicon</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Msgfmt </td>
+			<td class="foswikiTableCol1"> <code>p5-Locale-Msgfmt</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP </td>
+			<td class="foswikiTableCol1"> <code>p5-libwww</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP::Protocol::https </td>
+			<td class="foswikiTableCol1"> <code>p5-LWP-Protocol-https</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> URI </td>
+			<td class="foswikiTableCol1"> <code>p5-URI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> version </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>p5-version</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Must be version 0.77 or newer, included with perl 5.10.1 and newer. </td>
+		</tr>
+	</tbody></table>
+<p></p>
+<h5 id="To_install_the_above_packages_on_FreeBSD">  To install the above packages on FreeBSD </h5>
+<p></p>
+<blockquote>
+<code>pkg install</code> <code>p5-Algorithm-Diff</code> <code>p5-Archive-Tar</code> <code>p5-Authen-SASL</code> <code>p5-CGI</code> <code>p5-CGI-Session</code> <code>p5-Crypt-PasswdMD5</code> <code>p5-Digest-SHA</code> <code>p5-Email-MIME</code> <code>p5-Encode</code> <code>p5-Error</code> <code>p5-File-Copy-Recursive</code> <code>p5-HTML-Parser</code> <code>p5-HTML-Tree</code> <code>p5-IO-Socket-IP</code> <code>p5-IO-Socket-SSL</code> <code>p5-JSON</code> <code>p5-Locale-Maketext</code> <code>p5-Locale-Maketext-Lexicon</code> <code>p5-Locale-Msgfmt</code> <code>p5-libwww</code> <code>p5-LWP-Protocol-https</code> <code>p5-URI</code> <code>p5-version</code>
+</blockquote>
+<p></p>
+After expanding the Foswiki archive, change the ownership of the files: <ul>
+<li> <code>chown -R www:wwwadmin /var/www/path-to-foswiki</code>
+</li></ul> 
+<p></p>
+<h4 id="Optional_dependencies_AN3">  Optional dependencies </h4>
+<p></p>
+Install as needed.
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide11" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Apache2::Request </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Required if using Apache 2 and mod_perl (Not available?  Use cpanm ) </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> BSD-Resource </td>
+			<td class="foswikiTableCol1"> <code>p5-BSD-Resource</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - used for FCGI process handler resource limits </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBI </td>
+			<td class="foswikiTableCol1"> <code>p5-DBI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for the Foswiki Page cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::mysql </td>
+			<td class="foswikiTableCol1"> <code>p5-DBD-mysql</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for MySQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::Pg </td>
+			<td class="foswikiTableCol1"> <code>p5-DBD-Pg</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for PostgreSQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::SQLite </td>
+			<td class="foswikiTableCol1"> <code>p5-DBD-SQLite</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for SQLite based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI </td>
+			<td class="foswikiTableCol1"> <code>p5-FCGI</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi apache modules </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI::ProcManager </td>
+			<td class="foswikiTableCol1"> <code>p5-FCGI-ProcManager</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi process management </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::SMIME </td>
+			<td class="foswikiTableCol1"> <code>p5-Crypt-SMIME</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::X509 </td>
+			<td class="foswikiTableCol1"> <code>p5-Crypt-X509</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> Convert::PEM </td>
+			<td class="foswikiTableCol1 foswikiLast"> <code>p5-Convert-PEM</code> </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Optional, used for S/MIME email signing </td>
+		</tr>
+	</tbody></table>
+<p></p>
+</div></div>
+<p></p>
+<h3 id="Installation_with_CPAN">  Installation with CPAN </h3>
+<p></p>
+<div class="twistyPlugin foswikiMakeVisible"><span id="twistyIdSystemSystemRequirements6178show" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Show <code>CPAN</code> details</span></a></span><span id="twistyIdSystemSystemRequirements6178hide" style="display:none" class="twistyTrigger foswikiUnvisited twistyInited"><a class="" href="#"><span class="foswikiLinkLabel foswikiUnvisited">Hide <code>CPAN</code> details</span></a></span></div><div class="twistyPlugin"><div id="twistyIdSystemSystemRequirements6178toggle" style="" class="twistyContent twistyInited">
+<p></p>
+Perl dependencies can also be installed on most systems using <code>cpanm</code>, aka <code>App::cpanminus</code>.  On most unix* systems, <code>cpanminus</code> can bootstrap itself using curl or wget.
+If run as root, the modules will be installed in the System perl.   Otherwise they are installed into the users local environment.
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide12" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Algorithm::Diff </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Archive::Tar </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> *First shipped in perl 5.9.3 </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Authen::SASL </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> Optional, needed for authenticated SMTP </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> CGI::Session </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::PasswdMD5 </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Digest::SHA </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> Included with perl </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Error </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Email::MIME </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Encode </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> File::Copy::Recursive </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Parser </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> HTML::Tree </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::IP </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> IO::Socket::SSL </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> Optional, support encrypted email connection: STARTTLS or SSL </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> JSON </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Maketext::Lexicon </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Locale::Msgfmt </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> Optional, needed for internationalization </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> LWP::Protocol::https </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> URI </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> &nbsp; </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> version </td>
+			<td class="foswikiTableCol1 foswikiLastCol foswikiLast"> Must be version 0.77 or newer, included with perl 5.10.1 and newer. </td>
+		</tr>
+	</tbody></table>
+<p></p>
+<h5 id="To_install_the_above_packages_with_61cpanm_61">  To install the above packages with <code>cpanm</code> </h5>
+<strong>Note:</strong> We do not recommend installing CPAN modules with cpanminus as root.
+See below for information on using a private module library with cpanminus.
+<blockquote>
+curl -L http://cpanmin.us | perl - App::cpanminus    (optional - install cpanminus if not available ) <br />
+cpanm  Algorithm::Diff Archive::Tar Authen::SASL CGI CGI::Session Crypt::PasswdMD5 Digest::SHA Error Email::MIME Encode File::Copy::Recursive HTML::Parser HTML::Tree IO::Socket::IP IO::Socket::SSL JSON Locale::Maketext Locale::Maketext::Lexicon Locale::Msgfmt LWP LWP::Protocol::https URI version 
+</blockquote>
+<p></p>
+<h4 id="Optional_dependencies_AN4">  Optional dependencies </h4>
+<p></p>
+Install as needed.
+<p></p>
+<table border="1" class="foswikiTable" id="tableInstallationGuide13" rules="none">
+	<thead>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<th class="foswikiTableCol0 foswikiFirstCol"> Perl Module </th>
+			<th class="foswikiTableCol1"> Package to install </th>
+			<th class="foswikiTableCol2 foswikiLastCol"> Notes </th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Apache2::Request </td>
+			<td class="foswikiTableCol1 foswikiLastCol"> Required if using Apache 2 and mod_perl </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBI </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for the Foswiki Page cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::mysql </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for MySQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::Pg </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for PostgreSQL based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> DBD::SQLite </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional - Used for SQLite based Page Cache </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi apache modules </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> FCGI::ProcManager </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, needed for fastcgi / fcgi process management </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::SMIME </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">
+			<td class="foswikiTableCol0 foswikiFirstCol"> Crypt::X509 </td>
+			<td class="foswikiTableCol1"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol"> Optional, used for S/MIME email signing </td>
+		</tr>
+		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">
+			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> Convert::PEM </td>
+			<td class="foswikiTableCol1 foswikiLast"> &nbsp; </td>
+			<td class="foswikiTableCol2 foswikiLastCol foswikiLast"> Optional, used for S/MIME email signing </td>
+		</tr>
+	</tbody></table>
+<p></p>
+<h4 id="Installation_using_61cpanminus_61">  Installation using <code>cpanminus</code> </h4>
+<p></p>
+See <a class="interwikiLink" href="https://foswiki.org/Support.HowToInstallCpanModules" title="'Support.HowToInstallCpanModules' on foswiki.org">Foswiki:Support.HowToInstallCpanModules</a> for more information.
+<p></p>
+If you want to install the dependendencies into a specified location, add the <code>"-l"</code> option to cpanm, and add the lib path to <code>bin/LocalLib.cfg</code>.   The dependencies will be installed under the specified location, in the <code>lib/perl5</code> subdirectory.
+Example:  User "foswiki" logs in and installs the libraries locally under the foswikideps directory:
+<pre>
+cpanm -l foswikideps Algorithm::Diff Archive::Tar ...   (install libraries into &#61;/home/foswiki/foswikideps&#61;)
+</pre>
+<p></p>
+<code>/path/to/foswiki/bin/LocalLib.txt</code> is then edited, and the commented line is modified:
+<pre>
+# &#64;localPerlLibPath &#61; ( &#39;/path/to/dir&#39;, &#39;/path/to/another/dir&#39;, );
+&#64;localPerlLibPath &#61; ( &#39;/home/foswiki/foswikideps/lib/perl5&#39;, );
+</pre>
+<p></p>
+Foswiki will now run using the libraries installed by cpanm.
+</div></div>
+<p></p>
+<span id="ClientRequirements"></span>
+<h2 id="Client_Requirements">  Client Requirements </h2>
+<p></p>
+The <a class="foswikiCurrentTopicLink" href="https://foswiki.org/System/InstallationGuide">standard installation</a> has relatively low browser requirements:
+<p></p> <ul>
+<li> XHTML 1.0 Transitional compliant
+</li> <li> Cookies, if persistent sessions are required
+</li> <li> Javascript, is required for configure, edit save and upload functionality.  Foswiki is viewable without javascript.
+</li></ul> 
+<p></p>
+CSS and Javascript are used in most skins. Some skins will require more recent releases of browsers. The default (Pattern) skin is tested on IE 6+, Safari, Chrome and Firefox.
+<p></p>
+You can easily select a balance of browser capability versus look and feel. Try the installed skins at System.SkinBrowser and more at <a class="interwikiLink" href="https://foswiki.org/Extensions.SkinPackage" title="'Extensions.SkinPackage' on foswiki.org">Foswiki:Extensions.SkinPackage</a>.
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<span id="UploadingFoswikiDistribution"></span>
+<h3 id="Uploading_the_Foswiki_distribution_to_your_web_server_host">  Uploading the Foswiki distribution to your web server host </h3>
+<p></p>
+If you cannot unpack the Foswiki distribution directly in your installation directory, you can unpack the distribution on your local computer, manually create the directory structure on your host server and upload the files as follows: <ul>
+<li> Using the table below, create a directory structure on your host server
+</li> <li> Upload the Foswiki files by FTP (transfer as text except for the image files in <code>pub</code> directory.)
+</li> <li> <strong>Note:</strong> Don't worry if you are not able to put the <code>lib</code> directory at the same level as the <code>bin</code> directory. You can create this directory elsewhere and configure the <code>bin/setlib.cfg</code> file.             <table border="1" class="foswikiTable" rules="none">   	<thead>		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">			<th class="foswikiTableCol0 foswikiFirstCol"> <a href="/foswiki/bin/view?topic=System.InstallationGuide;skin=plain;sortcol=0;table=14;up=0#sorted_table" rel="nofollow" title="Sort by this column">Foswiki dir:</a> </th>			<th class="foswikiTableCol1"> <a href="/foswiki/bin/view?topic=System.InstallationGuide;skin=plain;sortcol=1;table=14;up=0#sorted_table" rel="nofollow" title="Sort by this column">What it is:</a> </th>			<th class="foswikiTableCol2"> <a href="/foswiki/bin/view?topic=System.InstallationGuide;skin=plain;sortcol=2;table=14;up=0#sorted_table" rel="nofollow" title="Sort by this column">Where to copy:</a> </th>			<th class="foswikiTableCol3 foswikiLastCol"> <a href="/foswiki/bin/view?topic=System.InstallationGuide;skin=plain;sortcol=3;table=14;up=0#sorted_table" rel="nofollow" title="Sort by this column">Example:</a> </th>		</tr>	</thead>   	<tbody>		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki</code> </td>			<td class="foswikiTableCol1"> start-up pages </td>			<td class="foswikiTableCol2"> root Foswiki dir </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/</code> </td>		</tr>		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/bin</code> </td>			<td class="foswikiTableCol1"> CGI bin </td>			<td class="foswikiTableCol2"> CGI-enabled dir </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/bin</code> </td>		</tr>		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/lib</code> </td>			<td class="foswikiTableCol1"> library files </td>			<td class="foswikiTableCol2"> same level as <code>bin</code> </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/lib</code> </td>		</tr>		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/locale</code> </td>			<td class="foswikiTableCol1"> language files </td>			<td class="foswikiTableCol2"> dir secure from public access </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/locale</code> </td>		</tr>		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/pub</code> </td>			<td class="foswikiTableCol1"> public files </td>			<td class="foswikiTableCol2"> htdoc enabled dir </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/pub</code> </td>		</tr>		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/data</code> </td>			<td class="foswikiTableCol1"> topic data </td>			<td class="foswikiTableCol2"> dir secure from public access </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/data</code> </td>		</tr>		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/templates</code> </td>			<td class="foswikiTableCol1"> web templates </td>			<td class="foswikiTableCol2"> dir secure from public access </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/templates</code> </td>		</tr>		<tr class="foswikiTableOdd foswikiTableRowdataBgSorted1 foswikiTableRowdataBg1">			<td class="foswikiTableCol0 foswikiFirstCol"> <code>foswiki/tools</code> </td>			<td class="foswikiTableCol1"> Foswiki utlilities </td>			<td class="foswikiTableCol2"> dir secure from public access </td>			<td class="foswikiTableCol3 foswikiLastCol"> <code>/home/smith/public_html/foswiki/tools</code> </td>		</tr>		<tr class="foswikiTableEven foswikiTableRowdataBgSorted0 foswikiTableRowdataBg0">			<td class="foswikiTableCol0 foswikiFirstCol foswikiLast"> <code>foswiki/working</code> </td>			<td class="foswikiTableCol1 foswikiLast"> Temporary and internal files </td>			<td class="foswikiTableCol2 foswikiLast"> dir secure from public access </td>			<td class="foswikiTableCol3 foswikiLastCol foswikiLast"> <code>/home/smith/public_html/foswiki/working</code> </td>		</tr>	</tbody>   </table>
+</li></ul> 
+<p></p>
+<span id="AboutAdminUsers"></span>
+<h3 id="About_Administrators">  About Administrators </h3>
+<p></p>
+Administrators have read and write access to any topic, regardless of any access controls that have been applied to the topic or its web. Administrators also have access to configure unless further restricted.
+<p></p>
+The default setup in Foswiki is that members of Main.AdminGroup in your installation have administrator privileges. Any member of the Main.AdminGroup can add subsequent members to that group.
+<p></p>
+To more easily debug access control issues, you may want to have a regular Foswiki user account for daily use, and a special one that belongs to the <code>AdminGroup</code> that you use only for administering your Foswiki site. See System.AccessControls in your installation for more information on access controls and user groups.
+<p></p>
+<div class="foswikiHelp">  Instead of adding users to the AdminGroup, grant those candidate administrators <code>ALLOWTOPICCHANGE</code> rights on the
+AdminGroup.  They can then use a button on the AdminGroup page to join or leave the group at will.
+</div>
+<p></p>
+<span id="WaysToProtectConfigure"></span>
+<h4 id="Options_to_Protect_the_Configure_Script">  Options to Protect the Configure Script </h4>
+Foswiki 2.0 has changed how configure is protected. You no longer need to establish special protections within the web server configuration.
+<p></p>
+There are now several choices for how to protect configure: <ul>
+<li> <strong>Option 1</strong> Restrict configure to members of the AdminGroup: <ul>
+<li> This is the default configuration. You don't need to set anything special from within configure.
+</li> <li> After you save your configuration, be sure to register a user and add them to the AdminGroup before you log out from the initial super admin login. Once you log out, you'll be blocked from any further configure access unless you can log in as a user in the AdminGroup. The default behaviour is that members of the AdminGroup have access to <code>bin/configure</code>
+</li></ul> 
+</li></ul> 
+<p></p> <ul>
+<li> <strong>Option 2</strong> Restrict configure to a defined list of users: <ul>
+<li> Visit the "Security and Authentication" tab, "Access control" sub-tab.
+</li> <li> Set <code>{FeatureAccess}{Configure}</code> to a list of WikiNames that will be allowed access to configure.
+</li> <li> This setting overrides use of the AdminGroup, and these users do not have to be members of the AdminGroup.
+</li> <li>  If you want the <em>admin</em> super-user to also have access to configure, you need to include "BaseUserMapping_333" in that list.
+</li></ul> 
+</li></ul> 
+<p></p> <ul>
+<li> <strong>Option 3</strong> Define a "super user" ID and allow it access to configure (This is not recommended) <ul>
+<li> Visit the "Security and Authentication" tab, "Passwords" tab. Enable "Expert" options. Set the <code>{Password}</code> field to a hashed <code>ApacheMD5</code> encoded password.
+</li> <li> See #InternalAdmin for more information.
+</li></ul> 
+</li></ul> 
+<p></p>
+You must at least do one of the above before closing your browser or logging out from the temporary admin authority established during bootstrap.  Once you
+close your browser, you have to have a usable id to run configure or you'll need to add a super-user admin login using the command line.
+<p></p>
+<span id="InternalAdmin"></span>
+<h4 id="Establishing_an_internal_admin_login_40optional_41">  Establishing an <em>internal admin</em> login  (optional) </h4>
+<p></p>
+ <strong>Don't log in with the wikiname</strong> <strong>AdminUser, and never register or set a password for AdminUser</strong>.
+<p></p>
+There is an optional <em>internal admin</em> (Main.AdminUser in your installation) which is accessed by logging in with user <code>admin</code> and a password set in the configuration. Foswiki 2.0 no longer enables the <em>internal admin</em> by default. <ul>
+<li> <strong>Setting password from <code>bin/configure</code> interface:</strong> The password can be set in configure, in the "Security and Authentication" -&gt; "Passwords" tab.  Enter the password in plain text.  It will be automatically hashed when saved, and cannot be recovered.
+</li> <li> <strong>Setting the password from the command line:</strong>  The password can also be set via command line configuration tool, using the following command: <pre>
+tools/configure -save -set {Password}&#61;&#39;adminpass&#39;</pre>
+</li> <li> <strong>Manually setting admin user in  <code>LocalSite.cfg</code>:</strong> Follow these steps: ( Caution: This procedure only works for plain ascii passwords, it does not handle international characters.) <ol>
+<li> Generate the hashed password using the Apache <code>htpasswd</code> tool: (replacing <code>{password}</code> with your password)<pre>
+htpasswd -bn  admin {password}</pre>
+</li> <li> Copy the password hash that's generated.  (The part after <code>admin:</code> ex: <code><b>$apr1$Oc.PLq8V$wslABA3mWXfYT/wH0Hsom0</b></code>)
+</li> <li> Search <code>LocalSite.cfg</code> for <code>$Foswiki::cfg{Password}</code>, Replace the existing line, or if not found, insert a new line in the file, as shown:<pre>
+&#36;Foswiki::cfg{Password} &#61; &#39;{password hash}&#39;;</pre>
+</li></ol> 
+</li></ul> 
+<p></p>
+<span id="AuthenticationOfUsers"></span>
+<h3 id="User_Authentication_Options">   User Authentication Options </h3>
+<p></p>
+The most common authentication methods used for public Foswiki installations are Template Login and Apache Login. They have the following relative advantages: <ul>
+<li> Template Login can be set up without any web server configuration, and users can log off without restarting the browser. As the login page is just a Wiki page, you can customize it to suit your needs.
+</li> <li> Apache Login allows you to use any Apache-module based authentication scheme, such as <code>mod_auth_ldap</code> or <code>mod_auth_mysql</code>. However, as your browser is caching your login, you must restart the browser to log out.
+</li></ul> 
+<p></p>
+Note that the password databases for both of these authentication mechanisms are compatible, so you can switch between them at a later date.
+<p></p>
+<h4 id="Template_Login_authentication">  Template Login authentication </h4>
+<p></p>
+ Template Login asks for a username (or optionally e-mail address) and password in a web page, and processes them using whatever Password Manager you choose. Users can log in and log out. Client Sessions are used to remember users. Users can choose to have their session remembered so they will automatically be logged in the next time they start their browser.
+<p></p>
+<h4 id="Enabling_Template_Login">  Enabling Template Login </h4>
+<p></p>
+<div class='foswikiHelp'> By default, your Foswiki installation is probably already using TemplateLogin, HtPasswdUser and <a href="https://foswiki.org/System/TopicUserMappingContrib">TopicUserMappingContrib</a> as the default <code>Login</code>, <code>Password</code> and <code>user mapping</code> options.</div> <ol>
+<li> Using <code>configure</code>, <code>Security And Authentication</code> tab <ol>
+<li> Navigate to the <code>Login</code> tab on the <code>Security and Authentication</code> panel. Select the <code>Foswiki::LoginManager::TemplateLogin</code> login manager.
+</li> <li> Navigate to the <code>Passwords</code> tab. Select the appropriate <code>PasswordManager</code> for your system - the default is <code>Foswiki::Users::HtPasswdUser</code>.      <div class='foswikiHelp'> There is an EXPERT configure setting <code>{TemplateLogin}{PreventBrowserRememberingPassword}</code> that you can set to prevent Browsers from remembering username and passwords if you are concerned about public terminal usage.</div>      <div class='foswikiHelp'> There is an EXPERT configure setting <code>{TemplateLogin}{AllowLoginUsingEmailAddress}</code> that you can set to allow users to login using their password system registered e-mail addresses.</div>
+</li></ol> 
+</li></ol> 
+<p></p>
+<p></p>
+<h4 id="Apache_Login_authentication">  Apache Login authentication </h4>
+<p></p>
+With Apache Login enabled, when Foswiki needs to authenticate the user, the standard HTTP authentication mechanism is used: the browser itself will prompt for a user name and password.
+<p></p>
+The rest of this section describes Webserver Login using the Apache web server, but the same process is applicable to other webserver implementations as well (though you may require a customised version of the ApacheLogin module to do it).
+<p></p>
+The advantage of this scheme is that if you have an existing website authentication scheme using Apache modules such as <code>mod_auth_ldap</code> or <code>mod_auth_mysql</code> you can just plug in to them directly.
+<p></p>
+The disadvantage is that because the user identity is cached in the browser, you can log in, but you can't log out again unless you restart the browser.
+<p></p>
+Foswiki maps the <code>REMOTE_USER</code> that was used to log in to the webserver to a WikiName using the table in Main.WikiUsers. This table is updated whenever a user registers, so users can choose not to register (in which case their webserver username is used for their signature) or register (in which case that username is mapped to their WikiName).
+<p></p>
+The same private <code>.htpasswd</code> file used in Foswiki Template Login can be used to authenticate Apache users, using the Apache Basic Authentication support.
+<p></p>
+<div class='foswikiHelp'> Do <strong>not</strong> use the Apache <code>htpasswd</code> program to modify <code>.htpasswd</code> files generated by Foswiki! <code>htpasswd</code> wipes out e-mail addresses that Foswiki saves in the info fields of this file.
+<p></p>
+ Apache Login is required for Apache-based login methods such as <code>mod_ldap</code>
+<p></p>
+ You can use any Apache authentication module that sets the <code>REMOTE_USER</code> environment variable.
+</div>
+<p></p>
+To set up Apache Login, perform the following steps:
+<p></p> <ol>
+<li> <strong>Configure Apache Login.</strong> Under the <code>Security and Authentication</code> pane on the <code>Login</code> tab in <code>configure</code>: <ol>
+<li> Select <code>Foswiki::LoginManager::ApacheLogin</code> for <code>{LoginManager}</code>.
+</li> <li> Select <code>Foswiki::Users::HtPasswdUser</code> for <code>{PasswordManager}</code>.
+</li> <li> Select <code>Foswiki::Users::TopicUserMapping</code> for <code>{UserMappingManager}</code>.
+</li> <li> Save your settings.
+</li> <li> Configure your Apache settings for HTTP authentication. Use the <a class="interwikiLink" href="https://foswiki.org/Support.ApacheConfigGenerator" title="'Support.ApacheConfigGenerator' on foswiki.org">Foswiki:Support.ApacheConfigGenerator</a> tool or the <code>foswiki/bin-htaccess-advanced.txt</code> file to set the following Apache directives on the <code>bin</code> scripts:(This example is for Apache 2.2, there are changes required if using Apache 2.4)       <pre>
+ AuthType Basic
+ &#60;FilesMatch &#34;(attach&#124;edit&#124;manage&#124;rename&#124;save&#124;upload&#124;mail&#124;logon&#124;.&#42;auth).&#42;&#34;&#62;
+ require valid-user
+ &#60;/FilesMatch&#62;</pre>      You can also refer to the sample <code>foswiki_httpd_conf.txt</code> and <code>bin-htaccess-advanced.txt</code> files to see how the appropriate Apache directives are specified.
+</li></ol> 
+</li></ol> 
+<p></p>
+<p></p>
+<span id="TestingAuthentication"></span>
+<h4 id="Testing_your_authentication_configuration:">  Testing your authentication configuration: </h4>
+<p></p> <ol>
+<li> Verify that registration works by registering yourself with the System.UserRegistration topic. If there are problems, try these troubleshooting tips:  <ol>
+<li> <strong>Note:</strong> If e-mail is enabled in configure, Foswiki will  not allow any new registrations unless e-mail is functional. In order to avoid issues, return to the <code>Mail and Proxies</code>, <code>Email Test</code> tab in <code>configure</code> and verify that Foswiki can successfully send e-mail.
+</li> <li> If your PasswordManager is <code>HtPasswdUser</code> (the default), check the <code>.htpasswd</code> file is being updated correctly with a new entry. If not, check <code>{Htpasswd}{FileName}</code> is correct (under <code>Security and Authentication</code> on the <code>Password</code> tab in <code>configure</code>), and that the webserver user has write permission.
+</li></ol> 
+</li> <li> Create a new topic (in Sandbox.WebHome web for example) to confirm that authentication works.
+</li> <li> <strong>Add users to the Main.AdminGroup</strong>. Edit the Main.AdminGroup topic in the Main web to include users that should have administrator status. Read <a class="foswikiCurrentTopicLink" href="#AboutAdminUsers">defining adminstrator user(s)</a> for more information.   <div class="foswikiHelp">  <strong>This is a very important step</strong>, as users in this group can access <em>all</em> topics, independent of Foswiki access controls.</div>
+</li></ol> 
+<p></p>
+<span id="ConfiguringFoswikiManually"></span>
+<h3 id="Configuring_Foswiki_manually_40without_using_the_61configure_61_page_41">  Configuring Foswiki manually (without using the <code>configure</code> page) </h3>
+<p></p>
+Foswiki 2.0 includes a shell based configuration tool that can be run from a
+server command-line login.  It will bootstrap the configuration, and prompt
+for settings as required.   Here is an example of using it for an interactive
+command line bootstrap:
+<div class="foswikiHelp">
+<strong>Note</strong>: If any of your configuration settings use utf-8 characters, (eg.  &Uuml;nic&ouml;de) be sure to
+run configure with the perl <code>-CAS</code> option so that all prompted input is properly encoded.
+<pre class='bash'>
+&#36; perl -CAS tools/configure -save
+</pre>
+</div>
+<p></p>
+<pre class='bash'>
+&#36; tools/configure -save
+
+LocalSite.cfg load failed
+AUTOCONFIG: Found Bin dir: /var/www/foswiki/distro/core/tools, Script name:
+configure using FindBin
+AUTOCONFIG: PubDir &#61; /var/www/foswiki/distro/core/pub
+AUTOCONFIG: DataDir &#61; /var/www/foswiki/distro/core/data
+AUTOCONFIG: WorkingDir &#61; /var/www/foswiki/distro/core/working
+AUTOCONFIG: ToolsDir &#61; /var/www/foswiki/distro/core/tools
+AUTOCONFIG: TemplateDir &#61; /var/www/foswiki/distro/core/templates
+AUTOCONFIG: LocalesDir &#61; /var/www/foswiki/distro/core/locale
+AUTOCONFIG: ScriptDir &#61; /var/www/foswiki/distro/core/bin
+AUTOCONFIG: Unable to use PlainFileStore: ,v files were found in data or pub,
+which indicates this installation is already configured for RCS e.g.
+/var/www/foswiki/distro/core/data/WFWeb/WebChanges.txt,v
+AUTOCONFIG: Store configured for RcsLite
+AUTOCONFIG: {Store}{SearchAlgorithm} set to Forking
+AUTOCONFIG: Detected OS UNIX:  DetailedOS: linux
+&#42;&#42; Enter values for critical configuration items.
+&#42;&#42; type a new value or hit return to accept the value in brackets.
+
+This is the root of all Foswiki URLs.
+For example, &#61;http://myhost.com:123&#61;
+(do not include the trailing slash.)
+
+{DefaultUrlHost} (http://localhost): http://myhost.com
+
+This is the &#39;cgi-bin&#39; part of URLs used to access the Foswiki bin
+directory. For example &#61;/foswiki/bin&#61;.
+See &#91;&#91;https://foswiki.org/Support/ShorterUrlCookbook&#93;&#91;ShorterUrlCookbook&#93;&#93;
+for more information on setting up Foswiki to use shorter script URLs.
+
+{ScriptUrlPath} (/foswiki/bin):
+
+...</pre>
+<p></p>
+It can also be run in a non-interactive mode, for use in automated deployment
+systems.
+<pre class='bash'>
+tools/configure -save -noprompt
+tools/configure -save -set {DefaultUrlHost}='http://mysite.com'
+tools/configure -save -set {ScriptUrlPath}='/bin'
+tools/configure -save -set {ScriptUrlPaths}{view}=''
+tools/configure -save -set {PubUrlPath}='/pub'
+perl -CA tools/configure -save -set {Password}='&Auml;dm&icirc;nP&auml;ss' </pre>
+<p></p>
+Any configuration keys may be set using this tool.
+<p></p>
+To run a wizard, for example autoconfiguration of email:
+<pre class='bash'>
+tools/configure -save -set {WebMasterEmail}&#61;&#39;user&#64;email.com&#39;
+tools/configure -save -set {SMTP}{MAILHOST}&#61;&#39;smtpserver.email.com&#39;
+tools/configure -save -set {SMTP}{Username}&#61;&#39;userid&#39;
+tools/configure -save -set {SMTP}{Password}&#61;&#39;password&#39;
+tools/configure -save -wizard AutoConfigureEmail -method autoconfigure</pre>
+<p></p>
+And the configuration can then be checked, with optional verbose output:
+(Without -verbose, only errors and warnings are reported.)
+<pre class='bash'>
+tools/configure -check -verbose</pre>
+<p></p>
+File system permissions can also be checked for any of
+<code>{DataDir}</code>, <code>{LocalesDir}</code>, <code>{PubDir}</code>, <code>{ScriptDir}</code>, <code>{TemplateDir}</code>, <code>{ToolsDir}</code> and <code>{WorkingDir}</code>, for ex:
+<pre>
+tools/configure -check {DataDir} -method validate&#95;permissions</pre>
+<p></p>
+<p></p>
+Configuration settings can be searched and queried as well:
+<pre class='bash'>
+tools/configure -search Umask
+tools/configure -getcfg {Store}</pre>
+<h3 id="TWiki_Compatibility">  TWiki Compatibility </h3>
+<p></p>
+Foswiki is 100% backwards compatible with TWiki<sup>&trade;</sup> markup up to and including TWiki 4.2.4. Existing TWiki webs, topics and attachments can be used with Foswiki without requiring any changes.
+<p></p>
+To support a seamless upgrade from TWiki, Foswiki ships with a plugin called <code>TWikiCompatibilityPlugin</code>. This plugin enables most TWiki extensions to work with Foswiki, without modifications. It also maps requests for legacy TWiki web topics to their Foswiki equivalents, as defined in <a class="interwikiLink" href="https://foswiki.org/Development.TopicNameMappingTable" title="'Development.TopicNameMappingTable' on foswiki.org">Foswiki:Development.TopicNameMappingTable</a>. The <code>TWIKIWEB</code> and <code>MAINWEB</code> TWiki variables are also mapped to the new Foswiki macros <code>SYSTEMWEB</code> and <code>USERSWEB</code>.
+<p></p>
+If you are not upgrading an existing TWiki installation and do not plan to install plugins from the TWiki web site, it is recommended that you disable the TWikiCompatibilityPlugin in the <em>Plugins</em> Section on the <code>configure</code> page.
+<p></p>
+If a plugin exists both in a TWiki version and a Foswiki version, it is strongly recommended that you use the Foswiki version, as this is coded to work optimally with Foswiki. As part of the Foswiki project, the Foswiki community is evaluating all of the extensions that are available for TWiki, and porting them over to the Foswiki name space. Many of them are being enhanced through the removal of bugs and security vulnerabilities, resulting in better, more functional extensions for Foswiki.
+<p></p>
+<span id="TWikiTrademark"></span>
+TWiki is a registered trademark of Peter Thoeny.
+<p></p>
+<p></p>
+<strong>Related Topics:</strong> System.InstallationGuidePart2 in your installation, System.AdminDocumentationCategory in your installation, <a class="interwikiLink" href="https://foswiki.org/Support.SupplementalDocuments" title="'Support.SupplementalDocuments' on foswiki.org">Foswiki:Support.SupplementalDocuments</a>
+<p></p>
+<!--  -->
+
+<span id="TopicEnd"></span>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+</div>
+</body></html>

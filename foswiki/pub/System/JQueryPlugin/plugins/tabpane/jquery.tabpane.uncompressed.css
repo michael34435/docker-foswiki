@@ -1,0 +1,183 @@
+.foswikiFormSteps .jqTabPane {
+  margin:0px;
+}
+.jqTabLabel {
+  display:none;
+}
+.jqTabPane form {
+  margin:0px;
+  padding:0px;
+}
+.jqTab {
+  display:none;
+  border:1px solid #BDBEC5;
+  padding:0px;
+  margin:0px;
+}
+.foswikiNoJs .jqTab {
+  display:block;
+  border:none;
+}
+.jqTab.current {
+  display:block !important;
+}
+.jqTabContents {
+  padding:1em;
+}
+.foswikiNoJs .jqTabContents {
+  padding:0;
+}
+ul.jqTabGroup {
+  margin:0px;
+  padding:0px;
+  list-style:none;
+  display:block;
+  float:left;
+  overflow:visible !important;
+}
+ul.jqTabGroup li {
+  float:left;
+  list-style:none;
+}
+ul.jqTabGroup a:hover,
+ul.jqTabGroup a {
+  text-decoration: none;
+  white-space:nowrap;
+  float:left;
+  display:block;
+  text-shadow:0px 1px #fff;
+}
+.foswikiFormSteps ul.jqTabGroup li.current {
+  background-color: inherit;
+}
+
+.jqTabPane .fltMakeIndexWrapper {
+  margin:0px;
+}
+
+.jqAjaxLoader {
+  background: url(../../images/spinner.gif) 0 0 no-repeat;
+  height: 16px;
+  width: 16px;
+  display: block;
+}
+
+/* default theme */
+.jqTabPaneDefault > .jqTabGroup li {
+  background-color: transparent;
+  background-image: url('tab_right.png');
+  background-repeat: no-repeat;
+  background-position: right top;
+  padding:0px 3px 0px 0px;
+  margin:0px 4px -1px 0px;
+  *margin:5px 4px -6px 0px; /* IE7 */
+  height:28px;
+}
+.jqTabPaneDefault > .jqTabGroup a:hover,
+.jqTabPaneDefault > .jqTabGroup a {
+  background-color:transparent;
+  background-image: url('tab_left.png');
+  background-repeat: no-repeat;
+  background-position: left top;
+  color:#111;
+  margin:0px 0px 0px 0px;
+  padding:5px 8px 0px 18px;
+  height:23px;
+  font-size:12px;
+  line-height:100%;
+}
+.jqTabPaneDefault > .jqTabGroup li.current {
+  background-image: url('tab_right_on.png');
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: right top;
+}
+.jqTabPaneDefault > .jqTabGroup li.current a:hover,
+.jqTabPaneDefault > .jqTabGroup li.current a {
+  background-image: url('tab_left_on.png');
+  background-repeat:no-repeat;
+  background-position:left top;
+  color: #333;
+}
+.jqTabPaneDefault > .jqTabGroup a:hover,
+.jqTabPaneDefault > .jqTabGroup a:focus {
+  color:#C60206;
+}
+
+/* error */
+.jqTabPane > .jqTabGroup a.error {
+  color:#C60206;
+}
+
+/* limitted support for printouts */
+.jqTabPane.jqStatic .jqTab {
+  display:block!important;
+  border:0;
+  padding:0;
+}
+.jqTabPane.jqStatic .jqTabContents {
+  padding:0;
+}
+.jqTabPane.jqStatic .jqAjaxTab {
+  display:none;
+}
+.jqTabPane.jqStatic .jqTabLabel {
+  margin:1em 0;
+  display:block;
+}
+
+@media print {
+  .jqTabPane .jqTab {
+    display:block!important;
+    border:0;
+    padding:0;
+  }
+  .jqTabPane .jqTabContents {
+    padding:0;
+  }
+  .jqTabPane .jqAjaxTab {
+    display:none;
+  }
+  .jqTabLabel {
+    margin:1em 0;
+    display:block;
+  }
+}
+
+/* simple theme */
+.jqTabPanePlain > .jqTabGroup li,
+.jqTabPaneSimple > .jqTabGroup li {
+  background:transparent;
+  margin:0px 0.4615em -1px 0; /* 0px 6px ... */
+  *height:2.3077em; /* IE7 ... 30px */
+}
+.jqTabPanePlain > .jqTabGroup li.current a,
+.jqTabPaneSimple > .jqTabGroup li.current a {
+  background:#fff;
+  border-bottom:1px solid #fff;
+}
+.jqTabPanePlain > .jqTabGroup a:hover,
+.jqTabPanePlain > .jqTabGroup a,
+.jqTabPaneSimple > .jqTabGroup a:hover,
+.jqTabPaneSimple > .jqTabGroup a {
+  background:#eee;
+  border: 1px solid #ccc;
+  color:inherit;
+  *color:#111; /* IE7 */
+  padding:5px 10px;
+}
+.jqTabPanePlain > .jqTabGroup a:hover,
+.jqTabPaneSimple > .jqTabGroup a:hover {
+  color:#C60206;
+}
+
+/* plain theme */
+.jqTabPanePlain .jqTab {
+  border-left:0px;
+  border-right:0px;
+  border-bottom:0px;
+  border-top-color:#ccc;
+}
+.jqTabPanePlain .jqTabContents {
+  padding:1em 0em 0em 0em;
+}

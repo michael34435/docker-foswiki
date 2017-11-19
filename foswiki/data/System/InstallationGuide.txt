@@ -1,0 +1,444 @@
+%META:TOPICINFO{author="ProjectContributor" date="1494206626" format="1.1"  version="1"}%
+%META:TOPICPARENT{name="AdminDocumentationCategory"}%
+<noautolink>
+---+!! Installation Guide
+<div class='foswikiHelp' style='border:2px orange solid' >
+This guide describes the steps for installing Foswiki, with __specific steps for installations on Linux with the Apache web server__.%BR%
+If you would prefer to use a different web server, please refer to supplemental documentation when you reach the Apache-specific steps:
+   * *Nginx:* [[https://foswiki.org/System/FastCGIEngineContrib#Nginx][FastCGIEngineContrib#Nginx]] and[[https://foswiki.org/Support/FoswikiOnNginx][Foswiki on Nginx]]
+   * *Lighttpd:* [[https://foswiki.org/Support/LighttpdBestPractice][Foswiki on Lighttpd]]
+</div>
+
+%TOC{title="Contents"}%
+
+*Rather not install manually?* Visit Foswiki:Download.OtherFoswikiInstallers for automated installers, and virtual machine images. These automate much of the installation process and may help some users get started more easily. For instructions using those packages, refer to the documentation provided there. Note that the installers are optimized for the target system, and do not necessarily follow the normal Foswiki directory structure documented below.
+
+*Upgrading?* Please see the [[Foswiki:System.UpgradeGuide][upgrade guide]].
+
+*Need further information?* Visit Foswiki:Support.SupplementalDocuments for additional notes on installing on different operating systems or shared web-hosting environments, performance tuning, security hardening and more.
+
+*Need help?* Visit Foswiki:Support web or Foswiki:Community.InternetRelayChat (irc.freenode.net, channel #foswiki).
+
+---++ Before you start
+
+   * This guide assumes the a basic knowledge of server administration on the system being used. For more information, see Foswiki:System.AdminSkillsAssumptions.
+   * Review the [[#SystemRequirements][System Requirements]] (below) to make sure you have server prerequisites installed.
+   * Review the [[Foswiki:System.ReleaseNotes02x01][release notes]].
+   * If you need to install any Perl libraries from CPAN, see Foswiki:Support.HowToInstallCpanModules for more information.
+
+---++ 5-Minute Install
+
+Here's the quick version of the instructions, for *those that are already comfortable* with performing such installations. More detailed instructions follow.
+
+   1 [[Foswiki:Download/][Download]] and unpack the latest version of Foswiki.
+   1 Configure Apache using the Foswiki:Support.ApacheConfigGenerator tool to generate a safe, working config file for your Foswiki installation.
+      * Install the generated file and restart Apache.
+      * In shared hosting environment where you don't have access to Apache config files, see [[#ConfigWithHtaccess][the instructions in step 4 below for configuring using =.htaccess= files]].
+   1 Bootstrap your the install by browsing to the default view URL for your site in your web browser. Depending upon your Apache configuration, your view URL might look something like:
+      * =http<nop>://yoursite.com=
+      * =http<nop>://yoursite.com/bin/view=
+      * =http<nop>://yoursite.com/foswiki/bin/view=
+   1 Follow the link in the Bootstrap banner of the returned page to the bin/configure tool, address any warnings and save your configuration.
+   1 Return from configure (button at top of page), and register your first user.
+
+<div class='foswikiHelp'>Note: If you are using SSL (=https<nop>://=), and access Foswiki via a proxy server, you may need to give bootstrap a "hint" that SSL is in use. Add
+=SSL=1= to the URL,  eg: =https<nop>://yoursite.com?SSL=1=.  From there, bootstrap should function correctly.  You only need to do this if the initial view screen displays without any
+styling and the links on the page point to non-SSL =http= locations.
+</div>
+
+That's it! You Foswiki should now be installed. Browse to =/bin/view= and start editing!
+
+At some point, you will want to re-visit [[#ConfigureFoswiki][Configuring Foswiki]] to enable out-going emails, create administrators and properly secure your installation.
+
+---++ Detailed Instructions
+
+---+++ Step 1: Download and unpack Foswiki
+
+   1 *Go to your site's root directory* as set by Apache (typically within the =/var/www= or =/srv/www= directory) or as set by your hosting company.
+   2 *Download* the Foswiki distribution from https://foswiki.org/Download
+      * If you have shell access, you can download the distribution directly using using this command: <pre>wget  https://sourceforge.net/projects/foswiki/files/latest/download</pre>
+      * If you do not have shell access to your web server host, see the section [[#UploadingFoswikiDistribution][Uploading the Foswiki distribution to your web server host]] below.
+   3 *Unpack the distribution file:*
+      * go to your web directory (usually /var/www) or in any directory you what to install Foswiki (designed after by  /path/to/foswiki/)
+      * Untar and gunzip the distribution using this command: (modify to match version number)<verbartim>
+       tar -xzvf foswiki-VERSION.tgz
+      </verbatim>A new subdirectory called Foswiki-VERSION will be created.
+      * You can rename this subdirectory to a shorter name. For the rest of this document, this subdirectory is assumed to be at =/path/to/foswiki=.
+      * *Note:* Foswiki does not support directory paths that contain spaces, so ensure that all of its directory paths do not contain any spaces (particularly on Windows).
+
+---+++ Step 2: Confirm file and directory ownership and permissions
+
+_Note: Installers on shared hosting sites and Windows can [[#ConfigurePerl][skip to next step]]._
+
+The general command in Linux distributions to set file ownership to the Apache system user is: <pre>sudo chown -R {user}:{group} /path/to/foswik</pre>
+
+The appropriate user/group ownership varies, depending upon the operating system and distribution:
+| RedHat, Fedora, CentOS, Gentoo, Mandriva | =apache:apache= |
+| debian, Ubuntu, Kubuntu | =www-data:www-data= |
+| Suse | =wwwrun:www= |
+| FreeBSD | =www:wwwadmin= |
+
+The default file and directory access permissions as set by the distribution define a reasonable security level that will work for many types of installations, including shared hosting. Nonetheless, you should verify that the web server user has read access to all files and directories beneath the =foswiki= directory, and execute access for all directories. Also verify that the =data= and =pub= directories and all the subdirectories and files beneath them allow write access for the web server user.
+
+If for some reason the file permissions have been modified, the shell script
+=tools/fix_file_permissions.sh= can be used to repair the installation.
+<verbatim>
+cd /path/to/foswiki
+sh tools/fix_file_permissions.sh
+</verbatim>
+
+
+For more information on the appropriate permissions to ensure security for your Foswiki data, see Foswiki:Support.SecuringYourSite.
+
+#ConfigurePerl
+---+++ Step 3: Configure location of the Perl executable
+
+If you are running a Linux system with Perl found on the default path or are on a shared hosting site, then you can [[#Configure_the_web_server][jump to this step]]. This step is *required* on Windows installations.
+
+The easiest way to fix up the bin scripts is to run the =tools/rewriteshebang.pl= script: <verbatim class='bash'>
+cd /path/to/foswiki/tools
+perl rewriteshebang.pl</verbatim>
+or for Windows users: <verbatim class='bash'>
+cd C:\path\to\foswiki\tools
+perl rewriteshebang.pl</verbatim>
+The script will determine the location of the Perl interpreter and will prompt to update both the bin and tools scripts in a single step.   The changed files will be reported, and it is safe to rerun the script.
+
+If you get an error about perl command not found,  the you need to find where your perl command is installed and include that in your command.  For example: <verbatim class='bash'>C:\path\to\perl rewriteshebang.pl</verbatim>
+
+<span id="Configure_the_web_server">
+---+++ Step 4: Configure the web server
+
+Foswiki provides several methods to configure Apache depending of your access to *root and sudo* and your preference to set all in one file or several files.
+
+Method 1 and 2 provide *better performance and requires editing only one file*. However, they *require root or sudo* access. Method 3 is for *cases where you do not have root access* (such as on hosted sites).
+
+In details:
+
+*Method 1: Use Foswiki's configuration generator* _(Needs root access)_
+   * See Foswiki:Support.ApacheConfigGenerator.
+   * This is the easiest and best way to generate a smooth-running and secure configuration file.
+   * After installing the config file as per your distribution's guidelines, remember to restart or reload Apache each time you edit the file to apply your changes.
+
+*Method 2: Customize the Apache config template file included in distribution* _(Needs root access)_
+   * A sample config file called =foswiki_httpd_conf.txt= can be found in the root of the foswiki installation.
+   * This is provided in case you can not access the online configuration generator.
+   * Instructions are provided in the file for tailoring the configuration to you server.
+   * *Be carefull!* The configuration shipped with Foswiki is for Apache 2.2 or earlier. Apache 2.4 has changed the syntax of the configuration file. Ensure that =mod_access_compat= is enabled for backwards compatibility when using Apache 2.4
+   * As with Method 1, remember to restart or reload Apache each time you edit the file to apply your changes.
+
+#ConfigWithHtaccess
+*Method 3: Customize the =.htaccess= template files included in distribution* _(Useful on shared hosting sites)_
+   * Sample =.htaccess= files for the Foswiki root and each subdirectory are included in the root of your installation. Each file contains instructions on modifying it for your installation. For more information, see Foswiki:Support.SupplementalDocuments. <sticky>
+%TABLE{sort="off"}%
+   | *location and name of sample .htaccess file* | *copy sample file to the following location* | *tailoring required (Detailed instuctions in each file)* |
+   | =foswiki/root-htaccess.txt= | =foswiki/.htaccess= | _Optional:_ redirect to a default page for empty URL. |
+   | =foswiki/bin-htaccess-basic.txt= | =foswiki/bin/.htaccess= | _Optional:_ In most cases this file will "just work" without tailoring.  |
+   | =foswiki/bin-htaccess-advanced.txt= | =foswiki/bin/.htaccess= | *Yes*. Use this file for configuring Apache login, LDAP authentication and other advanced configurations. Must find/replace all instances of ={DataDir}=, ={DefaultUrlHost}= and ={ScriptUrlPath}= with valid information. The setting =SetHandler cgi-script= is critical to make sure that scripts in the =bin= directory will be executed by Apache. |
+   | =foswiki/pub-htaccess.txt= | =foswiki/pub/.htaccess= | _Optional:_ - Uncomment and set correct URL path on the =ErrorDocument= statement for friendly handling of file-not-found errors. |
+   | =foswiki/subdir-htaccess.txt= | =foswiki/&lt;subdir&gt;/.htaccess= <br />Copy to all other subdirectories below =foswiki=, including<br/>\
+                                     =data=, =lib=, =locale=, =templates=, =tools=, =working=.<br/>\
+                                     _All_ directories except for =bin= and  =pub= addressed above. | No |</sticky>
+
+<div class='foswikiHelp'>
+%T% *General points to keep in mind with any of the above Apache configuration approaches:*
+   * For security purposes, it's important to check that web access is denied to all Foswiki subdirectories other than =bin= and =pub=. All three of the approaches described above (Foswiki:Support.ApacheConfigGenerator, the sample =foswiki_httpd_conf.txt= file included in the distribution, or =.htaccess= files) should provide for this but it should be confirmed by using web browser to confirm that direct access to the other directories is blocked.
+   * Also for security purposes, be sure to turn off any kind of PHP, Perl, Python, Server Side Includes, or other software execution mechanisms supported by your web server in the =pub= directory. Again, the three approaches described above all provide for this. However, different script execution mechanisms are disabled in different ways so refer see your web server configuration and documentation for more details.
+   * The configuration shipped with Foswiki is for Apache 2.2 or earlier. Apache 2.4 has changed the syntax of the configuration file. Ensure that =mod_access_compat= is enabled for backwards compatibility when using Apache 2.4, or use the Foswiki:Support.ApacheConfigGenerator config generator.
+   * %X% *New with Foswiki 2.0* The =configure= script no longer needs any special protection within the Apache configuration.</div>
+
+#ConfigureFoswiki
+---+++ Step 5: Bootstrap your configuration
+
+   1 Using your web browser, enter the default "view" url for your site. Depending upon your Apache configuration, this might look something like:
+      * =http<nop>://yoursite.com/foswiki/bin/view=
+      * =http<nop>://yoursite.com/bin/view=
+      * =http<nop>://yoursite.com= <br />This will Bootstrap your configuration and help Foswiki determine whether or not you are using Short URLs. It also logs you in as a the admin user. *Don't close your browser until you've completed the configuration process and registered your first user.*
+   2 *Follow the link to configure rendered in the Bootstrap banner.* (*Do not* manually enter the =bin/configure= URL or Foswiki will not correctly detect the URL configuration).
+   3 Make any required changes, and save the settings.
+      * This will create the initial configuration and end the bootstrap process.
+      * Configuration items which may require further attention will be highlighted.
+      * *Save as soon as possible*, especially if your site is exposed. Anyone accessing Foswiki before the configuration has been saved will be granted admin rights.
+
+<div class='foswikiHelp'>
+   * %T% If the Foswiki installation can be accessed by more than one !protocol://domain, ensure the additional alternative URLs are set in ={PermittedRedirectHostUrls}=. *Example:* if ={DefaultUrlHost}= is set to =https://wiki.company.com=, an example ={PermittedRedirectHostUrls}= might contain: <verbatim class='html'>https://company.com, http://111.222.123.234</verbatim>
+   * If your server requires a Proxy in order to access external resources like your mail server, this is configured on the "Security and Authentication" tab, "Proxies" sub-tab. Complete that before proceeding with the E-mail configuration.
+   * If you do not want to or are unable to configure from the web interface, there is an alternate command line configuration documented in %IF{"$skin = 'plain'" then="<nop>System.<nop>InstallationGuide#ConfiguringFoswikiManually in your installation" else="[[InstallationGuide#ConfiguringFoswikiManually]]"}%.
+</div>
+
+%IF{"$skin = 'plain'" then="<div class='foswikiHelp' style='border:2px orange solid' >$percntT$percntNow that your Foswiki installation is functional, you are encouraged to view this installation guide on your Foswiki site rather than the static =INSTALL.html= file included in the distribution. This will make it easier to implement the steps which follow because you will be able to use the embedded hyperlinks to jump directly to the referenced pages in your installation. To view this guide in your installation, follow the link provided in the bootstrap banner, or enter =System.InstallationGuide= in the jump-box.</div>"}%
+
+---+++ Step 6: Configure email
+
+Outgoing e-mail is required for Foswiki to send registration confirmations, notifications of changes, password reset requests, etc.
+
+   1 Select the =Mail= tab in left bar of confgiure and fill out the following parameters:
+      * The ={WebMasterEmail}= should be set to a valid e-mail address. This will be the From: ID used to send Foswiki Emails and will also appear on webmaster mailto: links. <div class='foswikiHelp'>If you are running on a <nop>*nix server with a configured local mail transport agent, you can try pressing the "%T%auto-configure email" button. If auto-configure succeeds, proceed to the next step, to send a test email. If your server is a Windows server, if auto-configure failed, or you know a local transport agent is not available, continue with the SMTP e-mail configuration:</div>
+      * The ={SMTP}{MAILHOST}= should be set to your e-mail server hostame: ex: =smtp.gmail.com=
+      * On most systems, you will also have to configure ={SMTP}{Username}= and ={SMTP}{Password}=. These are used so that Foswiki can sign into the e-mail server for purposes of sending e-mail.
+      * Click the "%T%auto-configure email" button. (__This can run a long time as Foswiki probes all possible e-mail configurations__) This will probe the mail server to discover it's configuration, and will finish the configuration. If all goes well, the settings will have been fine tuned for your e-mail server and e-mail is automatically enabled.
+   1 Once auto-configure completes, *Click the "%T%Send test email" button. located on the ={WebMasterEmail}= field* This will verify if the configuration is correct and able to send mail. If e-mail is enabled, but not functional, you will be unable to register users.
+   1 Click the Save button in the upper right corner of the configuration page.
+
+ <div class='foswikiHelp'>If auto-configure fails to complete, you can use the "Advanced settings" tab to manually configure the e-mail server. You will also need to configure the basic information tab.
+Although outgoing email is necessary for user registration, it is not _required_ for Foswiki to run otherwise, so if you are setting up a test installation or don't plan on enabling user registration, you can skip this step.</div>
+
+#FirstUser
+---+++ Step 7: Check Authentication and Register Yourself
+
+Authentication of users means their activity can be tracked, and access to your site can be controlled. *This is particularly important for sites that are publicly accessible on the web.*  Foswiki is pre-configured with a flexible and user-friendly authentication set-up that fits most common use-cases. To learn more about this set-up and available alternatives, see [[#AuthenticationOfUsers][User Authentication Options]]. You can also revisit this later and switch to an alternative authentication set-up.
+
+Test if authentication is working by going to %IF{"$skin = 'plain'" then="<nop>System.<nop>UserRegistration in your installation" else="[[$percntSYSTEMWEB$percnt.UserRegistration]]"}% and registering yourself.
+
+If there are problems, see [[#TestingAuthentication][authentication trouble-shooting tips]].
+
+<div class='foswikiHelp'>%T% After completing initial installation, you are strongly encouraged to read %IF{"$skin = 'plain'" then="<nop>System.<nop>UserAuthentication in your installation" else="[[$percntSYSTEMWEB$percnt.UserAuthentication]]"}%  and Foswiki:Support.UserAuthenticationSupplement for further information about managing users and access controls for your Foswiki site.</div>
+
+#ProtectConfigure
+---+++ Step 8: Establish an Administrator user 
+The last step in your configuration is to create and user with administration rights.
+
+<div class='foswikiHelp'>%T% The steps outlined below are recommended for initial configuration. *You should complete this before closing the browser after the bootstrap process.* Once you close the browser you will lose your temporary admin status. Later on, you can review the further notes below regarding [[#AboutAdminUsers][about administrators]] and [[#WaysToProtectConfigure][options to protect configure]] and consider one of the more restrictive options.</div>
+Once the Foswiki bootstrap process is completed and you've logged out, configure will be restricted to Foswiki's "AdminGroup".  Therefor you must add the user you just registered to the administrators group.
+%STARTSECTION{"addadmin"}%
+If you have not yet registered your first user, return to [[%TOPIC%#FirstUser]] and follow the steps to register a user.  Once that is completed, return to %IF{"'%BASETOPIC%'='InstallationGuide'" then="
+   1 Go to %IF{"$skin = 'plain'" then="<nop>Main.<nop>AdminGroup in your installation" else="[[%USERSWEB%.AdminGroup]] (Theses instructions will be there as well)"}%." else="[[%USERSWEB%.AdminGroup]]"}%
+   1 Scroll down to the "Administration" section and click on "Add Members" link.
+      * If you do not see the Admistration section, then you don't have authorization to change this group. See %IF{"$skin = 'plain'" then="[[#InternalAdmin]]" else="[[%TOPIC%#InternalAdmin]]"}% for instructions on establishing an _internal admin_ user.
+   1 Enter your %IF{"$skin = 'plain'" then="$quot<nop>WikiName$quot" else="[[%SYSTEMWEB%.WikiName][WikiName]]"}% as defined when you registered yourself%IF{"'%BASETOPIC%'='%TOPIC%'" then=" in Step 7"}%.
+   1 Click the Add Member button
+   1 Return to the <nop>AdminGroup by clicking the group name on the confirmation page and look under "Members" to confirm you have been added.
+%ENDSECTION{"addadmin"}%
+
+<div class="foswikiHelp">Foswiki provides multiple ways to protect configure. See [[#AboutAdminUsers]] for more details on how to protect your configuration.</div>
+
+---+++ Step 9. Save your configuration!
+
+Click the Save button in the upper right corner of the configuration page.
+
+Refer back to any page in your installation (such as the "AdminGroup" page you were at in the previous step). The login section at the top of the left-hand menu should show that you are still be logged in as a temporary Admin user.  Click on the "Log Out" link to exit that user.
+
+---+++ Congratulations! Your Foswiki Installation is Ready to Use!
+
+You now have set up your Foswiki installation! At this point you can start creating and editing pages. See InstallationGuidePart2 to proceed with further tailoring your site.
+
+In order to keep your user, group, and site configuration information separate from the actual content of your site, it is recommended that you create a new web in which your site's pages will reside. See %IF{"$skin = 'plain'" then="<nop>System.<nop>ManagingWebs in your installation" else="[[$percntSYSTEMWEB$percnt.ManagingWebs]]"}% for more information on Wiki webs and how to create one.
+
+#TroubleshootingInstall
+---++ Troubleshooting
+
+If you are having problems with your installation, try the following:
+
+   * Review the %IF{"$skin = 'plain'" then="<nop>System.<nop>PerlDependencyReport in your installation" else="[[$percntSYSTEMWEB$percnt.PerlDependencyReport]]"}% and sure all dependencies are correctly resolved.
+   * Run the =configure= script and ensure you have resolved all errors and are satisfied that you understand any warnings.
+      * You can also access the dependency report from the command line: <verbatim class='bash'>
+cd /path/to/foswiki
+perl tools/dependencies </verbatim>
+   * Consult the topics at Foswiki:Support.SupplementalDocuments and Foswiki:Support.AskedQuestions.
+   * Ask for help on [[Foswiki:Community.InternetRelayChat][IRC]] (irc.freenode.net, channel #foswiki). There are often a number of people waiting to help.
+   * Ask a question in the Foswiki:Support web
+
+
+---++ Supplemental Information For Installation
+
+#SystemRequirements
+---+++ System Requirements
+
+%INCLUDE{"SystemRequirements"}%
+
+
+#UploadingFoswikiDistribution
+---+++ Uploading the Foswiki distribution to your web server host
+
+If you cannot unpack the Foswiki distribution directly in your installation directory, you can unpack the distribution on your local computer, manually create the directory structure on your host server and upload the files as follows:
+   * Using the table below, create a directory structure on your host server
+   * Upload the Foswiki files by FTP (transfer as text except for the image files in =pub= directory.)
+   * *Note:* Don't worry if you are not able to put the =lib= directory at the same level as the =bin= directory. You can create this directory elsewhere and configure the =bin/setlib.cfg= file. <sticky>
+   | *Foswiki dir:* | *What it is:* | *Where to copy:* | *Example:* |
+   | =foswiki= | start-up pages | root Foswiki dir | =/home/smith/public_html/foswiki/= |
+   | =foswiki/bin= | CGI bin | CGI-enabled dir | =/home/smith/public_html/foswiki/bin= |
+   | =foswiki/lib= | library files | same level as =bin= | =/home/smith/public_html/foswiki/lib= |
+   | =foswiki/locale= | language files | dir secure from public access | =/home/smith/public_html/foswiki/locale= |
+   | =foswiki/pub= | public files | htdoc enabled dir | =/home/smith/public_html/foswiki/pub= |
+   | =foswiki/data= | topic data | dir secure from public access | =/home/smith/public_html/foswiki/data= |
+   | =foswiki/templates= | web templates | dir secure from public access | =/home/smith/public_html/foswiki/templates= |
+   | =foswiki/tools= | Foswiki utlilities | dir secure from public access | =/home/smith/public_html/foswiki/tools= |
+   | =foswiki/working= | Temporary and internal files | dir secure from public access | =/home/smith/public_html/foswiki/working= |</sticky>
+
+#AboutAdminUsers
+---+++ About Administrators
+
+Administrators have read and write access to any topic, regardless of any access controls that have been applied to the topic or its web. Administrators also have access to configure unless further restricted.
+
+The default setup in Foswiki is that members of %IF{"$skin = 'plain'" then="<nop>Main.<nop>AdminGroup in your installation" else="$percntUSERSWEB$percnt.AdminGroup"}% have administrator privileges. Any member of the %USERSWEB%.AdminGroup can add subsequent members to that group.
+
+To more easily debug access control issues, you may want to have a regular Foswiki user account for daily use, and a special one that belongs to the =AdminGroup= that you use only for administering your Foswiki site. See %IF{"$skin = 'plain'" then="<nop>System.<nop>AccessControls in your installation" else="$percntSYSTEMWEB$percnt.AccessControls"}% for more information on access controls and user groups.
+
+<div class="foswikiHelp"> %T% Instead of adding users to the AdminGroup, grant those candidate administrators =ALLOWTOPICCHANGE= rights on the
+AdminGroup.  They can then use a button on the AdminGroup page to join or leave the group at will.
+</div>
+
+#WaysToProtectConfigure
+---++++ Options to Protect the Configure Script
+Foswiki 2.0 has changed how configure is protected. You no longer need to establish special protections within the web server configuration.
+
+There are now several choices for how to protect configure:
+   * *Option 1* Restrict configure to members of the !AdminGroup:
+      * This is the default configuration. You don't need to set anything special from within configure.
+      * After you save your configuration, be sure to register a user and add them to the !AdminGroup before you log out from the initial super admin login. Once you log out, you'll be blocked from any further configure access unless you can log in as a user in the !AdminGroup. The default behaviour is that members of the !AdminGroup have access to =bin/configure=
+
+   * *Option 2* Restrict configure to a defined list of users:
+      * Visit the "Security and Authentication" tab, "Access control" sub-tab.
+      * Set ={FeatureAccess}{Configure}= to a list of WikiNames that will be allowed access to configure.
+      * This setting overrides use of the !AdminGroup, and these users do not have to be members of the !AdminGroup.
+      *  If you want the _admin_ super-user to also have access to configure, you need to include "BaseUserMapping_333" in that list.
+
+   * *Option 3* Define a "super user" ID and allow it access to configure (This is not recommended)
+      * Visit the "Security and Authentication" tab, "Passwords" tab. Enable "Expert" options. Set the ={Password}= field to a hashed =ApacheMD5= encoded password.
+      * See #InternalAdmin for more information.
+
+You must at least do one of the above before closing your browser or logging out from the temporary admin authority established during bootstrap.  Once you
+close your browser, you have to have a usable id to run configure or you'll need to add a super-user admin login using the command line.
+
+#InternalAdmin
+---++++ Establishing an _internal admin_ login  (optional)
+
+%T% *Don't log in with the wikiname* *AdminUser, and never register or set a password for AdminUser*.
+
+There is an optional _internal admin_ (%IF{"$skin = 'plain'" then="<nop>Main.<nop>AdminUser in your installation" else="[[$percntUSERSWEB$percnt.AdminUser]]"}%) which is accessed by logging in with user =admin= and a password set in the configuration. Foswiki 2.0 no longer enables the _internal admin_ by default.
+   * *Setting password from =bin/configure= interface:* The password can be set in configure, in the "Security and Authentication" -&gt; "Passwords" tab.  Enter the password in plain text.  It will be automatically hashed when saved, and cannot be recovered.
+   * *Setting the password from the command line:*  The password can also be set via command line configuration tool, using the following command: <verbatim>
+tools/configure -save -set {Password}='adminpass'</verbatim>
+   * *Manually setting admin user in  =LocalSite.cfg=:* Follow these steps: (%X% Caution: This procedure only works for plain ascii passwords, it does not handle international characters.)
+      1 Generate the hashed password using the Apache =htpasswd= tool: (replacing ={password}= with your password)<verbatim>
+htpasswd -bn  admin {password}</verbatim>
+      2 Copy the password hash that's generated.  (The part after =admin:= ex: ==$apr1$Oc.PLq8V$wslABA3mWXfYT/wH0Hsom0==)
+      3 Search =LocalSite.cfg= for =$Foswiki::cfg{Password}=, Replace the existing line, or if not found, insert a new line in the file, as shown:<verbatim>
+$Foswiki::cfg{Password} = '{password hash}';</verbatim>
+
+#AuthenticationOfUsers
+---+++  User Authentication Options
+
+The most common authentication methods used for public Foswiki installations are Template Login and Apache Login. They have the following relative advantages:
+   * Template Login can be set up without any web server configuration, and users can log off without restarting the browser. As the login page is just a Wiki page, you can customize it to suit your needs.
+   * Apache Login allows you to use any Apache-module based authentication scheme, such as =mod_auth_ldap= or =mod_auth_mysql=. However, as your browser is caching your login, you must restart the browser to log out.
+
+Note that the password databases for both of these authentication mechanisms are compatible, so you can switch between them at a later date.
+
+---++++ Template Login authentication
+
+%INCLUDE{"UserAuthentication" section="TemplateLogin" INSTALLGUIDE="1"}%
+
+---++++ Apache Login authentication
+
+%INCLUDE{"UserAuthentication" section="ApacheLogin" INSTALLGUIDE="1"}%
+
+#TestingAuthentication
+---++++ Testing your authentication configuration:
+
+%INCLUDE{"UserAuthentication" section="TESTING"}%
+
+#ConfiguringFoswikiManually
+---+++ Configuring Foswiki manually (without using the =configure= page)
+
+Foswiki 2.0 includes a shell based configuration tool that can be run from a
+server command-line login.  It will bootstrap the configuration, and prompt
+for settings as required.   Here is an example of using it for an interactive
+command line bootstrap:
+<div class="foswikiHelp">
+*Note*: If any of your configuration settings use utf-8 characters, (eg.  &Uuml;nic&ouml;de) be sure to
+run configure with the perl =-CAS= option so that all prompted input is properly encoded.
+<verbatim class='bash'>
+$ perl -CAS tools/configure -save
+</verbatim>
+</div>
+
+<verbatim class='bash'>
+$ tools/configure -save
+
+LocalSite.cfg load failed
+AUTOCONFIG: Found Bin dir: /var/www/foswiki/distro/core/tools, Script name:
+configure using FindBin
+AUTOCONFIG: PubDir = /var/www/foswiki/distro/core/pub
+AUTOCONFIG: DataDir = /var/www/foswiki/distro/core/data
+AUTOCONFIG: WorkingDir = /var/www/foswiki/distro/core/working
+AUTOCONFIG: ToolsDir = /var/www/foswiki/distro/core/tools
+AUTOCONFIG: TemplateDir = /var/www/foswiki/distro/core/templates
+AUTOCONFIG: LocalesDir = /var/www/foswiki/distro/core/locale
+AUTOCONFIG: ScriptDir = /var/www/foswiki/distro/core/bin
+AUTOCONFIG: Unable to use PlainFileStore: ,v files were found in data or pub,
+which indicates this installation is already configured for RCS e.g.
+/var/www/foswiki/distro/core/data/WFWeb/WebChanges.txt,v
+AUTOCONFIG: Store configured for RcsLite
+AUTOCONFIG: {Store}{SearchAlgorithm} set to Forking
+AUTOCONFIG: Detected OS UNIX:  DetailedOS: linux
+** Enter values for critical configuration items.
+** type a new value or hit return to accept the value in brackets.
+
+This is the root of all Foswiki URLs.
+For example, =http://myhost.com:123=
+(do not include the trailing slash.)
+
+{DefaultUrlHost} (http://localhost): http://myhost.com
+
+This is the 'cgi-bin' part of URLs used to access the Foswiki bin
+directory. For example =/foswiki/bin=.
+See [[https://foswiki.org/Support/ShorterUrlCookbook][ShorterUrlCookbook]]
+for more information on setting up Foswiki to use shorter script URLs.
+
+{ScriptUrlPath} (/foswiki/bin):
+
+...</verbatim>
+
+It can also be run in a non-interactive mode, for use in automated deployment
+systems.
+<pre class='bash'>
+tools/configure -save -noprompt
+tools/configure -save -set {DefaultUrlHost}='http://mysite.com'
+tools/configure -save -set {ScriptUrlPath}='/bin'
+tools/configure -save -set {ScriptUrlPaths}{view}=''
+tools/configure -save -set {PubUrlPath}='/pub'
+perl -CA tools/configure -save -set {Password}='&Auml;dm&icirc;nP&auml;ss' </pre>
+
+Any configuration keys may be set using this tool.
+
+To run a wizard, for example autoconfiguration of email:
+<verbatim class='bash'>
+tools/configure -save -set {WebMasterEmail}='user@email.com'
+tools/configure -save -set {SMTP}{MAILHOST}='smtpserver.email.com'
+tools/configure -save -set {SMTP}{Username}='userid'
+tools/configure -save -set {SMTP}{Password}='password'
+tools/configure -save -wizard AutoConfigureEmail -method autoconfigure</verbatim>
+
+And the configuration can then be checked, with optional verbose output:
+(Without -verbose, only errors and warnings are reported.)
+<verbatim class='bash'>
+tools/configure -check -verbose</verbatim>
+
+File system permissions can also be checked for any of
+={DataDir}=, ={LocalesDir}=, ={PubDir}=, ={ScriptDir}=, ={TemplateDir}=, ={ToolsDir}= and ={WorkingDir}=, for ex:
+<verbatim>
+tools/configure -check {DataDir} -method validate_permissions</verbatim>
+
+
+Configuration settings can be searched and queried as well:
+<verbatim class='bash'>
+tools/configure -search Umask
+tools/configure -getcfg {Store}</verbatim>
+---+++ TWiki Compatibility
+
+Foswiki is 100% backwards compatible with TWiki<sup>&trade;</sup> markup up to and including TWiki 4.2.4. Existing TWiki webs, topics and attachments can be used with Foswiki without requiring any changes.
+
+To support a seamless upgrade from TWiki, Foswiki ships with a plugin called =TWikiCompatibilityPlugin=. This plugin enables most TWiki extensions to work with Foswiki, without modifications. It also maps requests for legacy TWiki web topics to their Foswiki equivalents, as defined in Foswiki:Development.TopicNameMappingTable. The =TWIKIWEB= and =MAINWEB= TWiki variables are also mapped to the new Foswiki macros =SYSTEMWEB= and =USERSWEB=.
+
+If you are not upgrading an existing TWiki installation and do not plan to install plugins from the TWiki web site, it is recommended that you disable the !TWikiCompatibilityPlugin in the _Plugins_ Section on the =configure= page.
+
+If a plugin exists both in a TWiki version and a Foswiki version, it is strongly recommended that you use the Foswiki version, as this is coded to work optimally with Foswiki. As part of the Foswiki project, the Foswiki community is evaluating all of the extensions that are available for TWiki, and porting them over to the Foswiki name space. Many of them are being enhanced through the removal of bugs and security vulnerabilities, resulting in better, more functional extensions for Foswiki.
+
+#TWikiTrademark
+TWiki is a registered trademark of Peter Thoeny.
+
+
+*Related Topics:* %IF{"$skin = 'plain'" then="<nop>System.<nop>InstallationGuidePart2 in your installation" else="[[InstallationGuidePart2]]"}%, %IF{"$skin = 'plain'" then="<nop>System.<nop>AdminDocumentationCategory in your installation" else="[[AdminDocumentationCategory]]"}%, Foswiki:Support.SupplementalDocuments
+
+<!-- %JQREQUIRE{"chili"}% -->
+</noautolink>

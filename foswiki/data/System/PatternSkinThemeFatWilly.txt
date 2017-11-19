@@ -1,0 +1,111 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1443080939" format="1.1" version="1"}%
+%META:TOPICPARENT{name="PatternSkin"}%
+---+!! <nop>PatternSkin theme: Foswiki "Fat Willy" Site Skin
+
+---++ Test this theme
+<!--
+   * Local FOSWIKI_LAYOUT_URL = %URLPARAM{"layout" default="%PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/layout.css"}%
+   * Local FOSWIKI_STYLE_URL = %URLPARAM{"style" default="%PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/style.css"}%
+   * Local FOSWIKI_COLORS_URL = %URLPARAM{"colors" default="%PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/colors.css"}%
+   * Local COLUMNS_RELATIVE = %URLPARAM{"column" default="%SYSTEMWEB%/PatternSkinTheme/column_left.css"}%
+   * Local PATTERNSKIN_COLUMNS = %PUBURLPATH%/%COLUMNS_RELATIVE%
+   * Local PATTERNSKIN_THEME_VARIANT_RELATIVE = %URLPARAM{"variant" default="%SYSTEMWEB%/PatternSkinTheme/variant_foswiki_noframe.css"}%
+   * Local PATTERNSKIN_THEME_VARIANT = %IF{"$'PATTERNSKIN_THEME_VARIANT_RELATIVE'" then="'%PUBURLPATH%/%PATTERNSKIN_THEME_VARIANT_RELATIVE%"}%
+   * Local PATTERNSKIN_NAVIGATION_TOPIC = %URLPARAM{"navigation" default=""}%
+
+   * Local DISPLAY_FOSWIKI_LAYOUT_URL = %CALC{"$SUBSTITUTE(%FOSWIKI_LAYOUT_URL%, %PUBURLPATH%/%SYSTEMWEB%, $NOP(%<nop>PUBURLPATH%/%<nop>SYSTEMWEB%))"}%
+   * Local DISPLAY_FOSWIKI_STYLE_URL = %CALC{"$SUBSTITUTE(%FOSWIKI_STYLE_URL%, %PUBURLPATH%/%SYSTEMWEB%, $NOP(%<nop>PUBURLPATH%/%<nop>SYSTEMWEB%))"}%
+   * Local DISPLAY_FOSWIKI_COLORS_URL = %CALC{"$SUBSTITUTE(%FOSWIKI_COLORS_URL%, %PUBURLPATH%/%SYSTEMWEB%, $NOP(%<nop>PUBURLPATH%/%<nop>SYSTEMWEB%))"}%
+   * Local DISPLAY_PATTERNSKIN_COLUMNS = %CALC{"$SUBSTITUTE(%PATTERNSKIN_COLUMNS%, %PUBURLPATH%/%SYSTEMWEB%, $NOP(%<nop>PUBURLPATH%/%<nop>SYSTEMWEB%))"}%
+   * Local DISPLAY_PATTERNSKIN_THEME_VARIANT = %CALC{"$SUBSTITUTE(%PATTERNSKIN_THEME_VARIANT%, %PUBURLPATH%/%SYSTEMWEB%/, $NOP(%<nop>PUBURLPATH%/%<nop>SYSTEMWEB%))"}%
+   * Local DISPLAY_PATTERNSKIN_NAVIGATION_TOPIC = %CALC{"$SUBSTITUTE(%PATTERNSKIN_NAVIGATION_TOPIC%, %SYSTEMWEB%, $NOP(%<nop>SYSTEMWEB%))"}%
+
+   
+-->   
+   
+<form action="%SCRIPTURL{view}%/%BASEWEB%/%BASETOPIC%">
+<input type="hidden" name="viewtheme" value="1" />
+<input type="hidden" name="layout" value="%PUBURLPATH%/%SYSTEMWEB%/PatternSkinThemeFatWilly/layout.css" />
+<input type="hidden" name="style" value="%PUBURLPATH%/%SYSTEMWEB%/PatternSkinThemeFatWilly/style.css" />
+<input type="hidden" name="colors" value="%PUBURLPATH%/%SYSTEMWEB%/PatternSkinThemeFatWilly/colors.css" />
+<input type="hidden" name="variant" value="" />
+<input type="hidden" name="navigation" value="%SYSTEMWEB%/PatternSkinThemeFatWillyNavigation" />
+<div class="foswikiFormSteps">
+<div class="foswikiFormStep">
+---+++ Choose column
+<select name="column" class="foswikiSelect">
+%IF{"$'URLPARAM{column}'" then="<optgroup label='Current selection'><option value='%URLPARAM{"column"}%' selected='selected'>%URLPARAM{"column"}%</option></optgroup>"}%
+<optgroup label='Column options:'>
+<option value="%SYSTEMWEB%/PatternSkinThemeFatWilly/column_right.css">Column right</option>
+<option value="%SYSTEMWEB%/PatternSkinThemeFatWilly/column_none.css">No column</option>
+</optgroup>
+</select>
+</div>
+<div class="foswikiFormStep">
+<input type="submit" class="foswikiSubmit" value="View theme" /> <a href="%SCRIPTURLPATH{view}%/%BASEWEB%/%BASETOPIC%" class="foswikiButton">Hide theme</a>
+</div>
+</div>
+</form>
+
+%IF{"$'URLPARAM{viewtheme}'" then='$percntINCLUDE{$quot%BASETOPIC%$quot section=$quotstoresettings$quot}$percnt'}%
+
+<verbatim class="foswikiHidden">
+%STARTSECTION{"storesettings"}%
+---++ Store theme settings
+%INCLUDE{"PatternSkin" section="copysettings"}%
+<noautolink>
+<form name="select_all">
+<textarea readonly="readonly" rows="15" cols="120" name="copypaste" class="foswikiInputFieldReadOnly foswikiSmallish" style="width:99%">The overall skin:
+   * Set SKIN = pattern
+Skin styles:
+   * Set FOSWIKI_LAYOUT_URL = %DISPLAY_FOSWIKI_LAYOUT_URL%
+   * Set FOSWIKI_STYLE_URL = %DISPLAY_FOSWIKI_STYLE_URL%
+   * Set FOSWIKI_COLORS_URL = %DISPLAY_FOSWIKI_COLORS_URL%
+Theme variants:
+   * Set PATTERNSKIN_COLUMNS = %DISPLAY_PATTERNSKIN_COLUMNS%
+   * Set PATTERNSKIN_THEME_VARIANT =
+Navigation:
+   * Set PATTERNSKIN_NAVIGATION_TOPIC = %DISPLAY_PATTERNSKIN_NAVIGATION_TOPIC%
+Top bar:
+   * Set WEBHEADERART =
+   * Set WEBHEADERBGCOLOR =
+</textarea><br />
+<input type="button" class="foswikiButton" value="Highlight text" onClick="javascript:this.form.copypaste.focus();this.form.copypaste.select();">
+</form>
+</noautolink>
+%ENDSECTION{"storesettings"}%
+</verbatim>
+
+%META:FILEATTACHMENT{name="column_none.css.gz" attr="h" comment="" date="1443080939" size="83" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="header.gif" attr="h" comment="" date="1443080939" size="2270" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="column_none_src.css" attr="h" comment="" date="1443080939" size="118" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="colors.css" attr="h" comment="" date="1443080939" size="14055" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="bg_buttoncancel_gradient.gif" attr="h" comment="" date="1443080939" size="1106" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="colors.css.gz" attr="h" comment="" date="1443080939" size="2870" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="sidebar_header_background.psd" attr="h" comment="" date="1443080939" size="33830" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="menu_background.psd" attr="h" comment="" date="1443080939" size="35632" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="bg_submit_gradient.gif" attr="h" comment="" date="1443080939" size="1533" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="layout_src.css" attr="h" comment="" date="1443080939" size="1416" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="button_arrow.gif" attr="h" comment="" date="1443080939" size="1297" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="GrayBlend.psd" attr="h" comment="" date="1443080939" size="70350" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="bg_button_gradient.gif" attr="h" comment="" date="1443080939" size="1490" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="column_right.css.gz" attr="h" comment="" date="1443080939" size="152" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="button_font_selector.gif" attr="h" comment="" date="1443080939" size="831" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="bullet-toc.gif" attr="h" comment="" date="1443080939" size="54" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="GrayBlend.gif" attr="h" comment="" date="1443080939" size="1097" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="sidebar_header_background.gif" attr="h" comment="" date="1443080939" size="352" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="column_right.css" attr="h" comment="" date="1443080939" size="198" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="topicactions_background.gif" attr="h" comment="" date="1443080939" size="624" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="foswiki-logo-on-header.psd" attr="h" comment="" date="1443080939" size="97390" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="popup.gif" attr="h" comment="" date="1443080939" size="63" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="column_none.css" attr="h" comment="" date="1443080939" size="75" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="layout.css.gz" attr="h" comment="" date="1443080939" size="261" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="layout.css" attr="h" comment="" date="1443080939" size="517" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="colors_src.css" attr="h" comment="" date="1443080939" size="15770" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="style.css.gz" attr="h" comment="" date="1443080939" size="3678" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="topicactions_background.psd" attr="h" comment="" date="1443080939" size="34832" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="header-left.gif" attr="h" comment="" date="1443080939" size="11555" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="menu_background.gif" attr="h" comment="" date="1443080939" size="408" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="style_src.css" attr="h" comment="" date="1443080939" size="20725" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="style.css" attr="h" comment="" date="1443080939" size="16989" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="column_right_src.css" attr="h" comment="" date="1443080939" size="278" user="ProjectContributor" version="1"}%

@@ -1,0 +1,153 @@
+%META:TOPICINFO{author="ProjectContributor" date="1485233581" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Contribs"}%
+---+!! !TopicUserMappingContrib
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = User management using data stored in topics
+-->
+%SHORTDESCRIPTION%
+
+%TOC%
+
+The _User Mapping Manager_ interface provides services for mapping between a 'user identity' as used when talking to an external authentication provider,
+an internal canonical user ID, and the displayed name used to identify the user in topics.
+This is the default <nop>TopicUserMapping in which user information is stored in topics - one per user, and then any mapping needed is done using the
+<nop>%WIKIUSERSTOPIC% topic in the %USERSWEB%.
+
+It includes the topics that are used when registering and managing users and groups via Foswiki:
+   * Registration and user management topics
+      * %SYSTEMWEB%.UserRegistration
+      * %SYSTEMWEB%.ResetPassword
+      * %SYSTEMWEB%.ChangePassword
+      * %SYSTEMWEB%.ChangeEmailAddress
+      * %SYSTEMWEB%.BulkRegistration
+      * %SYSTEMWEB%.BulkResetPassword
+      * %SYSTEMWEB%.RemoveUser
+   * Documentation topics
+      * %SYSTEMWEB%.ManagingUsers
+      * %SYSTEMWEB%.UserToolsCategory
+   * default groups and user
+      * %USERSWEB%.NobodyGroup
+      * %USERSWEB%.AdminGroup
+      * %USERSWEB%.RegistrationAgent
+   * User lists
+      * %USERSWEB%.UserList
+      * %USERSWEB%.UserListHeader
+      * %USERSWEB%.UserListByDateJoined
+      * %USERSWEB%.UserListByLocation
+   * User and Group template files
+      * %SYSTEMWEB%.NewUserTemplate
+      * %SYSTEMWEB%.UserForm
+      * %SYSTEMWEB%.UserFormHelp
+      * %SYSTEMWEB%.UsersTemplate
+      * %USERSWEB%.UserHomepageHeader
+      * %SYSTEMWEB%.UserSetting
+      * %USERSWEB%.GroupTemplate
+
+If you are developing a non-topic based User mapper, you might like to consider removeing or replacing the files installed by this Contrib.
+
+---++ Adding and deleting users
+Users are added using the default registration process in Foswiki. To delete a user (admins only),
+
+   1. Edit the .htpasswd file to delete their entry (see =configure= for the location
+   2. Remove their topic files: data/%USERSWEB%/FredQuimby.txt and data/%USERSWEB%/FredQuimby.txt,v
+   3. Remove the !FredQuimby line from the [[%USERSWEB%.%WIKIUSERSTOPIC%]] topic
+   4. Remove user from all groups and from all the ALLOWWEB/ALLOWTOPIC... declarations, if any. <br />
+   <div class="foswikiHelp">%X% *Note:* Otherwise this will leave a security hole, as the first person to re-register with this name will be granted the permissions of the previous user.</div>
+
+---++ Settings
+The !TopicUserMappingContrib specific settings have not yet been moved out of the standard Foswiki.spec. This will be done in a future release.
+
+---++ Installation Instructions
+It's a part of the default distribution of the Foswiki Core.
+
+---++ Contrib Info
+
+|  Contrib Author(s): | Copyright (C) 2007-2017 Sven Dowideit, SvenDowideit@WikiRing.com and Project Contributors. |
+|  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  4.56 (23 Jan 2017) | Release with Foswiki-2.1.3<br/>\
+                        Foswikitask:Item13883: Clarify documention on removing a user, create new RemoveUser tool topic. |
+|  4.55 (26 Nov 2016) | Release with foswiki-2.1.3-Beta1<br/>\
+                        Foswikitask:Item13936: Add alternate from= email sender address for registration messages. |
+|  4.54 (8 Apr 2016) | Release with Foswiki 2.1.1<br/>\
+                        Foswikitask:Item975: Allow bulk registration to work when Apache login is enabled.<br/>\
+                        Foswikitask:Item13883: Improve bulk registration documentation.<br/>\
+                        Foswikitask:Item13996: Bulk registration should process Add to groups data.<br/>\
+                        Foswikitask:Item14005: Pass template topic parameter to templates. |
+|  4.53 (3 Feb 2016) | Release with Foswiki 2.1.0,<br/>\
+                        Foswikitask:Item13854: Set ALLOWTOPICVIEW="*" on critical system topics<br/>\
+                        Foswikitask:Item13864: Restructure UserRegistration topics for easier customization, use newer Foswiki features.<br/>\
+                        Foswikitask:Item13880: Fix rendering in HEAD zone<br/>\
+                        Foswikitask:Item13924: Missing SET in restructured registration topics. |
+|  4.52 (8 Sep 2015) | Released with Foswiki 2.0.2.<br/>\
+                        Foswikitask:Item13600: Set correct parent for WikiUsers topic.|
+|  4.51 (14 Jun 2015) | Released with Foswiki 2.0<br />\
+                        Foswikitask:Item13423: Perl 5.22 deprecations.<br />\
+                        Foswikitask:Item13323: Use /usr/bin/perl in scripts<br />\
+                        Foswikitask:Item13294: Improvements in translation strings <br />\
+                        Foswikitask:Item12162: Disable password reset if email disabled<br />\
+                        Foswikitask:Item13287: Improvements in regular expressions<br />\
+                        Foswikitask:Item2257: Improve performance of BulkResetPassword<br />\
+                        Note: This version is *Not compatible with Foswiki 1.1.x* |
+|  4.50 (18 Dec 2014)  | Foswikitask:Item13060: Add toggle-all action to the BulkResetPassword page<br />\
+                         Foswikitask:Item13106: removed blockquote where possible<br />\
+                         Foswikitask:Item13027: Most try..catch clauses were catching Error::Simple, which is effective only for catching Foswiki-specific exceptions<br />\
+                         Foswikitask:Item12952: remove non-existent Config.spec<br />\
+                         Foswikitask:Item11737: Change hardcoded =Main= to =%<nop>USERSWEB%= Replace =System= with =%<nop>SYSTEMWEB%= <br />\
+                         Foswikitask:Item11705: Multiple fixes to BulkRegistration<br />\
+                         Foswikitask:Item12823: add auto-generated header to various plugins sending email<br />\
+                         Foswikitask:Item12207: Add function to remove users, generally for SPAM cleanup |
+|  4.3.7 (31 Jan 2013) | Foswikitask:Item12329: Document core change: Code that deletes stale registrations needs it's own expiration timer. |
+|  4.3.6 (28 Nov 2012) | Foswikitask:Item11281: Don't filter user names beginning with "Web" from BulkResetPassword <br />\
+                         Foswikitask:Item11923: Better logging of changes to group membership. <br />\
+                         Foswikitask:Item12003: FAQRebuildingWikiUsersTopic creates an invalid Main.WikiUsers topic <br />\
+                         Foswikitask:Item12006: Don't generate edit links for Main.NobodyGroup <br />\
+                         Foswikitask:Item11965: Correct "undefined variable" errors in mailnotify <br />\
+                         Foswikitask:Item11746: Change email address instructions were incorrect <br />\
+                         Foswikitask:Item11267: Convert to perl version strings. |
+|  4.3.5 (06 Apr 2012) | Foswikitask:Item652, Foswikitask:Item710, Foswikitask:Item2196: Cleanup partial registrations after failure.%BR%\
+                         Foswikitask:Item10238: Allow UI to create empty groups<br /> \
+                         Foswikitask:Item11196: Add error messages translations for registraion and group UI errors<br /> \
+                         Foswikitask:Item11501: Validate all registration fields<br /> \
+                         Foswikitask:Item11349: Improve performance |
+|  4.3.4 (20 Dec 2011) | Foswikitask:Item11373: Check for duplicate member of groups was incorrect |
+|  4.3.3 (05 Dec 2011) | Foswikitask:Item10815: Warn if registering user as admin when auto group membership is enabled.<br /> \
+                         Foswikitask:Item11208: Throw error if group name not *Group <br /> \
+                         Foswikitask:Item10906: Force user names to the %<nop>USERSWEB% - avoid linking errors if username might be interpreted as a Web.Topic name <br /> \
+                         Other minor code cleanup and documentation updates |
+|  4.3.2 (11 Apr 2011) | Foswikitask:Item10304 - !AdminGroup moved from this extension to Foswiki core to avoid it gets overwritten when upgrading the contrib from configure <br />\
+                         Foswikitask:Item10590 - !ChangeEmailAddress has query error <br />\
+                         Foswikitask:Item10536 - !UserRegistration !WikiName JS support for all skins <br />\
+                         Foswikitask:Item92: Document admin behaviour of !ChangeEmailAddress <br />\
+                         Foswikitask:Item8876: Add admin help when registration disabled <br />\
+                         Foswikitask:Item10131: !TopicUserMapping loses creation date when updating existing user if the admin had changed the {DefaultDateFormat} <br />\
+                         Foswikitask:Item9437: Dot after wikiwebmasters email becomes part of mailto <br />\
+                         Foswikitask:Item9851, Foswikitask:Item9848, Foswikitask:Item9810: <br />\
+                         Fixed problem with not being able to remove users when they has Main suffix <br />\
+                         Fixed problem where users were seen as different if prefixed by Main when added. <br />\
+                         Correct reporting when duplicate user is attempted added <br />\
+                         Removed code no longer used <br />\
+                         The creator of new group is not added to group if the user is admin unless he specifies it <br />\
+                         Fixed problem with removing duplicate users |
+|  4.3.1 (10 Nov 2010) | Foswikitask:Item9415 - Documentation updates. |
+|  4.3.0 (13 Mar 2010) | Made !UserRegistration customizable. |
+|  4.2.4 (25 Feb 2010) | Updated documentation in !UserForm. |
+|  4.2.3 (20 Sep 2009) | Foswiki 1.0.7 version |
+|  4.2.2 (16 Dec 2008) | Foswiki version |
+|  4.2.1 (03 Aug 2008) | Distributed with TWiki 4.2.1 |
+|  4.2.0 (22 Jan 2008) | Distributed with TWiki 4.2.0 |
+|  Dependencies: | None |
+|  Contrib Home: | http://foswiki.org/Extensions/%TOPIC% |
+|  Support: | http://foswiki.org/Support/%TOPIC% |
+
+<!-- Do _not_ attempt to edit this topic; it is auto-generated. Please add comments/questions/remarks to the Dev topic instead. -->
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="ProjectContributor"}%
+%META:FIELD{name="Copyright" title="Copyright" value="Foswiki Contributors, All Rights Reserved"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/TopicUserMappingContrib"}%
+%META:FIELD{name="License" title="License" value="[[http://www.gnu.org/licenses/gpl.html][GPL (Gnu General Public License)]]"}%
+%META:FIELD{name="Release" title="Release" value="23 Jan 2017"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/TopicUserMappingContrib"}%
+%META:FIELD{name="Version" title="Version" value="4.56"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/distro"}%

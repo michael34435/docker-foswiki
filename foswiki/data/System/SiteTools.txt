@@ -1,0 +1,151 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434484983" format="1.1" version="1"}%
+%META:TOPICPARENT{name="AdminDocumentationCategory"}%
+%STARTINCLUDE%
+---+ Site Tools
+
+Utilities for searching, navigation, and monitoring site activity
+
+Site Tools include utilities for navigating, searching and keeping up with site activity.
+
+In particular, you have two highly configurable, automated site monitoring tools, *<nop>WebNotify*, to e-mail alerts when topics are edited, and *<nop>%STATISTICSTOPIC%*, to generate detailed activity reports.
+
+%TOC%
+
+#WebNotify
+---++ <nop>WebNotify - recent changes alert
+
+%INCLUDE{"WebNotifyHelp" section="includeasdocumentation"}%
+
+#WebSearch
+---++ <nop>WebSearch - search the site
+
+WebSearch is a flexible search facility, part of the core feature set. WebSearchAdvanced offers more options, including:
+   * topic title or full-text search
+   * regular expressions
+   * query search over form data
+   * search within web or site-wide
+   * index-style A-Z alphabetical listing sorted topic title
+   * many more
+
+See also: SearchHelp for help; [[%SYSTEMWEB%.Macros][Macros]] and FormattedSearch for including hard-coded searches in text.
+
+#WebChanges
+---++ <nop>WebChanges - what's new
+
+To check for the most recently edited topics while on-site, use the WebChanges link, usually located in the toolbar. It lists the most recently modified topics, newest first, along with the first couple of lines of the page content.
+
+This is simply a preset =SEARCH=. The number of topics listed by the =limit= parameter.:
+<verbatim class="tml">
+%SEARCH{ "1" web="%BASEWEB%" type="query" nosearch="on"
+  order="modified" reverse="on" limit="50"
+}%</verbatim>
+
+#WebRssAndAtom
+---++ <nop>WebRss and <nop>WebAtom - news feeds on recent changes
+
+You can point your news reader at WebRss and WebAtom to find out what is new in a web. WebRssBase and WebAtomBase have the details. Like WebChanges, this is based on a =%<nop>SEARCH{}%=.
+
+#WebIndex
+---++ <nop>WebIndex - list of topics
+
+WebIndex lists all web topics in alphabetical order, with the first couple of lines of text. This is simply a preset =SEARCH=:
+<verbatim class="tml">
+%SEARCH{"1" scope="topic" type="query" nosearch="on" }%</verbatim>
+
+#WebStatistics
+---++ <nop>%STATISTICSTOPIC% - site statistics
+See SiteToolStatistics for detailed configuration and customization information.
+
+%INCLUDE{"SiteToolStatistics" section="SiteTools"}%
+
+#LogFiles
+---++ Log Files
+
+Foswiki generates an event log which is used by the statistics script
+   * The directory for the log file is defined by the =={Log}{Dir}== setting in [[%SCRIPTURLPATH{"configure"}%][configure]] =Logging and Statistics= tab.
+   * The file name is =events.log= Old events are archived as =events.&lt;year&gt;&lt;month&gt;=
+   * Example path name: =working/logs/events.log=
+   * Each access gets logged as: %BR%
+     =| &lt;time&gt; | &lt;wikiusername&gt; | &lt;action&gt; | &lt;web&gt;.&lt;topic&gt; | &lt;extra info&gt; | &lt;IP address&gt; |=
+   * Example log entry: %BR%
+     =| %SERVERTIME{$day $mon $year - $hour:$min}% | %USERSWEB%.WikiGuest | view | %SYSTEMWEB%.WebRss | | 66.124.232.02 |=
+   * By default the following actions are logged:
+     | *Script* | *Action name* | *Extra info* |
+     | attach | =attach= | when viewing attach screen of previous uploaded attachment: =filename= |
+     | changes | =changes= | |
+     | edit | =edit= | when editing non-existing topic: =(not exist)= |
+     | login | =login= | Authentication failure or success |
+     | manage | =rename= | when moving topic: =moved to !Newweb.NewTopic= |
+     | manage | =move= | when moving attachment: =Attachment filename moved to !Newweb.NewTopic= |
+     | manage | =renameweb= | when renaming a web: =oldweb moved to newweb= |
+     | rdiff | =rdiff= | higher and lower revision numbers: =4 3= |
+     | register | =regstart= | !WikiUserName, e-Mail address, UserName: =user attempts to register= |
+     | register | =register= | E-mail address: =user successfully registers= |
+     | register | =bulkregister= | !WikiUserName of new, e-mail address, admin ID |
+     | save | =save= | when replacing existing revision: =repRev 3= %BR% when user checks the minor changes box: =dontNotify= %BR% when user changes attributes to an exising attachment: =filename.ext= |
+     | save | =cmd= | special admin parameter used when saving |
+     | search | =search= | search string |
+     | upload | =upload= | filename |
+     | view | =view= | when viewing non-existing topic: =(not exist)= %BR% when viewing previous topic revision: =r3= |
+     | n/a | =logout= | When authentication information is cleared |
+   * You can disable the logging (and therefore the reporting) of individual actions using the =={Log}{Action}== %RED%EXPERT%ENDCOLOR% setting in =configure=.
+
+#ConfigureEmail
+---++ E-mail
+
+See also [[%SYSTEMWEB%.InstallationGuidePart2#EmailConfig]]
+
+---+++ Configuring outgoing mail
+
+Outgoing mail is required for UserRegistration and for [[#WebNotify][recent changes alert]].
+
+The preferred place to configure e-mail is in the [[%SCRIPTURLPATH{"configure"}%][configure =Mail= tab]] tool (=LocalSite.cfg=). The configure tool fully documents these setting.
+
+The notify e-mail uses the default =changes.tmpl= template, or a skin if activated by a [[%SYSTEMWEB%.PreferenceSettings][preference setting]].
+
+=mailnotify= also relies on a hidden file in each =data/Web= directory: =.changes= and a file with the Web name (one per web) in the =working/work_areas/MailerContrib/= directory. Make sure both are writable by your web server process. =.changes= contains a list of changes;  The file in the =working/work_areas/MailerContrib/= directorycontains a timestamp of the last time notification was done for the web.Both files are automatically created as needed.
+
+---++++ Legacy and current configuration
+
+<div class="foswikiHelp">
+%X% *Caution:* Older versions of Foswiki, and especially TWiki migrations might configure e-mail in the [[%SYSTEMWEB%.PreferenceSettings][preference settings]] topic.Make sure you delete that setting if you are using a %LOCALSITEPREFS% topic from a previous release of Foswiki.   *These settings are no longer used and have been removed*.
+</div>
+
+%TABLE{sort="off"}%
+| *Parameter* | *[[%SCRIPTURLPATH{"configure"}%][configure]]<br />(Current)* | *[[%SYSTEMWEB%.PreferenceSettings][preference settings]]<br />(Legacy)* | *Default* | *Description* |
+| Global enable | ={EnableEmail}= | _n/a_ | =enabled= | Globally enable/disable email support. |
+| Extermal mail program | ={MailProgram}=  | _n/a_ | ='/usr/sbin/sendmail -t -oi -oeq'= | E-mail program used when Net:SMTP is unavailable |
+| Mail relay host | ={SMTP}{MAILHOST}= | =SMTPMAILHOST= | _not set_ | Destination SMTP Server used to receive and relay email. Net::SMTP is disabled if this is not set. |
+| Mail sending hostname | ={SMTP}{SENDERHOST}= | =SMTPSENDERHOST= | _not set_ | Hostname used to identify sender. Some SMTP configurations will require this. |
+| SMTP Password | ={SMTP}{Password}= | _not supported_ | _not set_ |
+
+---+++ Setting the automatic e-mail schedule
+
+*For Unix platforms:* Edit the =cron= table so that =mailnotify= is called in an interval of your choice. Please consult =man crontab= for how to modify the table that schedules program execution at certain intervals. Example:
+<verbatim class="bash">
+% crontab -e
+0 1 * * * (cd /path/to/bin; ./mailnotify -q)</verbatim>
+
+The above line will run mailnotify nightly at 01:00. The =-q= switch suppresses all normal output.
+
+*For ISP installations:* Many ISPs don't allow hosted accounts direct cron access, as it's often used for things that can heavily load the server. Workaround scripts are available.
+
+*On Windows:* You can use a scheduled task if you have administrative privileges.
+
+---++ Site Permissions
+
+   * AccessControl describes how to restrict read and write access to topics and webs, by users and groups
+   * SitePermissions lists the permissions settings of the webs on this site
+
+---++ Help with crontab
+
+The crontab command is used to schedule commands to be executed periodically.
+
+   * Wikipedia:Crontab - crontab documentation
+   * [[http://www.kalab.com/freeware/pycron/pycron.htm][pycron]] - crontab for Windows
+
+---
+
+*%MAKETEXT{"Related Topics:"}%* AdminDocumentationCategory, AdminToolsCategory<!-- %JQREQUIRE{"chili"}% -->
+
+%STOPINCLUDE%

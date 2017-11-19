@@ -1,0 +1,10 @@
+FROM nginx:1.13.6-alpine
+
+RUN mkdir -p /run/nginx && \
+    mkdir -p /etc/nginx/conf.d
+
+COPY docker-nginx-entrypoint.sh docker-nginx-entrypoint.sh
+
+COPY nginx.default.conf /etc/nginx/conf.d/default.conf
+
+CMD ["sh", "docker-nginx-entrypoint.sh"]

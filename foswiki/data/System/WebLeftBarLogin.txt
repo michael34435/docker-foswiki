@@ -1,0 +1,25 @@
+%META:TOPICINFO{author="ProjectContributor" date="1447730097" format="1.1" version="1"}%
+%META:TOPICPARENT{name="WebLeftBarExample"}%
+%STARTINCLUDE%<div class="patternLeftBarPersonal">
+<ul id="patternLeftBarUserActions">
+%IF{
+  "context authenticated" 
+  then="<li>%JQICON{"%IF{"context isadmin" then="user_red" else="user"}%"}%%MAKETEXT{"Hi, [_1]" args="<span class='foswikiUserName'>[[%WIKIUSERNAME%][%SPACEOUT{%WIKINAME%}%]]</span></li>"}%"
+}%%IF{
+  "$ LOGOUT != ''" 
+  then="<li class='patternLogOut'>%JQICON{"lock"}%$percntLOGOUT$percnt</li>"
+  else="%IF{"{AdminUserWikiName}='%WIKINAME%'" then="<li class='patternLogOut'>%JQICON{"lock"}%[[%SCRIPTURL{"view"}%/%BASEWEB%/%BASETOPIC%?logout=1][Logout]]</li>"}%"
+}%%IF{
+  "$ LOGIN != '' and not context authenticated" 
+  then="<li class='patternLogIn'>%JQICON{"key"}%$percntLOGIN$percnt</li> %IF{
+      "context registration_supported AND context registration_enabled" 
+      then="<li>%JQICON{"add"}%[[%SYSTEMWEB%.UserRegistration][%MAKETEXT{"Register"}%]]</li>"
+    }%"
+}%</ul>
+%IF{"'%USERNAME%'!='guest'"
+  then="$percntIF{\"istopic '%USERSWEB%.%WIKINAME%LeftBar'\" 
+    then=\"<div class='patternLeftBarPersonalContent'>$n$dollarpercntINCLUDE{%USERSWEB%.%WIKINAME%LeftBar}$dollarpercnt</div>\"
+    else=\"<ul><li>%JQICON{"page_white_add"}%<a href='%SCRIPTURLPATH{edit}%/%USERSWEB%/%WIKINAME%LeftBar?templatetopic=%SYSTEMWEB%.WebLeftBarPersonalTemplate&amp;topicparent=%WIKINAME%'>%MAKETEXT{"Create personal sidebar"}%</a></li></ul>\"
+ }$percnt"
+}%</div>%STOPINCLUDE%
+%META:PREFERENCE{name="ALLOWTOPICVIEW" title="ALLOWTOPICVIEW" type="Set" value="*"}%

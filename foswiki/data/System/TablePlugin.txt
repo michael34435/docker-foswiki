@@ -1,0 +1,298 @@
+%META:TOPICINFO{author="ProjectContributor" date="1454519814" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Plugins"}%
+---+ Table Plugin
+
+Gives extra control of table display:
+   * Sorting
+   * Setting visual table properties like border width, cell spacing and cell padding
+   * Setting the background color and text color of header cells
+   * Setting the background color and text color for data cells, for instance to get an alternating zebra pattern
+   * Merging cells (row and col spans)
+
+%TOC%
+
+---++ Table Attributes
+
+Attributes are defined as a =TABLEPLUGIN_TABLEATTRIBUTES= [[%SYSTEMWEB%.PreferenceSettings][preference]], or on the line before the table using =%<nop>TABLE{...}%=:
+%INCLUDE{"%SYSTEMWEB%.VarTABLE" section="table_attributes"}%
+
+---+++ Specifying and overriding attributes
+Table attributes can be set in different ways. In top down order:
+   1 As default preference in [[%SCRIPTURL{"configure"}%][Configure -> =Extensions= tab -> =TablePlugin= sub-tab]].
+   1 As preference in a topic: =TABLEPLUGIN_TABLEATTRIBUTES=: =Set TABLEPLUGIN_TABLEATTRIBUTES = tableborder="0" cellpadding="1" ...=
+   1 As parameters to the =TABLE= macro: =%<nop>TABLE{ tableborder="0" cellpadding="4" cellspacing="3" cellborder="0" }%=
+
+The preference =TABLEPLUGIN_TABLEATTRIBUTES = ...= competely overrides previous preferences (for example in %LOCALSITEPREFS% or Configure):
+<pre class="tml">
+   * <nop>Set TABLEPLUGIN_TABLEATTRIBUTES = cellpadding="0" <span class="foswikiGrayText">&lt;&lt;&lt; this will remove previously set preferences and leave only 1 attribute</span>
+</pre>
+If you pass =%<nop>TABLE{...}%= parameters, you partially override previously set preferences:
+<pre class="tml">
+   * %<nop>TABLE{datacolor="#f00"}% <span class="foswikiGrayText">&lt;&lt;&lt; this will only change the data color attribute</span>
+</pre>
+
+---+++ Reserved attributes
+The setting =disableallsort= is normally not used as a TABLE or TABLEPLUGIN_TABLEATTRIBUTES setting. Plugins such as EditTablePlugin dynamically sets =disableallsort= to disable sorting while editing a table. For this to work it is important that EditTablePlugin runs before TablePlugin, which is the default. The setting =sort= can be overwritten by a URL parameter or hidden formfield of the same name. Plugins such as EditTablePlugin can use this to disable table header sorting while in edit mode.
+
+---++ Examples
+
+---+++ Use of %<nop>TABLE{...}%
+
+Line before table: <pre class="tml">%<nop>TABLE{ sort="on" tableborder="0" cellpadding="4" cellspacing="3" cellborder="0" headerbg="#D5CCB1" headercolor="#666" databg="#FAF0D4, #F3DFA8" headerrows="2" footerrows="1" }%</pre>
+
+%TABLE{ sort="on" tableborder="0" cellpadding="4" cellspacing="3" cellborder="0" headerbg="#D5CCB1" headercolor="#666" databg="#FAF0D4, #F3DFA8" headerrows="2" footerrows="1" }%
+| *Table with two Header Rows and Footer Row* ||||||
+| *Num* | *Status* | *Action* | *Who* | *When* | *Progress* |
+| 1 | C | Chose new colours | John | 1-Dec-02 | |
+| 2 | X | Release | John | 1-Apr-02 | |
+| 3 |   | Get feedback | Anne | 1-Feb-02 | |
+| 12 | C | Spec error handling | Jack | 1-Dec-02 | |
+| 5 |   | Abc | John | | |
+| *Num* | *Status* | *Action* | *Who* | *When* | *Progress* |
+
+---+++ Sorting
+Click on column heading text to sort by a column. Initial column will be sorted in descending order, click again to get ascending order.  The type of data in the cell is determined automatically:
+
+   * Date with supported date formats
+%TWISTY{mode="span" link="View date formats" remember="on"}%
+      * Default Foswiki format
+         * 31 Dec 2001 - 23:59
+         * 31-Dec-2001 - 23:59
+      * Foswiki format without time (defaults to 00:00)
+         * 31 Dec 2001
+         * 31-Dec-2001
+      * Date separated by '/', '.' or '-', time with '.' or ':'
+      * Date and time separated by ' ', '.' and/or '-'
+         * 2001/12/31 23:59:59
+         * 2001.12.31.23.59.59
+         * 2001/12/31 23:59
+         * 2001.12.31.23.59
+         * 2001-12-31 23:59
+         * 2001-12-31 - 23:59
+         * 2009-1-12
+         * 2009-1
+         * 2009
+      * ISO format
+         * 2001-12-31T23:59:59
+         * 2001-12-31T
+      * ISO dates may have a timezone specifier, either Z or a signed difference in hh:mm format. For example:
+         * 2001-12-31T23:59:59+01:00
+         * 2001-12-31T23:59Z
+%ENDTWISTY%
+   * Number is digits, with optional decimal point
+   * Otherwise treated as text
+
+If you specify =headerrows=, then the row with the sort links is the row
+closest to the data (the last row in the header). If you do not specify
+=headerrows=, the first row that has a heading in the first column is the
+sort row. To sort by the first _footer_ row, set =headerrows="0"=.
+
+---++++ Sorting example
+%TABLE{databg="#ffffcc" databgsorted="#ffcc33" headercolor="#ffffff" headerbg="#990033" headerbgsorted="#660000" initsort="1"}%
+| *Number* | *Decimal* | *Alpha* | *Date* |
+| 1 | 9.9 | vwx | 01 Jan 1990 |
+| 2 | 9.91 | stu | 31 Dec 1999 |
+| 3 | 9.09 | pqr | 15 Jan 2006 |
+
+---+++ Row spans
+
+Table cells with a single caret indicate follow-up rows of multi-row spans. For example,
+
+<verbatim class="tml">
+| One One | One Two | One Three |
+| ^ | Two Two | Two Three |
+| Three One | ^ | Three Three |
+</verbatim>
+
+Results in:
+| One One | One Two | One Three |
+| ^ | Two Two | Two Three |
+| Three One | ^ | Three Three |
+
+*Note:* Row spans do not work across the header and body boundaries of a table. So it you have a header row, the row cells beneath (in the body section) cannot be merged with the header row cells. Row spans within header cells are possible.
+
+<verbatim class="tml">
+%TABLE{headerrows="2" sort="off"}%
+| *One One* | *One Two* | *One Three* |
+| ^ | *Two Two* | *Two Three* |
+| Two One | Two Two | Two Three |
+| Three One | ^ | Three Three |
+</verbatim>
+
+Results in:
+%TABLE{headerrows="2" sort="off"}%
+| *One One* | *One Two* | *One Three* | 
+| ^ | *Two Two* | *Two Three* | 
+| Two One | Two Two | Two Three | 
+| Three One | ^ | Three Three |
+
+---+++ Col spans
+Col spans can be achieved by writing table cell separators without contents or spacing:
+<verbatim class="tml">
+%TABLE{tablerules="cols"}%
+| *Mammals* ||
+| Monotremes | Echidna, Platypus |
+| Marsupials | Kangaroo, Koala |
+| Placentals ||
+| Fish (to write) ||
+</verbatim>
+
+Results in:
+%TABLE{tablerules="cols"}%
+| *Mammals* ||
+| Monotremes | Echidna, Platypus |
+| Marsupials | Kangaroo, Koala |
+| Placentals ||
+| Fish (to write) ||
+
+---++ <nop>%TOPIC% Global Settings
+
+You can override the default settings for the plugin by defining the following [[%SYSTEMWEB%.PreferenceSettings][preferences]].
+
+<!--
+      * Set SHORTDESCRIPTION = Control attributes of tables and sorting of table columns
+-->
+| *Preference* | *Meaning* | *Default* |
+| TABLEPLUGIN_SORT | Make all tables in a topic sortable. If this is set to =all=, all tables that have a header row (including those that do not have %TABLE before them) will be made sortable. If set to =none=, only tables with %TABLE will be sortable. Topic rendering is faster if this is set to =none=. | =all= |
+| TABLEPLUGIN_TABLEATTRIBUTES | Default table attributes. These are first defined in [[%SCRIPTURL{"configure"}%][Configure Extensions tab, TablePlugin sub-tab]], and can be set on site level in %LOCALSITEPREFS%, on web level in any <nop>%WEBPREFSTOPIC% or on topic level. | =tableborder="1" valign="top" headercolor="#000000" headerbg="#d6d3cf" headerbgsorted="#c4c1ba" databg="#ffffff,#edf4f9" databgsorted="#f1f7fc,#ddebf6" tablerules="rows" headerrules="cols"= |
+
+
+---++ <nop>TablePlugin and CSS
+Information for programmers.
+
+!TablePlugin implements the following precedence:
+   * the =TABLEATTRIBUTE= settings only write html styling, no CSS
+   * the =TABLEATTRIBUTE= settings can be overridden by a skin's CSS
+   * the =TABLE= tag attributes are converted to CSS styling, written in the head; these override any skin's CSS
+    
+---+++ CSS written by !TablePlugin
+|=.foswikiTable=  |The table  |
+|=.foswikiSortedCol=  |A sorted column  |
+|=.foswikiSortedAscendingCol=  |Sorted column, ascending  |
+|=.foswikiSortedDescendingCol=  |Sorted column, descending  |
+|=.tableSortIcon=  |The sort icon holder (span)  |
+|=.foswikiFirstCol=  |The first column  |
+|=.foswikiTableEven= |Even numbered rows  |
+|=.foswikiTableOdd= |Odd numbered rows  |
+|=.foswikiTableCol= + column number  | Unique column identifier, for instance: =foswikiTableCol0= |
+|=.foswikiTableRow= + type + row number | Unique row identifier, for instance: =foswikiTableRowdataBg0= |
+
+---+++ Images used by !TablePlugin
+Sort icons in the header are read from %SYSTEMWEB%.DocumentGraphics.
+| <img src="%ICONURL{tablesortup}%" width="11" height="13" alt="Sort table ascending" border="0" />  | Sort ascending | 
+| <img src="%ICONURL{tablesortdown}%" width="11" height="13" alt="Sort table descending" border="0" />  | Sort descending | 
+| <img src="%ICONURL{tablesortdiamond}%" width="11" height="13" alt="Sort table" border="0" />  | Generic sort button if header label is a link, not a sort link |
+
+---++ Plugin Installation Instructions
+You do not need to install anything in the browser to use this extension. The following instructions are for the administrator who installs the extension on the server.
+
+Open configure, and open the "Extensions" section. "Extensions Operation and Maintenance" Tab -&gt; "Install, Update or Remove extensions" Tab.  Click the "Search for Extensions" button.  
+Enter part of the extension name or description and press search.   Select the desired extension(s) and click install. If an extension is already installed, it will *not* show up in the
+search results.
+
+You can also install from the shell by running the extension installer as the web server user: (Be sure to run as the webserver user, not as root!)
+<verbatim>
+cd /path/to/foswiki
+perl tools/extension_installer <NameOfExtension> install
+</verbatim>
+
+If you have any problems, or if the extension isn't available in =configure=, then you can still install manually from the command-line. See https://foswiki.org/Support/ManuallyInstallingExtensions for more help.
+
+   * Test if the plugin is correctly installed:
+      * Check above example if the table renders as expected
+      * Try click on heading to sort.  Other tables should also be sortable
+
+---++ Plugin Info
+
+%TABLE{columnwidths="10%,90%"}%
+|  Change History: | <!-- specify latest version first -->&nbsp; |
+|  03 Feb 2016 | 1.154: Foswikitask:Item13881 - Unicode column heading are incorrectly encoded,<br/>\
+                        Foswikitask:Item13405 - Unicode NFC normalization |
+|  30 Dec 2015 | 1.153: Foswikitask:Item13436 - Add class parameter to the TABLE macro to permit custom class specifications. |
+|  10 Dec 2015 | 1.152: Foswikitask:Item12569 - Improve sorting of UNICODE data by NFKD normalizing the comparisons. |
+|  10 Sep 2015 | 1.151: Foswikitask:Item13688 - fixed css precedence for table css emitted by !TablePlugin; removed hard-coded vertical alignment; Foswikitask:Item13695 - add support for common css units |
+|  28 May 2013 | 1.142: Foswikitask:Item12480 - memory leak amasses css styles from all visited pages |
+|  28 Nov 2012 | 1.141: Foswikitask:Item12233 - Don't generate table sort links when rendering static html. |
+|  06 Apr 2012 | 1.140: Arthur Clemens: Foswikitask:Item11354 adds warning message when =include= parameter fails. |
+|  10 Jan 2012 | 1.139: Michael Daum: Foswikitask:Item11423 fixed disabling default table attributes when setting them to the empty string |
+|  12 Dec 2011 | 1.138: George Clark: Foswikitask:Item11350 TablePlugin issues a die if included table is not found. |
+|  05 Dec 2011 | 1.137: Paul Harvey: Foswikitask:Item11331: Further improvements for persistent perls. |
+|  24 Oct 2011 | 1.136: George Clark:  Foswikitask:Item8647: TablePlugin generates empty tfoot, even when there are footer rows. |
+|  20 Sep 2011 | 1.135: George Clark:  Foswikitask:Item10559: perl errors about non-numeric or uninitialized variables for the URL parameters. Foswikitask:item10971: reload settings in persistent perl environment. |
+|  27 Aug 2011 | 1.134: Arthur Clemens: Foswikitask:Item11083: table should sort if sort is off but initsort has a column number. |
+|  17 Jun 2011 | 1.133: Arthur Clemens: setting =databg= and =headerbg= to ="none"= now makes the cell transparent. |
+|  11 Apr 2011 | 1.132: Version released with Foswiki 1.1.3. Only a minor change related to how the plugin is being upgraded |
+|  09 Mar 2011 | 1.131: Arthur Clemens: fix sorting bug that was not properly fixed in 1.128. |
+|  08 Mar 2011 | 1.130: Michael Daum: Foswikitask:Item10456: fixed initialization in persistent perl environments. |
+|  05 Mar 2011 | 1.129: Arthur Clemens: Foswikitask:Item8302: init sorting is broken if no header row. \
+Foswikitask:Item10016: No rowspan in header rows possible. \
+Foswikitask:Item5864: documentation needs better coverage of spans from header row. \
+Foswikitask:Item8991: header-only table violates XHTML DTD. |
+|  04 Mar 2011 | 1.128: Arthur Clemens: disable sorting if =sort="off"= is set in =TABLEPLUGIN_TABLEATTRIBUTES=. |
+|  16 Feb 2011 | 1.127: Michael Daum: Foswikitask:Item10357: only emit inline css when there's a foswikiTable on the current page |
+|  18 Aug 2010 | 1.126: Paul harvey: Foswikitask:Item9415: minor documentation changes |
+|  09 Aug 2010 | 1.125: Crawford Currie: Foswikitask:Item8303: fixed sorting with multiple headers |
+|  31 Jul 2010 | 1.124: Arthur Clemens: Added attribute =inlinemarkup= to optionally add HTML markup for better copy/pasting. |
+|  05 Apr 2010 | 1.123: New default colors. |
+|  13 Mar 2010 | 1.122: Arthur Clemens: Fixed sorting of columns with mixed data types: numbers, dates, strings, empty cells. |
+|  17 Sep 2009 | 1.121: Arthur Clemens: Improved documentation for date formats. |
+|  17 Sep 2009 | 1.120: Arthur Clemens: Added =include= parameter. |
+|  16 Sep 2009 | 1.110: Arthur Clemens: Added attributes =headerrules= and =datarules=. Fixed potential bug where Explorer won't render more than 20 table CSS tags. Fix sorting on IP addresses. |
+|  13 Sep 2009 | 1.100: Arthur Clemens: Removed HTML formatting in favor of a pure CSS rendering. Code refactoring and bug fixes: \
+%BB% Fixed a bug that ignored =cellspacing= (Foswikitask:Item8270). \
+%BB% Sorting is now possible with multiple header rows (Foswikitask:Item8122). \
+%BB% Fixed sorting of dates prior to 1970. |
+|  21 Sep 2009 | 1.043: Kenneth Lavrsen: Added check for valid value for initsort. Ignore if it is not a number. |
+|  12 Sep 2009 | 1.042: Kenneth Lavrsen: Added a new API call initialiseWhenRender which plugins like !CompareRevisionsAddOn can use to reset the table counters between two renderings of the same topic |
+|  03 Sep 2009 | 1.041: Kenneth Lavrsen: Fix for crash when cell contains the number 0. Allow sorting of negative numbers even when suffixed with unit. Treat whitespace as zero if pure numerical context. |
+|  02 Sep 2009 | 1.040: Kenneth Lavrsen: Fixed the fix of parsing date-time columns so that plain numbers are not interpreted as dates causing wrong sorting |
+|  03 Jun 2009 | 1.039: Michael Daum: fixed parsing date-time columns |
+|  19 Apr 2009 | 1.038: Removed support for settings in the plugin topic which is a bad idea anyway as they get overwritten at each Foswiki upgrade. Define the global settings in <nop>%LOCALSITEPREFS% instead. <br />Fixed an issue where TablePlugin produced invalid css if no 'px' or '%' is passed in a size parameter. <br />Small refactoring in style attribute handling. |
+|  16 Dec 2008 | 1.037: Foswiki version |
+|  30 Sep 2008 | 1.035: Fix sorting of attachment date column.  |
+|  03 Aug 2008 | 1.034: TWiki 4.2.1 release version |
+|  20 Mar 2008 | 1.033: TWikibug:Item5387: allow rowspanned columns to contain HTML tags; otherwise it is impossible to add an invisible anchor to a rowspanned cell |
+|  16 Dec 2007 | 1.030: Kenneth Lavrsen: Fixed the problem of tables being sorted by by TablePlugin while the table is being edited by plugins such as EditTablePlugin. This required adding a new attribute =disableallsort= so plugins such as EditTablePlugin can temporarily disable all sorting for a table. Additionally the CGI variable (URL parameter or hidden formfield) =sort= can be set to "off" which disables all header sorting in the topic. This is used by plugins such as EditTablePlugin to disable the sorting by clicking header fields during editing of tables. Ref: TWikibug:Item5135 and TWikibug:Item2690. |
+|  03 Dec 2007 | Arthur Clemens: Fixed rendering and order of html elements =thead=, =tfoot= and =tbody=; corrected =id= parameter. |
+|  24 Nov 2007 | Arthur Clemens: Fixed sorting of columns with only icons; also removed TWiki formatting before sorting. |
+|  06 Oct 2007 | 15180: PTh: Added %SYSTEMWEB%.VarTABLE to have it listed in %SYSTEMWEB%.Macros |
+|  27 Jun 2007 | 1.024 - 1.027: Various small bug fixes. |
+|  24 Jun 2007 | 1.023: Arthur Clemens: Inline styles are now written to the head; updated default sort icons (from %SYSTEMWEB%.DocumentGraphics). |
+|  23 Jun 2007 | 1.022: Arthur Clemens: Fixed styling of param =tablerules= on Internet Explorer. |
+|  23 May 2007 | 1.021: Michael Daum: Fixed css attribute priority to cooperate nicely with skin themes. |
+|  27 Dec 2006 | 1.020: Kenneth Lavrsen: Fixed initsort so all tables can be initsorted and not only the first. When you sort a table by clicking on the header of a column the table gets sorted accordingly. When you click the header of another table the previously sorted table goes back being sorted as specified by initsort. |
+|  13 Dec 2006 | 1.019: Arthur Clemens: Prevent sorting of columns that do no exist.  |
+|  02 Dec 2006 | 1.018: Arthur Clemens: Data rows now start with first =datacolor= and =databgcolor=.  |
+|  26 Nov 2006 | 1.017: Arthur Clemens: Better support for =tablerules=.  |
+|  24 Nov 2006 | 1.016: Arthur Clemens: Added new attribute =cellborder=.  |
+|  25 Oct 2006 | 1.015: Arthur Clemens: Added support for background colors of sorted column. Columns can be unsorted - sorting order is now: sort ascending, sort descending, unsort. Added attributes =headervalign= and =datavalign=. |
+|  16 Aug 2006 | Michael Daum: Added CSS support for even/odd table rows |
+|  13 Dec 2005 | Arthur Clemens: Added support for =id=, =summary= and =caption= |
+|  05 Mar 2005 | 1.014: Crawford Currie eliminated deprecated handlers for Dakar |
+|  01 Aug 2004 | Arthur Clemens: Added CSS support for first column and ascending/descending table headers |
+|  21 Mar 2004 | PTh: Internal change: Fixed reference to unofficial variable |
+|  01 Jan 2004 | PTh: Alternating data row colors restart again after each header row |
+|  01 Dec 2003 | PTh: Fixed error when footerrows was specified on an empty table, contributed by TWiki:Main/PaulineCheung |
+|  24 May 2003 | PTh: New =&#124;^&#124;= rule for multi row span (TWiki:Main/WalterMundt); added tableframe and tablerules (TWiki:Main/JohannesMartin); ignore columnwidths for multi column span; validate headerrows and footerrows (TWiki:Main/DarrylGreen); fixed link color problem and up/down icon color problem for dark header background |
+|  17 Dec 2002 | PTh: Removed individual table Plugin settings; added TABLEATTRIBUTES Plugins setting and TABLEATTRIBUTES preferences setting |
+|  15 Dec 2002 | PTh: Added headerrows and footerrows params (TWiki:Main/DarrylGreen, TWiki:Main/WoutMertens); added tablewidth and columnwidths params (TWiki:Main/ThorstenSommermann) |
+|  09 Dec 2002 | PTh: Added headercolor and datacolor parameters |
+|  05 Jun 2002 | PTh: Added "none" value to databg parameter (suggested by TWiki:Main/TaitCyrus); fixed sorting by stripping HTML tags, removing links and making sort ignore case (suggested by TWiki:Main/ShawnBradford) |
+|  13 Mar 2002 | PTh: Added TWiki:Main/ShawnBradford 's initsort and initdirection |
+|  12 Mar 2002 | PTh: Added valign, headeralign and dataalign; fixed bug of swapped cellpadding/cellspacing; fixed warning of uninitialized value |
+|  05 Jan 2002 | PTh: Fixed sorting bug of cells with leading white space  |
+|  06 Dec 2001 | PTh: Fixed date sorting bug <br /> 03 Dec 2001 PTh: Fixed sort="off" bug and more |
+|  29 Nov 2001 | PTh: Fixed Perl warnings |
+|  16 Nov 2001 | PTh: Added table border, cell spacing, cell padding, gif files |
+|  07 Oct 2001 | JT: Initial version |
+<!-- %JQREQUIRE{"chili"}% -->
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="ProjectContributor"}%
+%META:FIELD{name="Copyright" title="Copyright" value="Copyright (C) 2001-2008 TWiki:Main/JohnTalintyre, Peter Thoeny, peter@thoeny.org and TWiki Contributors; &copy; 2008-2016 Foswiki Contributors"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/TablePlugin"}%
+%META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
+%META:FIELD{name="Release" title="Release" value="03 Feb 2016"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/TablePlugin"}%
+%META:FIELD{name="Version" title="Version" value="1.154"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/distro"}%

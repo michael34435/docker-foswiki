@@ -1,0 +1,79 @@
+%META:TOPICINFO{author="ProjectContributor" date="1485108858" format="1.1" version="1"}%
+%META:TOPICPARENT{name="PatternSkinFatwillyTheme"}%
+---+!! <nop>PatternSkin theme: Foswiki "Fat Willy" Site Skin - Navigation
+
+Include main navigation with:
+<verbatim class="tml">
+%INCLUDE{"%SYSTEMWEB%.PatternSkinThemeFatWillyNavigation" section="main"}%
+</verbatim>
+This is done automatically in the templates by setting in the %USERSWEB%.SitePreferences:
+   * #Set PATTERNSKIN_NAVIGATION_TOPIC = %SYSTEMWEB%.PatternSkinThemeFatWillyNavigation
+
+Include meta navigation with:
+<verbatim class="tml">
+%INCLUDE{"PatternSkinThemeFatWillyNavigation" section="meta"}%
+</verbatim>
+
+
+---++ Include sections
+<verbatim class="tml">
+%STARTSECTION{"main"}%<div id="patternTopBarButtons" class="clear"><ul>
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="About" DESTTOPIC="%HOMETOPIC%" LABEL="About"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="Blog" DESTTOPIC="%HOMETOPIC%" LABEL="Blog"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="Extensions" DESTTOPIC="%HOMETOPIC%" LABEL="Extensions"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="%SYSTEMWEB%" DESTTOPIC="%HOMETOPIC%" LABEL="Documentation"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="Community" DESTTOPIC="%HOMETOPIC%" LABEL="Community"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="Development" DESTTOPIC="%HOMETOPIC%" LABEL="Development"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="Tasks" DESTTOPIC="%HOMETOPIC%" LABEL="Tasks"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="Download" DESTTOPIC="%HOMETOPIC%" LABEL="Download"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.PatternSkinNavigation" section="topbarbutton"
+    ID="" DESTWEB="Support" DESTTOPIC="%HOMETOPIC%" LABEL="Support"
+}%
+</ul></div>%ENDSECTION{"main"}%
+
+
+%STARTSECTION{"meta"}%<div id="foswikisiteUserBar"><ul>%IF{
+    "context authenticated"
+    then='<li>%MAKETEXT{
+        "Hello [_1]"
+        args="[[%WIKIUSERNAME%][%SPACEOUT{%WIKINAME%}%]]"
+    }%</li>'
+}%%IF{
+    "$ LOGOUT != ''"
+    then='<li>%LOGOUT%</li>'
+}%%IF{
+    "$ LOGIN != '' and not context authenticated"
+    then='<li>Hello [[%WIKIUSERNAME%][%WIKINAME%]]</li>
+        <li>%LOGIN% %IF{
+            "context registration_supported AND context registration_enabled"
+            then="%MAKETEXT{"or"}% [[%SYSTEMWEB%.UserRegistration][%MAKETEXT{"Register"}%]]"
+        }%</li>'
+}%<li>[[%USERSWEB%.%WIKIUSERSTOPIC%][Users]]</li></ul></div>%ENDSECTION{"meta"}%
+</verbatim>
+<!-- %JQREQUIRE{"chili"}% -->
+%META:PREFERENCE{name="ALLOWTOPICVIEW" title="ALLOWTOPICVIEW" type="Set" value="*"}%

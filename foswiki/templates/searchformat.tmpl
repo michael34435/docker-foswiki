@@ -1,0 +1,25 @@
+%{ This is a default template }%
+
+%TMPL:DEF{SEARCH:header}%<h4 class="foswikiSearchResultsHeader" %TMPL:P{"header:style:backgroundcolor"}%>%TMPL:P{"header:text"}%</h4>%TMPL:END%
+
+%TMPL:DEF{SEARCH:format}%%TMPL:END%
+%TMPL:DEF{SEARCH:footer}%%TMPL:END%
+
+%TMPL:DEF{SEARCH:searched}%<div class="foswikiSearchResultsHeader"><span>%MAKETEXT{"Searched:"}% <b><noautolink>%SEARCHSTRING%</noautolink></b></span><span id="foswikiNumberOfResultsContainer"></span></div>
+%TMPL:END%
+
+%TMPL:DEF{SEARCH:count_result}%<div class="foswikiSearchResultCount">%MAKETEXT{"Number of topics: [_1]" args="<span>%NTOPICS%</span>"}%</div>%TMPL:END%
+%TMPL:DEF{SEARCH:count}%%TMPL:P{SEARCH:count_result}%
+%TMPL:END%
+
+%TMPL:DEF{"header:text"}%<b>%MAKETEXT{"Results from [_1] web" args="<nop>%WEB%"}%</b> %MAKETEXT{"retrieved at [_1]" args="%DISPLAYTIME{"$hour:$min ($tz)"}%"}%%TMPL:END%
+
+%TMPL:DEF{"header:style:backgroundcolor"}% style="border-color:%WEBBGCOLOR%"%TMPL:END%
+
+%{ simple default pager }%
+
+%TMPL:DEF{SEARCH:pager_previous}%[[$previousurl][< %MAKETEXT{"Previous"}%]]%TMPL:END%
+%TMPL:DEF{SEARCH:pager_next}%[[$nexturl][%MAKETEXT{"Next"}% >]]%TMPL:END%
+%TMPL:DEF{SEARCH:pager}%<div class="foswikiSearchResultsPager">
+%MAKETEXT{"[_1] [_2] Page [_3] of [_4] [_5] [_6]" args="$previousbutton,$sep,$currentpage,$numberofpages,$sep,$nextbutton"}%
+</div>%TMPL:END%

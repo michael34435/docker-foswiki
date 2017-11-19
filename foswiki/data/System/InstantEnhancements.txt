@@ -1,0 +1,159 @@
+%META:TOPICINFO{author="ProjectContributor" date="1457496285" format="1.1" version="1"}%
+%META:TOPICPARENT{name="AdminDocumentationCategory"}%
+---+!! Instant Site Enhancements
+
+These quick enhancements are aimed at improving and customising your Foswiki as quickly as possible. New site administrators are encouraged to review this document for ideas before deploying their site. Small changes planned in advance can make a *big* differences for user satisfaction.
+
+All modifications can be done through your Web browser, and they don't take more then in a couple of minutes.  No system administration expertise is required.
+
+This may spark your imagination to *really* customize your site so that it's optimal for *your* users.
+
+%TOC%
+
+---++ Change the logo in the top left corner
+The default Foswiki logo image is a 46 pixels high GIF image. You can use any similar-sized graphic in its place.
+
+To set the logo site-wide, first attach your logo image to [[%LOCALSITEPREFS%]] using the 'Attach' button. Now, edit [[%LOCALSITEPREFS%]] and find the line:
+<pre>
+   *<nop> Set WIKILOGOIMG = %<nop>PUBURL%/%<nop>SYSTEMWEB%/ProjectLogos/foswiki-logo.png
+</pre>
+Assuming you have called your logo =mycologo.png=, change this line to:
+<pre>
+   *<nop> Set WIKILOGOIMG = %<nop>PUBURL%/%<nop>USERSWEB%/SitePreferences/mycologo.png
+</pre>
+(If the WIKILOGOIMG line is missing from the file, just add it)
+
+By changing the WIKILOGOALT and WIKILOGOURL you can change the default alt-text and target of the link behind the image as well.
+
+%I% [[Pattern Skin Customization]] has a whole lot more on customising how your site looks, while still using the standard skin.
+
+---++ Change the Web Color Codes
+
+Web color codes are used to provide a visual reference for each web, so users can quickly tell where they are. Incredibly obvious, maybe, but some site admins don't get around to changing the default web colors right off, whether they like them or not. Simply changing the defaults will make a huge difference in the overall look. 
+
+*What we are doing*
+
+We want to set the preference WEBBGCOLOR in topic WebPreferences to one of the StandardColors. <nop>WebPreferences is, as you can guess, a topic which holds all kind of [[%SYSTEMWEB%.PreferenceSettings][preference settings]] for each Web[[ManagingWebs][{*}]]. Each web has its own <nop>WebPreferences, and you can set them differently for each web.
+
+*How to do it*
+
+   1 Pick color code from company or product references, the StandardColors table (recommended for 8-bit client compatibility), or some other color reference. 
+   2 Go to WebPreferences in each web, and edit the topic.
+   3 Set your preferred WEBBGCOLOR [[%SYSTEMWEB%.PreferenceSettings][preference settings]], and save the topic.
+   4 %X% Add a new line immediately after the color code. If there is (invisible) space after the color code, the page header might get strange colors (e.g. black).
+
+It's just as easy to refine later on, so you're not locked in, just looking better.
+
+---++ Use Graphic Icons to Highlight Text
+
+Icons can do a lot to enhance scannability of topics. For example,
+
+%X% there's a warning here
+
+DocumentGraphics has a whole collection of ready-to-use icon images. You can use these images in any topic by referring to their name. For example, !DocumentGraphics has an image attachment called =days.gif=. To show this image in a topic, write =%<nop>ICON{"days"}%= to get %ICON{"days"}%.
+
+*Creating image macros*
+
+You can create your own image macros by defining them in a preference topic (usually [[%LOCALSITEPREFS%]]). Image macro names are usually one letter, like =Y=, but may be longer like =HELP= or =WARN=.
+
+For instance, if we want to write =%<nop>DOWN%= to get the %ICON{"arrowbdown"}% image, define the new macro like this:
+<verbatim>
+   * Set DOWN = %ICON{"arrowbdown"}%
+</verbatim>
+If you have your own custom image that you want to use, attach it to [[%LOCALSITEPREFS%]] and write:
+<verbatim>
+   * Set DOWN = <img src="%PUBURLPATH%/%USERSWEB%/SitePreferences/my_image.gif" border="0" alt="DOWN" width="16" height="16" />
+</verbatim>
+
+%I% There are other approaches for creating more extensive icon libraries. This is a simply and quick way to get started. See DocumentGraphics for more info.
+
+Most images in DocumentGraphics are 16 x 16 pixels.
+
+---++ Use the [[VarTOC][TOC]] macro to create table of contents
+
+The TOC macro generates a table of contents automagically from headers (defined like this: ==---++== , see EditingShorthand).
+
+For example, the table of contents at the top of _this_ page was generated
+using a TOC macro.
+
+---++ Use SEARCH 
+
+The [[VarSEARCH][SEARCH]] macro is one of the most powerful and useful macros
+in Foswiki. Using SEARCH you can quickly build simple reports.
+
+---+++ Personal directory of topics you're involved in
+
+Here's how you can create your own personal directory of topics you've contributed to recently (assuming that your [[VarWIKIUSERNAME][username]] is present on topics that you contribute to). Copy the text below and paste it into your personal page (%WIKIUSERNAME%). You can add other webs to search by duplicating one of the web subsections and editing the string {web ="webname"} in the search parameters to refer to the specific web you want to search.
+
+<verbatim class="tml">
+*Here's a list of topics I've been involved in recently:*
+
+---++++ Project Web
+%SEARCH{
+   "%TOPIC%"
+   web="Project"
+   scope="text"
+   nonoise="on"
+   order="modified"
+   reverse="on"
+   limit="20"
+}%
+</verbatim>
+
+Read the [[VarSEARCH][SEARCH documentation]] for more about [[VarSEARCH][SEARCH]].
+
+---+++ Recently changed pages 
+Here are the last 15 changed pages, formatted into a neat table.
+
+<verbatim class="tml">
+%SEARCH{
+   "1"
+   type="query"
+   nonoise="on"
+   order="modified"
+   reverse="on"
+   limit="15"
+   header="| *Topic* | *User* | *Date* |"
+   format="|  [[$web.$topic][$topic]] | $wikiusername | $date  |"
+}%
+</verbatim>
+
+---++ Restricting who can edit
+
+You may want to temporarily (or permanently) restrict editing to yourself or a limited group of people. You can do this with a Preference setting that includes one or more users and groups. Only authorized users will be able to use ==Edit==.
+
+*Example:* <verbatim class="tml">   * Set ALLOWTOPICCHANGE = %USERSWEB%.UserName, %USERSWEB%.GroupName</verbatim>
+<div class="foswikiHelp"> %T% *To hide the setting:* Use HTML comment tags - put ==&lt;!--== on the line _above the setting, and ==--&gt;== on the line below.</div>
+
+See [[Access Controls]] for much more on controlling access to webs and topics.
+
+---++ Customize the Left Navigation Bar
+If you are using the default skin, you can customize the contents of the !WebLeftBar topic. This topic does not exist by default - read PatternSkinCustomization for details. Each web can have its own !WebLeftBar.
+
+<div class="foswikiHelp">%T% Also check PatternSkinCustomization to learn how to customise the !WebTopBar</div>
+
+---++ Deeper Customisations
+Foswiki is very powerful, and can be customised at many
+different levels. We've shown above how preferences, macros and topics can
+be used to do some simple and quick customisations from the browser, many
+of them by normal (non-admin) users. Administrators have even more power
+at their fingertips, and if you can log in to the server, even more. Here's
+a breakdown of customisation opportunities available to different types of
+people:
+
+| *Normal Users* ||
+| [[Preference settings]] | Customise preferences |
+| [[Macros]] | Use macros to create and format reports, and customise each page |
+| [[Template Topics]] | Use topic and form templates to create new topics |
+| *Administrators* ||
+| %SCRIPTURL{configure}% | Set basic system options |
+| [[InstalledPlugins]] | Install new plugins, skins and other extensions from https://foswiki.org/Extensions |
+| [[Pattern Skin Customization]] | Customising the standard skin |
+| *Developers* ||
+| [[Plugins]] | Write your own plug-in perl code |
+| https://foswiki.org/Development | Where Foswiki development is coordinated and documented |
+
+*Remember, Foswiki is an open-source project developed and supported entirely by volunteers.* Once you have built up a bit of expertise, you can say "thank you" to all those people by giving a bit of your time back - see https://foswiki.org/Community/HowYouCanHelp
+
+*Related Topics:* AdminDocumentationCategory
+<!-- %JQREQUIRE{"chili"}% -->

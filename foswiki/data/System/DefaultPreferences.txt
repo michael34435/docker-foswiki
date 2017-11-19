@@ -1,0 +1,476 @@
+%META:TOPICINFO{author="ProjectContributor" date="1457496285" format="1.1" version="1"}%
+%META:TOPICPARENT{name="AdminToolsCategory"}%
+---+!! <nop>%WIKITOOLNAME% Site-Level Preferences
+
+This topic defines *site-level* settings that apply to all users and webs on this site.
+
+<div class="foswikiNotification">
+*%X% Note:* This topic should be regarded as read-only, so that upgrades can safely overwrite it without risk to your customizations.
+
+Preference settings local to your site should be set in [[%LOCALSITEPREFS%]] (this topic is pointed to by ={LocalSitePreferences}=, which is set by the admin in the [[%SCRIPTURLPATH{"configure"}%][configure]] interface). Settings in [[%LOCALSITEPREFS%]] will override settings in this topic, and should be used for defining custom settings.
+
+[[Macros#SettingPrefs][Read more]] on how to set preferences.
+</div>
+
+%TOC%
+
+#Default%WEBPREFSTOPIC%
+---++ Default Web Preferences
+
+<div class="foswikiHelp"> %X% *NOTE:* These are just defaults; don't change them here. Instead, add them to the <nop>%WEBPREFSTOPIC% topic in each web</div>
+
+
+   * Web-specific background color: (is overwritten by web preferences)
+      * Set WEBBGCOLOR = #FFD8AA
+
+   * [[http://en.wikipedia.org/wiki/Favicon][favicon]]: Attach a =favicon.ico= to a web's %WEBPREFSTOPIC% or add a =FAVICON= setting to %WEBPREFSTOPIC%
+      * Set FAVICON = %PUBURLPATH%/%SYSTEMWEB%/ProjectLogos/favicon.ico
+
+   * Image, URL and alternate tooltip text of web's logo.
+      * Set WEBLOGOIMG = %WIKILOGOIMG%
+      * Set WEBLOGOURL = %WIKILOGOURL%
+      * Set WEBLOGOALT = %WIKILOGOALT%
+
+   * List this web in the %SYSTEMWEB%.SiteMap:
+      * If yes, set SITEMAPLIST to =on=, do not set NOSEARCHALL, and add the "what" and "use to..." description for the site map. Make sure to list only links that include the name of the web, e.g. <nop>%WEB%.Topic links.
+      * Set SITEMAPLIST = on
+      * Set WEBSUMMARY = %IF{"defined SITEMAPWHAT" then="$percentSITEMAPWHAT$percent"}% %IF{"defined SITEMAPUSETO" then="$percentSITEMAPUSETO$percent"}%
+<sticky>
+   * Copyright notice:
+      * Set WEBCOPYRIGHT = <span class="foswikiRight"> <a href="https://foswiki.org/"><img src="%PUBURLPATH%/%SYSTEMWEB%/ProjectLogos/foswiki-badge.png" alt="%MAKETEXT{"This site is powered by Foswiki"}%" title="%MAKETEXT{"This site is powered by Foswiki"}%" /></a></span>%MAKETEXT{"Copyright &&copy; by the contributing authors. All material on this collaboration platform is the property of the contributing authors." args="1999-%GMTIME{$year}%"}% <br /> %MAKETEXT{"Ideas, requests, problems regarding [_1]? <a href='[_2]'>Send feedback</a>" args="<nop>%WIKITOOLNAME%,mailto:%WIKIWEBMASTER%?subject=%WIKITOOLNAME%%20Feedback%20on%20%BASEWEB%.%BASETOPIC%"}%
+
+   * Simplified Copyright notice for the WebRss feed (don't use any special characters, html tags, entities, wiki markup or WikiWords)
+      * Set WEBRSSCOPYRIGHT = Copyright %GMTIME{"$year"}% by contributing authors
+</sticky>
+
+   * Exclude web from a =web="all"= search: (Set to =on= for hidden webs; is overwritten by web preferences) *Note* it is much better to use [[AccessControl][AccessControls]] in individual webs to control who can and can't view the contents of a web. NOSEARCHALL is retained for compatibility, but you should avoid using it.
+      * Set NOSEARCHALL =
+   * Prevent automatic linking of [[%SYSTEMWEB%.WikiWords][WikiWords]] and [[%SYSTEMWEB%.ACRONYM][acronyms]] (if set to =on=); link <nop>WikiWords (if empty); can be overwritten by web preferences:
+      * Set NOAUTOLINK =
+      * *Note:* Use the =[<nop>[...][...]]= syntax to link topics in case you disabled <nop>WikiWord linking. The =&lt;noautolink&gt; ... &lt;/noautolink&gt;= syntax can be used to prevents links within a block of text.
+
+   * Warn if =%<nop>INCLUDE{}%= of topic fails: Fail silently if empty or =off=. Output warning message (defined in templates/oopsalerts.tmpl) if set to =on=. Otherwise output specific text (use =$topic= for topic). You can override this in web preferences, or by using a =warn="..."= parameter with =%<nop>INCLUDE{}%= :
+      * Set INCLUDEWARNING = on
+
+   * Generated Table of Contents (TOC) settings
+      * The first header level to appear in the TOC:
+         * Set TOC_MIN_DEPTH =
+            * If not set: =1=
+            * Possible values: =1= to =6=
+      * The last header level to appear in the TOC:
+         * Set TOC_MAX_DEPTH =
+            * If not set: =6=
+            * Possible values: =1= to =6=
+            * Can be overridden by =depth= parameter of [[%SYSTEMWEB%.VarTOC][TOC]]
+      * The default TOC title:
+         * Set TOC_TITLE =
+            * If not set: nothing
+            * Possible values: any string, for example =On this page:=
+            * Can be overridden by =title= parameter of [[%SYSTEMWEB%.VarTOC][TOC]]
+      * Do not show a TOC if the topic it contains is included in another topic:
+         * Set TOC_HIDE_IF_INCLUDED =
+            * If not set: included TOC is shown
+            * Possible values: =on= or nothing
+
+---++ Default User Settings
+
+<div class="foswikiHelp"> %X% *NOTE:* They are typically redefined in the individual users topic. eg. %WIKIUSERNAME%.</div>
+
+   * Show tool-tip topic info on mouse-over of WikiWord links. Setting can be on, off, or customized. An empty setting or off setting disables the tool-tips (for better performance). The setting can contain $summary to show the topic summary, $date for the last change date, $rev for the revision, $username for the login name of the last editor, $wikiname for the <nop>WikiName, $wikiusername for <nop>%USERSWEB%.WikiName, $topic for the topic name, and $web for the web name
+      * Set LINKTOOLTIPINFO = off
+      * #Set LINKTOOLTIPINFO = $username - $date - r$rev: $summary
+         * This is exactly equivalent to:
+      * #Set LINKTOOLTIPINFO = on
+
+<div class="foswikiHelp">
+---+++ Deprecated editor settings
+These settings are overridden by an editor cookie that is set when using the
+Sizing and font buttons on the lower right corner of the edit window.  These
+settings will be ignored once a =FOSWIKIPREF= cooke has been set.  They have
+been removed from Foswiki 2.0.
+
+   * Horizontal size of text edit box: (can be overwritten by user preferences)
+      * Set EDITBOXWIDTH = 70
+
+   * Vertical size of text edit box: (can be overwritten by user preferences)
+      * Set EDITBOXHEIGHT = 22
+
+</div>
+
+   * Style of text edit box. Set to =width: 99%= for full window width (default; this will override the EDITBOXWIDTH setting), or =width: auto= to disable. This setting works for IE and some other recent browsers. (can be overwritten by user preferences)
+      * Set EDITBOXSTYLE = width:99%
+
+   * Style of the user signature
+      * Set SIGNATUREFORMAT = -- %WIKIUSERNAME% - %DATE%
+
+   * Default state of the *Force New Revision* check box in preview. Check box is initially checked if =Set FORCENEWREVISIONCHECKBOX = checked="checked"=, or unchecked if empty: (can be overwritten by user preferences)
+      * Set FORCENEWREVISIONCHECKBOX =
+
+   * Default state of the *Minor Changes, Don't Notify* check box in preview. Check box is initially checked if =Set DONTNOTIFYCHECKBOX = checked="checked"=, or unchecked if empty: (can be overwritten by user preferences)
+      * Set DONTNOTIFYCHECKBOX =
+
+   * Default state of the *link* check box in the attach file page. Checkbox is initially checked if =Set ATTACHLINKBOX = checked="checked"=, or unchecked if empty (=Set ATTACHLINKBOX ==). If checked, a link is created to the attached file at the end of the topic: (can be overwritten by user preferences)
+      * Set ATTACHLINKBOX =
+
+   * Format of file link when the *link* check box is checked: (can be overwritten by user preferences)
+   <div class="foswikiHelp"> %H% *NOTE:* Keyword ==$filename== gets expanded to filename; ==$fileurl== gets expanded to the urlencoded filename; ==$comment== to comment; ==\t== to tab (3 spaces for bullets).</div>
+   <!-- verbatim tag required to prevent error in Apache log; does not suppress Set -->
+   <verbatim class="tml">
+      * Set ATTACHEDFILELINKFORMAT = \n   * [[%ATTACHURL%/$fileurl][$filename]]: $comment
+</verbatim>
+
+   * Format of images when the *link* check box is checked: (can be overwritten by user preferences)
+      <div class="foswikiHelp"> %H% *NOTE:* Keyword ==$filename== gets expanded to filename; ==$fileurl== gets expanded to the urlencoded filename; ==$comment== to comment; ==$size== to ==width="..." height="..."== attribute of ==img== tag; ==\t== to tab and ==\n== to linefeed (3 spaces for bullets).</div>
+      <verbatim class="tml">
+      * Set ATTACHEDIMAGEFORMAT = \n   * $comment: <br />\n     <img src="%ATTACHURLPATH%/$fileurl" alt="$filename" $size />
+</verbatim>
+
+---++ Platform Settings
+
+   * Site name:
+      * Set WIKITOOLNAME = Foswiki
+
+   * Image, URL and alternate tooltip text of the logo *for this installation*: you should change these settings for your site, or they can be overwridden in <nop>%WEBPREFSTOPIC% for individual webs by defining these settings there.
+      * Set WIKILOGOIMG = %PUBURL%/%SYSTEMWEB%/ProjectLogos/foswiki-logo.png
+      * Set WIKILOGOURL = %SCRIPTURL{"view"}%/%USERSWEB%/%HOMETOPIC%
+      * Set WIKILOGOALT = Powered by Foswiki, The Free and Open Source Wiki
+
+   * Home page of this site
+      * Set WIKIHOMEURL = %SCRIPTURLPATH{"view"}%/
+
+   * List of <nop>%WIKITOOLNAME% webs - on the first line of the upper toolbar (to add a new web, see ManagingWebs and %SYSTEMWEB%.SiteMap):
+      * Set WIKIWEBLIST = [[%USERSWEB%.%HOMETOPIC%][%USERSWEB%]] %SEP% [[%SYSTEMWEB%.%HOMETOPIC%][%SYSTEMWEB%]] %SEP% [[%SANDBOXWEB%.%HOMETOPIC%][%SANDBOXWEB%]]
+      * %T% *NOTE:* To automatically list all non-hidden webs in alphabetical order, use the =%<nop>WEBLIST{}%= macro instead: <br />
+        %WEBLIST{"[[$name.%HOMETOPIC%][$name]]" separator=" | "}%
+
+   * Maximum size of %SYSTEMWEB%.FileAttachments in KB, 0 for no limit:
+      * Set ATTACHFILESIZELIMIT = 10000
+
+   * Broadcast message for skins supporting a %<nop>BROADCASTMESSAGE% at the top of the page: (IMPORTANT: Set to empty message if not used; #Comment out unused messages)
+      * Set BROADCASTMESSAGE =
+      * #Set BROADCASTMESSAGE = *NOTE:* Edit and Attach will be disabled today between 05:00 PM and 06:00 PM PDT (00:00 to 01:00 GMT) for a scheduled <nop>%WIKITOOLNAME% maintenance.
+      * %I% __Note:__ if you need to block all user access (view included) the easiest way it to change the =configure= =AccessControl= option to =AdminOnlyAccess= (see the =Security and Authentication= section)
+
+   * Users or groups allowed to [[%SYSTEMWEB%.ManagingWebs][create new top-level webs]]: (ex: %USERSWEB%.WebCreatorsGroup). If set to nothing, only administrators will be able to do this.
+      * Set ALLOWROOTCHANGE = %USERSWEB%.AdminGroup
+
+---+++ Search Settings
+
+   * Default type for search bin script, one of: keyword (for search engine like syntax), regex (for RegularExpression search), or literal (for verbatim search). It does not influence the default for the WebSearch
+      * Set SEARCHDEFAULTTTYPE = keyword
+   * Default for =%<nop>SEARCH{}%= macro, one of: keyword, regex, or literal
+      * Set SEARCHVARDEFAULTTYPE = literal
+   * Stop words, e.g., common words and characters to exclude from a keyword search:
+      * Set SEARCHSTOPWORDS = a, all, am, an, and, any, as, at, b, be, by, c, d, e, for, from, g, h, how, i, i'm, i.e., in, is, isn't, it, it's, its, j, k, l, m, n, o, of, on, or, p, q, r, s, t, that, that's, the, this, to, u, v, w, was, wasn't, what, what's, when, where, who, who's, will, with, x, y, z
+   * Default page size for Index topics - such as WebIndex, WebSearch
+      * Set DEFAULTPAGESIZE = 50
+
+<div class="foswikiHelp">%T% Customize the Search and Jump boxes at the top of the page by customizing the !WebTopBar.  See [[PatternSkinCustomization#Top_bar]] and WebTopBarExample.</div>
+
+---+++ E-mail Settings
+
+   * 'Mail this topic' mailto: link - can be included in topics, templates or skins
+      * Set MAILTHISTOPIC = <a href="mailto:?subject=%BASETOPIC%&amp;body=%TOPICURL%">%MAILTHISTOPICTEXT%</a>
+
+   * 'Mail this topic' link text
+      * Set MAILTHISTOPICTEXT = Send a link to this page
+
+   * URL for current topic
+      * Shortcut TOPICURL -- absolute URL for the current topic
+      * Set TOPICURL = %SCRIPTURL{"view"}%/%BASEWEB%/%BASETOPIC%
+
+#RegistrationOptions
+---+++ Registration configuration options
+---++++ Add user to group during registration
+Note, this feature also must be enabled on the UserRegistration page by adding
+=extraField_groups= to the =optionalFields= section.  See [[UserAuthentication#Custom_registration_page]] for more information.
+   * Group type settings during registration:
+      * =automatic=: users will be automatically added to eligible groups
+      * =one=: users can select one of the groups
+      * =multiple=: users can select from multiple groups to join
+      * =none=: user cannot be added to groups while registering
+   * Set REGISTRATIONGROUPTYPE = none
+
+   * If REGISTRATIONGROUPS is set to a comma separated list of groups, only those listed groups will be shown in the UserRegistration form.
+   If it is unset, then group change permissions will be used to create the list of groups eligible for selection during registration. (When using "self-registration" by guest users, the !RegistrationAgent's permissions are used. If the registration is entered by another logged in user, that user's permissions are used).
+      * #Set REGISTRATIONGROUPS =
+
+   * Implementation Notes:
+      * If the RegistrationAgent or logged in user does not have permission to change one of the listed groups,  then that group will be silently skipped.  The user will not be added to the group.
+      * Group permissions are stored in Topic Settings, *not* inline in the group topic.  Edit the Group Topic Settings to change permissions.
+
+---+++ Change of Password Message
+
+   * If password management is not handled by Foswiki, this message will be displayed on %SYSTEMWEB%.ChangePassword and %SYSTEMWEB%.ResetPassword. If email is disabled, it will also be displayed on %SYSTEMWEB%.ResetPassword. Replace this generic text with a reference to how to change or reset password within your organisation.
+      * Set CHANGEPASSWORDDISABLEDMESSAGE = %MAKETEXT{"Resetting and setting password is not available."}%
+
+---+++ HTTP-<nop>EQUIV Settings
+
+<div class="foswikiHelp"> %T% *NOTE:* Changing cache behaviour with these settings should not be necessary and may cause cache-related problems. These settings do not affect proxy caches.</div>
+   * *NOTE:* The current values of these preferences are not displayed in view mode (values are <code>&lt;link&gt;</code>-tags).
+
+   * ==http-equiv== meta tags for ==view==, ==rdiff==, ==attach==, ==search*== scripts:
+      * #Set HTTP_EQUIV_ON_VIEW =
+      * Set HTTP_EQUIV_ON_VIEW = <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="%SCRIPTURLPATH{"view"}%/%WEB%/WebRss" />
+
+   * ==http-equiv== meta tags for ==edit== script:
+      * Set HTTP_EQUIV_ON_EDIT =
+
+   * ==http-equiv== meta tags for ==preview== script:
+      * Set HTTP_EQUIV_ON_PREVIEW =
+
+
+---++ Extension Settings
+
+   * Skin overriding the default templates: (can be overwritten by %WEBPREFSTOPIC% and user preferences)
+      * Set SKIN = natedit,pattern
+
+   * *Note:* See SkinBrowser for currently installed skins
+
+---+++ JQuery
+   * List of Foswiki preferences, the values of which are made available
+     through the foswiki.getPreference() javascript function.
+     Note: Plugin authors can extend this list in their =initPlugin=
+     using the following simple code fragment. Say you want to add
+     'MYPREF' to the list:
+     <verbatim class="perl">
+    my $pref = Foswiki::Func::getPreferencesValue('EXPORTEDPREFERENCES')||'';
+    my @list = split(/[,\s]+/, $pref);
+    unless (grep { /^MYPREF$/ } @list) {
+        push(@list, 'MYPREF');
+    }
+    Foswiki::Func::setPreferencesValue(
+        'EXPORTEDPREFERENCES', join(',', @list));
+    </verbatim>
+   * Set EXPORTEDPREFERENCES = PUBURL, PUBURLPATH, SCRIPTSUFFIX, SCRIPTURL, SCRIPTURLPATH, SERVERTIME, SKIN, SYSTEMWEB, TOPIC, USERNAME, USERSWEB, WEB, WIKINAME, WIKIUSERNAME, NAMEFILTER
+
+---+++ PatternSkin
+
+   * Global skin styles. To change the look of the site, point these variables to custom CSS attachments.
+      * Set FOSWIKI_LAYOUT_URL = %PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/layout.css
+      * Set FOSWIKI_STYLE_URL = %PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/style.css
+      * Set FOSWIKI_COLORS_URL = %PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/colors.css
+
+   * Themes that add upon the global skin styles. See the Theme Browser in PatternSkin.
+      * Set PATTERNSKIN_JQUERY_THEME = PatternSkinTheme
+      * Set PATTERNSKIN_THEME_VARIANT = %PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/variant_foswiki_noframe.css
+      * Set PATTERNSKIN_COLUMNS = %PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/column_left.css
+      * #Set PATTERNSKIN_NAVIGATION_TOPIC = %SYSTEMWEB%.PatternSkinHorizontalNavigationExample
+   * Deprecated (use =PATTERNSKIN_THEME_VARIANT=):
+      * Set PATTERNSKIN_THEME = %PATTERNSKIN_THEME_VARIANT%
+
+   * Overriding styles that add upon the global and theme styles. Enabled by default but empty to prevent browsers from fetching %<nop>USERLAYOUTURL%-style URLs.
+      * Set USERLAYOUTURL =
+      * Set USERSTYLEURL =
+      * Set USERCOLORSURL =
+
+   * Top bar background image and color
+      * Set WEBHEADERART = %PUBURLPATH%/%SYSTEMWEB%/PatternSkin/header5.gif
+      * Set WEBHEADERBGCOLOR = #ffffff
+
+---+++ Skin icons
+
+   * Topic containing the icon graphics library. Icons can easily be rendered with =%<nop>ICON{name}%=.
+      * Set ICONTOPIC = %SYSTEMWEB%.DocumentGraphics
+      * to use the Foswiki 1.0 iconset, set the ICONTOPIC to %SYSTEMWEB%.DocumentGraphics
+
+---+++ TinyMCEPlugin
+   * Topic containing a [[VarSECTION][section]] named =INIT= which will hold the default initialisation parameters for the !TinyMCE editor.
+      * #Set TINYMCEPLUGIN_INIT_TOPIC = %SYSTEMWEB%.TinyMCEPlugin
+         <div class="foswikiHelp"> %H% _Not set in this topic, the plugin assumes this value if missing_ </div>
+
+---+++ TwistyPlugin
+   * Show/hide animation speed: 'fast', 'slow', or integer milliseconds | =0= (no animation)
+      * Set TWISTYPLUGIN_TWISTYANIMATIONSPEED = fast
+      
+---+++ Legacy support
+   * Support for legacy "EDITTOPIC", used to be hard-coded, now replaced by TMPL:P conditional instantiation
+      * Set EDITURL = %SCRIPTURLPATH{"edit"}%/%WEB%/%TOPIC%?t=%GMTIME{"$epoch"}%
+      * Set EDITTOPIC = <a href="%EDITURL%" title="Edit Topic - deprecated usage - please see release notes">Edit</a>
+   * Support for MAINWEB which is often used in older legacy webs that have been upgraded to Foswiki
+      * Set MAINWEB = %USERSWEB%
+
+---++ Plugins Settings
+
+   * You can enable/disable Plugins using the [[%SCRIPTURLPATH{"configure"}%][configure]] interface.
+   * You can also disable installed plugins in individual webs/topics by defining the DISABLEDPLUGINS [[PreferenceSettings][preference setting]] to be a list of plugins to disable e.g.
+      * <nop>Set DISABLEDPLUGINS = SpreadSheetPlugin,EditTablePlugin
+      * Currently, %<nop>DISABLEDPLUGINS% is set to "%DISABLEDPLUGINS%"
+   * Currently activated Plugins: %ACTIVATEDPLUGINS%
+
+   * Detailed diagnostics can be found in InstalledPlugins
+   * Legacy settings:
+      * Set INSTALLEDPLUGINS = The INSTALLEDPLUGINS macro is no longer supported. You can set the Plugins execution order using the [[%SCRIPTURLPATH{"configure"}%][configure]] interface.
+
+#RenderingShortcuts
+---++ Rendering Shortcuts Settings
+
+   * Line break: Note that the setting has an intentional trailing space
+      * Shortcut BR -- line break
+      * Set BR = <br />
+   
+   * Clear floats:
+      * Shortcut CLEAR -- clear floats
+      * Set CLEAR = <span class='foswikiClear'></span>
+
+   * Bullet sign:
+      * Shortcut BULLET -- %BULLET%
+      * Set BULLET = &#8226;
+
+   * Vertical bar / pipe symbol:
+      * Shortcut VBAR -- %VBAR%
+      * Set VBAR = &#124;
+
+   * Vertical caret symbol:
+      * Shortcut CARET -- %CARET%
+      * Set CARET = &#94;
+
+   * Line break and bullet with different levels of indentation:
+      * Shortcut BB -- line break and bullet
+      * Set BB = <br />&#8226;
+      * Shortcut BB2 -- line break and bullet
+      * Set BB2 = <br />&nbsp;&nbsp;&#8226;
+      * Shortcut BB3 -- line break and bullet
+      * Set BB3 = <br />&nbsp;&nbsp;&nbsp;&nbsp;&#8226;
+      * Shortcut BB4 -- line break and bullet
+      * Set BB4 = <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8226;
+
+   * *Hint:* Above shortcuts are useful in tables where you cannot use newlines
+
+#DocGraphics
+   * Macros for graphics used in documentation - view all images in %ICONTOPIC%:
+      * Set H = <img src="%ICONURLPATH{help}%" alt="HELP" title="HELP" width="16" height="16" />
+      * Set I = <img src="%ICONURLPATH{tip}%" alt="IDEA!" title="IDEA!" width="16" height="16" />
+      * Set M = <img src="%ICONURLPATH{arrowright}%" alt="MOVED TO..." title="MOVED TO..." width="16" height="16" />
+      * Set N = <img src="%ICONURLPATH{new}%" alt="NEW" title="NEW" width="30" height="16" />
+      * Set P = <img src="%ICONURLPATH{pencil}%" alt="REFACTOR" title="REFACTOR" width="16" height="16" />
+      * Set Q = <img src="%ICONURLPATH{question}%" alt="QUESTION?" title="QUESTION?" width="16" height="16" />
+      * Set S = <img src="%ICONURLPATH{starred}%" alt="PICK" title="PICK" width="16" height="16" />
+      * Set T = <img src="%ICONURLPATH{tip}%" alt="TIP" title="TIP" width="16" height="16" />
+      * Set U = <img src="%ICONURLPATH{updated}%" alt="UPDATED" title="UPDATED" width="55" height="16" />
+      * Set X = <img src="%ICONURLPATH{warning}%" alt="ALERT!" title="ALERT!" width="16" height="16" />
+      * Set Y = <img src="%ICONURLPATH{choice-yes}%" alt="DONE" title="DONE" width="16" height="16" />
+
+   * Colored text: (see more StandardColors)
+     | You type: | =%<nop>RED% red text %<nop>ENDCOLOR% and %<nop>GREEN% green text %<nop>ENDCOLOR%= |
+     | You get: | %RED% red text %ENDCOLOR% and %GREEN% green text %ENDCOLOR% |
+      * *Note:* =%&lt;color&gt;%= text must end with =%<nop>ENDCOLOR%=. If you want to switch from one color to another one you first need to end the active color with =%<nop>ENDCOLOR%=, e.g. write =%<nop>RED% some text %<nop>ENDCOLOR% %<nop>GREEN% more text %<nop>ENDCOLOR%=.
+        <!-- Two sets of colors follow: Color test and color setting. The format of Color test is fixed, and
+             is assumed by the documentation -->
+      * %YELLOW% *Set YELLOW = looks like this* %ENDCOLOR%
+      * %ORANGE% *Set ORANGE = looks like this* %ENDCOLOR%
+      * %RED% *Set RED = looks like this* %ENDCOLOR%
+      * %PINK% *Set PINK = looks like this* %ENDCOLOR%
+      * %PURPLE% *Set PURPLE = looks like this* %ENDCOLOR%
+      * %TEAL% *Set TEAL = looks like this* %ENDCOLOR%
+      * %NAVY% *Set NAVY = looks like this* %ENDCOLOR%
+      * %BLUE% *Set BLUE = looks like this* %ENDCOLOR%
+      * %AQUA% *Set AQUA = looks like this* %ENDCOLOR%
+      * %LIME% *Set LIME = looks like this* %ENDCOLOR%
+      * %GREEN% *Set GREEN = looks like this* %ENDCOLOR%
+      * %OLIVE% *Set OLIVE = looks like this* %ENDCOLOR%
+      * %MAROON% *Set MAROON = looks like this* %ENDCOLOR%
+      * %BROWN% *Set BROWN = looks like this* %ENDCOLOR%
+      * %BLACK% *Set BLACK = looks like this* %ENDCOLOR%
+      * %GRAY% *Set GRAY = looks like this* %ENDCOLOR%
+      * %SILVER% *Set SILVER = looks like this* %ENDCOLOR%
+      * <span style='background : #808080;'>%WHITE% *Set WHITE = looks like this (with gray background)* %ENDCOLOR%</span>
+      * The following color settings are enclosed in verbatim tags to avoid incorrect nesting of XHTML tags, and in sticky to prevent wrapping of the closing verbatim.
+<sticky>
+<verbatim class="tml">
+      * Set YELLOW = <span class='foswikiYellowFG'>
+      * Set ORANGE = <span class='foswikiOrangeFG'>
+      * Set RED = <span class='foswikiRedFG'>
+      * Set PINK = <span class='foswikiPinkFG'>
+      * Set PURPLE = <span class='foswikiPurpleFG'>
+      * Set TEAL = <span class='foswikiTealFG'>
+      * Set NAVY = <span class='foswikiNavyFG'>
+      * Set BLUE = <span class='foswikiBlueFG'>
+      * Set AQUA = <span class='foswikiAquaFG'>
+      * Set LIME = <span class='foswikiLimeFG'>
+      * Set GREEN = <span class='foswikiGreenFG'>
+      * Set OLIVE = <span class='foswikiOliveFG'>
+      * Set MAROON = <span class='foswikiMaroonFG'>
+      * Set BROWN = <span class='foswikiBrownFG'>
+      * Set BLACK = <span class='foswikiBlackFG'>
+      * Set GRAY = <span class='foswikiGrayFG'>
+      * Set SILVER = <span class='foswikiSilverFG'>
+      * Set WHITE = <span class='foswikiWhiteFG'>
+      * Set ENDCOLOR = </span>
+</verbatim>
+</sticky>
+
+---++ Miscellaneous Settings
+
+   * Format of a NewWikiWord link:
+   * Note that =$text= is the topic link text, =$topic= is the name of the new topic, and =$web= is the name of the web for the new topic. Values for the 3 are taken from the link syntax =[<nop>[$web.$topic][$text]]=. For normal plain !WikiWord links =$text= and =$topic= are the same. The value of =$web= is the current web unless the link is in the format =$web.$topic=.
+      * Default setting:
+         * Set NEWLINKFORMAT = <a class="foswikiNewLink" href="%SCRIPTURLPATH{"edit"}%/$web/$topic?topicparent=%ENCODE{"%WEB%.%TOPIC%"}%" rel="nofollow" title="%MAKETEXT{"Create this topic"}%">$text</a>
+
+   * %SYSTEMWEB%.PreviewBackground image:
+      * Set PREVIEWBGIMAGE = %PUBURLPATH%/%SYSTEMWEB%/PreviewBackground/preview2bg.gif
+
+   * User-friendly synonyms for system webs
+      * Set DOCWEB = %SYSTEMWEB%
+
+   * Show extra help for !ApacheLogin users for %USERSWEB%.AdminUser login
+      * Set ADMINLOGIN = %IF{"{LoginManager} = 'Foswiki::LoginManager::ApacheLogin' AND NOT context authenticated"
+        then="Foswiki is configured using <nop>ApacheLogin, please [[%LOGINURL%][login]] as a normal user first. Then the Admin Login will replace this text"
+        else="[[%SCRIPTURL{login}%/%BASEWEB%/%BASETOPIC%?sudo=sudo][internal admin login]] (use the password set in [[%SCRIPTURLPATH{"configure"}%][configure]])."}%
+
+   * Formatting of revision comparison: =sequential=, =sidebyside= or =debug=
+      * Set DIFFRENDERSTYLE = sequential
+
+   * Debug settings for use by Javascript and CSS authors
+      * Set FWSRC = 
+      * Set FWCOMPRESSED = .compressed
+      * Set FWUNCOMPRESSED = 
+
+   * Redefine these as follows for debugging:
+      * #Set FWSRC = _src
+      * #Set FWCOMPRESSED = .uncompressed
+      * #Set FWUNCOMPRESSED = .uncompressed
+
+---++ Access Control Settings
+
+   * No-one (except admins) should change this topic
+      * Set ALLOWTOPICCHANGE = %USERSWEB%.AdminGroup
+      * Set ALLOWTOPICRENAME = %USERSWEB%.AdminGroup
+
+---++ Accessible configuration items
+Note that any configuration variable accessed via QUERY must be included in the
+definition of {AccessibleCFG} in =configure= (expert setting)
+   * Set NAMEFILTER = %QUERY{"{NameFilter}"}%
+
+---++ Creating New Preference Settings
+
+You can introduce new [[PreferenceSettings][preference settings]] and use them in your topics and templates. There is no need to change the Foswiki engine (Perl scripts).
+   * A preference is defined in a bullet item: ==[3 spaces] * [space] Set NAME = value== <br /> Example (as a nested bullet item, indented 6 spaces):
+      * S<nop>et WEBBGCOLOR = #FFFFC0
+   * Preferences are used as [[%SYSTEMWEB%.Macros][Macros]] by enclosing the name in percent signs: ==%==. Example:
+      * When you write ==%WEB<nop>BGCOLOR%==, it gets expanded to =%WEBBGCOLOR%= .
+
+<div class="foswikiHelp"> %X% The sequential order of the [[PreferenceSettings][preference settings]] is significant. Define preferences that use other preferences FIRST. For example, set ==<nop>WEBCOPYRIGHT== before ==<nop>WIKIWEBMASTER== since the copyright notice uses the Wiki administrator e-mail address.
+
+%X% In order to protect your custom preferences from being overwritten when upgrading the [[%SYSTEMWEB%.%TOPIC%]] topic, it is recommended that all custom settings are defined in [[%LOCALSITEPREFS%]].</div>
+
+---++ Protected System Settings
+
+The following macros are declared final to protect them as read only. These are system macros that should
+never be attempted set or altered in any preference topic or topic settings.
+
+   * Set FINALPREFERENCES = WEB, TOPIC, BASEWEB, BASETOPIC, ENCODE, ENV, IF, QUERYPARAMS, QUERYSTRING, URLENCODE, URLPARAM, SCRIPTURL, SCRIPTURLPATH, SCRIPTSUFFIX, ATTACHURL, ATTACHURLPATH, PUBURL, PUBURLPATH, USERSWEB, SYSTEMWEB, SANDBOXWEB, MAKETEXT, GMTIME
+
+
+
+---++ Related Topics
+
+   * %WEBPREFSTOPIC% has preferences of the <nop>%WEB% web.
+   * User topics in %USERSWEB% can have optional user preferences.
+   * [[%SYSTEMWEB%.Macros][Macros]] has a list of common =%<nop>MACROS%=.
+   * %SYSTEMWEB%.AccessControl explains how to restrict access by users or groups.
+   * Foswiki:Extensions.PreferencesPlugin makes editing preferences a snap.
+
+*Note*: Can't edit?
+[[%SCRIPTURLPATH{"view"}%/%WEB%/%TOPIC%?raw=on][View raw topic]]
+<!-- %JQREQUIRE{"chili"}% -->

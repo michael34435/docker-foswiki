@@ -1,0 +1,70 @@
+%META:TOPICINFO{author="ProjectContributor" date="1450308566" format="1.1" version="1"}%
+---+!! %MAKETEXT{"Welcome to the [_1] web" args="<nop>%WEB%"}%
+%MAKETEXT{"The [_1] web is the sandbox you can use for testing. Everybody is welcome to add or delete some stuff. It is recommended to walk through the [_2] to get a jumpstart on the [_3] tool. A good rule of thumb is to add at the end of the page and sign and date it with your [_4]." args="<b><nop>%WEB%</b>,%SYSTEMWEB%.TwentyMinuteTutorial,<nop>%WIKITOOLNAME%,%SYSTEMWEB%.WikiName"}%
+
+<!--
+To include a custom "create new topic" form on a page, see %SYSTEMWEB%.WebCreateNewTopicComponents
+-->
+%TWISTY{
+  showlink="%MAKETEXT{"Create New Topic"}%"
+  showimgleft="%ICONURLPATH{"add"}%"
+  hidelink="%MAKETEXT{"hide form"}%"
+  hideimgleft="%ICONURLPATH{"toggleclose"}%"
+  linkclass="foswikiButton"
+  mode="div"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="js"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="formstart"
+}%
+<div class="foswikiFormSteps">
+<div class="foswikiFormStep">
+%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="topicname"
+    newtopic=""
+    placeholder="%MAKETEXT{"Topic name"}%"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="topicnamefeedback"
+}%
+%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="wikiword"
+}%
+<div>%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="errorfeedback"
+}%</div>
+<input type='hidden' name='topicparent' value='%BASETOPIC%'/>
+%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="submit"
+}%
+</div>
+</div>
+%INCLUDE{
+    "%SYSTEMWEB%.WebCreateNewTopicComponents"
+    section="formend"
+}%
+%ENDTWISTY%
+
+---++ %MAKETEXT{"Recently changed topics"}%
+%SEARCH{
+	".*"
+	type="regex"
+	nonoise="on"
+	order="modified"
+	reverse="on"
+	pager="on"
+	pagesize="5"
+}%
+
+<!--
+   * Set ALLOWTOPICCHANGE = %USERSWEB%.AdminGroup
+-->

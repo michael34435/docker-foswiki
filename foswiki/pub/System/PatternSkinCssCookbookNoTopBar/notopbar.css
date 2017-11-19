@@ -1,0 +1,20 @@
+/* copy the styles from viewtopbar.pattern.tmpl */
+#patternTopBar,
+#patternClearHeaderCenter,
+#patternClearHeaderLeft,
+#patternClearHeaderRight,
+#patternTopBarContents {
+	height:0;
+}
+#patternTopBar,
+#patternTopBarContents {
+	display:hidden;
+}
+#patternSideBar {
+	/* dynamic background image set in topic */
+	/* or write a hard coded image location here */
+	background-attachment:relative;
+	background-position:1em 11px;
+	background-repeat:no-repeat;
+	border-top:0px;
+}

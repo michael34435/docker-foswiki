@@ -1,0 +1,329 @@
+%META:TOPICINFO{author="ProjectContributor" date="1460338963" format="1.1" version="1"}%
+%META:TOPICPARENT{name="AdminDocumentationCategory"}%
+%STARTINCLUDE%
+---+ User Authentication
+
+Controlling who can access your site
+
+%TOC%
+
+---++ Overview
+
+Authentication, or "login", is the process by which a user lets Foswiki know who they are.
+
+Knowing who is accessing your site isn't just to do with controlling access, it's a critical part of what makes Foswiki a social medium. Foswiki uses user identities to manage a wide range of personal settings. Most importantly, it means every contribution is automatically attributed to the person who made it.
+
+Foswiki authentication is very flexible, and can either stand alone, or integrate with existing authentication systems. You can set up Foswiki to require authentication for every access, or only for changes.
+
+*Quick Authentication Test* - Use the %<nop>USERINFO% macro to return your current identity:
+   * You are %USERINFO%
+
+Foswiki user authentication is split into four sections; password management, user mapping, user registration, and login management. Password management deals with how users personal data is stored. Registration deals with how new users are added to the wiki. Login management deals with how users log in.
+
+Once a user is logged on, they can be remembered using a _Session_ stored (for example) in a cookie in the browser. This avoids them having to log on again and again.
+
+Foswiki user authentication is configured through the Security Settings pane in the [[%SCRIPTURLPATH{"configure"}%][configure]] interface, =Security and Authentication= tab. Selecting an authentication method is a complex business, and you may want to read the [[#HowTo][Important Considerations]] section before you do so.
+
+#PasswordManagement
+---++ Password Management
+
+'Password management' is the process by which user identies and passwords are stored and checked. This work of password management is done by a module called the 'Password Manager'.
+
+The Password Manager is selected using the ={PasswordManager}= setting in the *Security and Authentication* -> *Passwords* tab in [[%SCRIPTURL{configure}%][configure]].
+
+Out of the box, Foswiki comes with a default password manager. Alternatively you can install one of several different password managers to interface to third-party authentication databases (such as LDAP).
+
+---+++ The default Password Manager, =HtPasswdUser=
+This password manager uses =.htpasswd= files stored on the server. These files can be unique to Foswiki, or can be shared with other applications (such as an Apache webserver).
+
+A variety of password encodings are supported for flexibility when re-using existing files. See the descriptive comments in =configure= for more details.
+
+<div class='foswikiHelp'>
+%X% *Caution:* By default Foswiki uses the =.htpasswd= file to also store the e-mail addresses of registered users.  If the =.htpasswd= file will be shared with another application, it is critical to preserve the e-mail address stored as the last field in each line of the file.
+</div>
+#ChangingPasswords
+---+++ Changing Passwords (and Email Addresses)
+
+If your ={PasswordManager}= supports password changing, you can change and reset passwords using forms on regular pages.
+
+   * The ChangePassword form ( ==Foswiki/ChangePassword== )
+   * The ResetPassword form ( ==Foswiki/ResetPassword== )
+
+If the ={PasswordManager}= does not support password changing, the ChangePassword and ResetPassword will show a simple message. This message is defined by the setting CHANGEPASSWORDDISABLEDMESSAGE in %SYSTEMWEB%.%WIKIPREFSTOPIC%. You can redefine this setting by copying it to %LOCALSITEPREFS% and change it to include a link to the password management website of your organisation.
+
+If the active ={PasswordManager}= supports storage and retrieval of user e-mail addresses, you can change your e-mail using a regular page. As shipped, this is true only for the Apache 'htpasswd' password manager.
+
+   * The ChangeEmailAddress form ( ==Foswiki/ChangeEmailAddress== )
+
+If the ={PasswordManager}= does not support password changing, ChangeEmailAddress will guide the user to define the e-mail address in the user topic.
+
+#UserMapping
+---++ User Mapping
+
+Usually when you are using an external authentication method, you want to map from an unfriendly 'login name' to a more friendly WikiName. This process is called 'User Mapping' and is performed in Foswiki by a module called the 'User Mapping Manager'.
+
+The user mapping manager is selected using the ={UserMappingManager}= setting in the *Security and Authentication* -> *User mapping* tab in [[%SCRIPTURL{configure}%][configure]].
+
+A secondary function of the User Mapping Manager is to import information such as user groups from an external user authentication module.
+
+Out of the box, Foswiki comes with a default user mapping manager that maps usernames to wikinames, and supports Foswiki groups internal to Foswiki. If you want, you can plug in an alternate user mapping module to support import of groups etc.
+
+---+++ The default User Mapping Manager, =TopicUserMapping=
+This module uses the content of certain specific Foswiki topics to map usernames to wikinames, and supports Foswiki groups internal to Foswiki. This module is described in depth in TopicUserMappingContrib.
+
+#UserRegistration
+---++ User Registration
+
+'User registration' is the process by which a new user registers to use the wiki. Foswiki new user registration is a sophisticated process which negotiates with the  Password Manager
+and User Mapping Manager to establish the identity of the user, to set and change passwords, and store e-mail addresses and other user meta-data. The process includes:
+   * new user verification
+   * optional new user approval
+   * *single user registration* via the UserRegistration page,
+   * *bulk user registration* via the BulkRegistration page (for admins only).
+
+---+++ Configuration
+
+Registration options are selected in the *Security and Authentication* -> *Registration* tab in [[%SCRIPTURL{configure}%][configure]].  Options controlled by configure include:
+   * Enable user registration: ={Register}{EnableNewUserRegistration}=
+   * Use login names separate from the WikiName: ={Register}{AllowLoginName}=
+   * Verify the user's email address: ={Register}{NeedVerification}=
+   * Expiration of unverified pending registrations: ={Register}{ExpireAfter}=
+   * Approve registrations by a 3rd party: ={Register}{NeedApproval}=
+   * Block duplicate registrations by same email address: ={Register}{UniqueEmail}=
+   * Filter registering email addresses by domain: ={Register}{EmailFilter}=
+
+---+++ How registration works:
+
+The default "landing page" for user registration is [[%SYSTEMWEB%.UserRegistration]], however this page is a "director" page, and displays one of two pages:
+   * [[%USERSWEB%.UserRegistration]] or if that page does not exist,
+   * [[%SYSTEMWEB%.DefaultUserRegistration]]
+These are the default registration pages, but as of Foswiki 2.1, any page name can be used as the registration page.  This can accomodate customized registrations, such as !CustomerRegistration, !VendorRegistration, etc.
+each with its own settings.  This page (from %SYSTEMWEB% or %USERSWEB%) or other custom registration pages each sets a number of additional registration defaults, and then INCLUDEs the components that together compose the operational page.  These settings include:
+   * =%<nop>NEWUSERTEMPLATE%= - Specifies the template topic used to create the new user's topic.  If not set, %USERSWEB.NewUserTemplate or if that does not exist,  %SYSTEMWEB%.NewUserTemplate is used.
+   * =%<nop>REGPARTS%= - Specifies a list of topics used to resolve the INCLUDEs used to build the registration form.  Defaults to the current topic, and then %SYSTEMWEB%.UserRegistrationParts.
+   * =%<nop>FIELDS%= - List optional fields to add to the registration form.  They correspond to _sections_ in the topics listed in !%REGPARTS%
+   * =%<nop>REGISTRATIONGROUPTYPE%= and  =%<nop>REGISTRATIONGROUPS%=, which controls automatic group membership upon registration.
+
+*Note:* It is important to use the new =%<nop>SET{}%= macro to establish these defaults. Traditional bullet style ="   * Set field=value= statements do not get processed when the topic is included.
+---+++ Custom registration page
+
+You can customize the default [[%SYSTEMWEB%.UserRegistration]] topic, or create new registration topics, by copying [[%SYSTEMWEB%.DefaultUserRegistration]] to !UserRegistration (or another registration topic) in %USERSWEB% web.
+This will ensure that your changes will remain intact next time you upgrade. There are some brief instructions on %SYSTEMWEB%.UserRegistration that helps you accomplish this.
+
+The user registration page is assembled from =INCLUDE= blocks either hidden on that page, or by default blocks found in %SYSTEMWEB%.UserRegistrationParts. Details of these INCLUDE blocks
+are documented in that page. The user registration page is included in the INCLUDE search order, so new include blocks can be added to the page without the need to update %SYSTEMWEB% topics.
+
+New fields may also be added to the Registration.
+   * The =name=""= parameter of the =&lt;input&gt;= tags must start with: ="Fwk0..."= (if this is an optional entry), or ="Fwk1..."= (if this is a required entry).
+   * The field name (without the Fwk* prefix) should be added to the [[%USERSWEB%.UserForm]] (or whaver form you use for user registration) so that they are stored in the user topics.
+This ensures that the fields are carried over into the user home page correctly.
+
+For example, you want to add a "DepartmentName" field. Find a similar block in %SYSTEMWEB%.UserRegistrationParts, ([[%SYSTEMWEB%.UserRegistrationParts#Optional_field:_61OrganisationName_61][OrganisationName]] for ex.) and copy the entire block to the bottom of your custom registration topic.
+Name it to create your new field, _DepartmentName_, and then add the name of the block to the list in the =%<nop>SET{"FIELDS" value="..."=   You can hide the block by enclosing it in HTML comments =&lt;!--= and =--&gt;=
+
+---+++ Automatic Group Membership
+
+You can also automatically enrol users into groups during registration. Note however that this feature is done through the user interface. It cannot be used to force a user into a NewUsersGroup for example if the user submits the registration through a bot or script that submits the form data omitting the group fields.
+
+Options include:
+   * Automatically enrolling users in one or more groups during registration
+   * Allow the user to select multiple groups from a list of eligible groups
+   * Allow the user to choose only _one_ group from a list of eligible groups
+   * Don't do any group enrolment during registration.
+
+The list of eligible groups can be generated in one of two ways:
+   * Manually by configuration. This fixed list of groups will always be listed.
+   * Automatically based upon CHANGE permission on the group topics.
+
+There are two registration scenarios that apply:
+   $ Self-registration by Guest users: The actual registration will be processed by the special internal user %USERSWEB%.RegistrationAgent. Group topics must include an ALLOWTOPICCHANGE = %USERSWEB%.RegistrationAgent to be eligible for enrolment.
+   $ Registration by logged-in users: The registration form is filled out by some other logged-in user. In this case, the %USERSWEB%.RegistrationAgent is *not* used for Group updates. The current user must have ALLOWTOPICCHANGE permission for groups for them to be eligible for enrollment.
+
+Note: During registration, if it turns out that the current user or %USERSWEB%.RegistrationAgent doesn't have permission to update the group topic, the group update will be silently skipped.  The user will still be able to register.
+
+The settings that control group memberships during registration are located at the top of the %SYSTEMWEB%.DefaultUserRegistration topic. You also must add =extraField_groups= to the list of optional fields in the ==%<nop>SET{"FIELDS" value="..."= macro in the =optionalFields= section.
+
+#LoginManagement
+---++ Login Management
+
+'Login management' controls the way users have to log in. There are three basic options; no login, login via a Foswiki login page, and login using the webserver authentication support. Login management is performed by a module called the 'Login Manager'.
+
+The Login Manager is selected using the ={LoginManager}= setting in the *Security and Authentication* -> *Login* tab in [[%SCRIPTURL{configure}%][configure]].
+
+#NoLogin
+---+++ No Login
+
+Does exactly what it says on the tin. Forget about authentication to make your site completely public - anyone can browse and edit freely, in classic Wiki style. All visitors are given the %USERSWEB%.WikiGuest default identity, so you can't track individual user activity.
+
+<div class='foswikiHelp'> *%X% Note:* This setup is *not* recommended on public websites for security reasons; anyone would be able to change system settings and perform tasks usually restricted to administrators.</div>
+
+#TemplateLogin
+---+++ Template Login
+
+%STARTSECTION{"TemplateLogin"}% Template Login asks for a username (or optionally e-mail address) and password in a web page, and processes them using whatever Password Manager you choose. Users can log in and log out. Client Sessions are used to remember users. Users can choose to have their session remembered so they will automatically be logged in the next time they start their browser.
+
+---++++ Enabling Template Login
+
+<div class='foswikiHelp'>%I% By default, your Foswiki installation is probably already using !TemplateLogin, !HtPasswdUser and [[TopicUserMappingContrib]] as the default =Login=, =Password= and =user mapping= options.</div>
+   1 Using %IF{"'%INSTALLGUIDE%'='1'" then="=configure=" else="[[%SCRIPTURLPATH{"configure"}%][configure]]"}%, =Security And Authentication= tab
+      1 Navigate to the =Login= tab on the =Security and Authentication= panel. Select the =Foswiki::LoginManager::TemplateLogin= login manager.
+      1 Navigate to the =Passwords= tab. Select the appropriate =PasswordManager= for your system - the default is =Foswiki::Users::HtPasswdUser=.
+      <div class='foswikiHelp'>%H% There is an EXPERT configure setting ={TemplateLogin}{PreventBrowserRememberingPassword}= that you can set to prevent Browsers from remembering username and passwords if you are concerned about public terminal usage.</div>
+      <div class='foswikiHelp'>%H% There is an EXPERT configure setting ={TemplateLogin}{AllowLoginUsingEmailAddress}= that you can set to allow users to login using their password system registered e-mail addresses.</div>
+%ENDSECTION{"TemplateLogin"}%%INCLUDE{"UserAuthentication" section="TESTING"}%
+
+AccessControl has more information on setting up access controls.
+
+<div class='foswikiHelp'>
+%X% Foswiki AccessControls do not protect topic attachments unless the web server has been configured to do so using the =viewfile= script. Visit Foswiki:Support.ApacheConfigGenerator for examples using Apache.
+
+%T% As Template Login uses a wiki page for its login prompt, there is a great deal of flexibility in customizing the login page for your purposes.
+
+%T% The default new user template page is in [[%SYSTEMWEB%.NewUserTemplate][%SYSTEMWEB%.NewUserTemplate]]. The same macros get expanded as in the [[template topics]]. You can create a custom new user topic by creating the !NewUserTemplate topic in %USERSWEB% web, which will then override the default in %SYSTEMWEB% web. See %SYSTEMWEB%.UserForm for copy instructions.</div>
+
+---++++ Controlling access to individual scripts
+
+You may want to add or remove scripts from the list of scripts that require authentication. %T% Any scripts listed as requiring authentication will not be usable by the Guest user.  If you require that %USERSWEB%.WikiGuest be allowed to edit topics on your site, =edit= and =save= must be removed from the list of scripts requiring authentication. To do this, update the ={AuthScripts}= list using the *Security and Authentication" -> *Login* tab of [[%SCRIPTURLPATH{"configure"}%][configure]].
+
+#ApacheLogin
+---+++ Enabling Webserver Login
+
+%STARTSECTION{"ApacheLogin"}%With Apache Login enabled, when Foswiki needs to authenticate the user, the standard HTTP authentication mechanism is used: the browser itself will prompt for a user name and password.
+
+The rest of this section describes Webserver Login using the Apache web server, but the same process is applicable to other webserver implementations as well (though you may require a customised version of the !ApacheLogin module to do it).
+
+The advantage of this scheme is that if you have an existing website authentication scheme using Apache modules such as =mod_auth_ldap= or =mod_auth_mysql= you can just plug in to them directly.
+
+The disadvantage is that because the user identity is cached in the browser, you can log in, but you can't log out again unless you restart the browser.
+
+Foswiki maps the =REMOTE_USER= that was used to log in to the webserver to a WikiName using the table in %USERSWEB%.%WIKIUSERSTOPIC%. This table is updated whenever a user registers, so users can choose not to register (in which case their webserver username is used for their signature) or register (in which case that username is mapped to their WikiName).
+
+The same private =.htpasswd= file used in Foswiki Template Login can be used to authenticate Apache users, using the Apache Basic Authentication support.
+
+<div class='foswikiHelp'>%X% Do *not* use the Apache =htpasswd= program to modify =.htpasswd= files generated by Foswiki! =htpasswd= wipes out e-mail addresses that Foswiki saves in the info fields of this file.
+
+%I% Apache Login is required for Apache-based login methods such as =mod_ldap=
+
+%I% You can use any Apache authentication module that sets the =REMOTE_USER= environment variable.
+</div>
+
+To set up Apache Login, perform the following steps:
+
+   1 *Configure Apache Login.* Under the =Security and Authentication= pane on the =Login= tab in =configure=:
+      1 Select =Foswiki::LoginManager::ApacheLogin= for ={LoginManager}=.
+      1 Select =Foswiki::Users::HtPasswdUser= for ={PasswordManager}=.
+      1 Select =Foswiki::Users::TopicUserMapping= for ={UserMappingManager}=.
+      1 Save your settings.
+      1 Configure your Apache settings for HTTP authentication. Use the Foswiki:Support.ApacheConfigGenerator tool or the =foswiki/bin-htaccess-advanced.txt= file to set the following Apache directives on the =bin= scripts:(This example is for Apache 2.2, there are changes required if using Apache 2.4) <sticky>
+      <verbatim>
+ AuthType Basic
+ <FilesMatch "(attach|edit|manage|rename|save|upload|mail|logon|.*auth).*">
+ require valid-user
+ </FilesMatch></verbatim></sticky>
+      You can also refer to the sample =foswiki_httpd_conf.txt= and =bin-htaccess-advanced.txt= files to see how the appropriate Apache directives are specified.
+%ENDSECTION{"ApacheLogin"}%%INCLUDE{"UserAuthentication" section="TESTING"}%
+
+---++++ Logons via bin/logon
+
+Any time a user requests a page that needs authentication, they will be forced to log on. It may be convenient to have a "logon" link as well, to give the system a chance to identify the user and retrieve their personal settings. It may be convenient to force them to log on.
+
+The ==bin/logon== script enables this. If you are using Apache Login, the ==bin/logon== script must be set up in the Apache configuration or ==bin/.htaccess== file to be a script which requires a =valid user=. Once authenticated, it will redirect the user to the view URL for the page from which the =logon= script was linked.
+
+---++++ Controlling access to individual scripts
+
+You may want to add or remove scripts from the list of scripts that require authentication. %T% Any scripts listed as requiring authentication will not be usable by the Guest user.  If you require that %USERSWEB%.WikiGuest be allowed to edit topics on your site, =edit= and =save= must be removed from the list of scripts requiring authentication. To do this, add/remove the script from =bin/.htaccess=, or from the !=FilesMatch= line in the Apache configuration.
+
+#TrackSessions
+---+++ Sessions
+
+Foswiki uses the CPAN:CGI::Session and CPAN:CGI::Cookie modules to track sessions. These modules are de facto standards for session management among Perl programmers. If you can't use Cookies for any reason, CPAN:CGI::Session also supports session tracking using the client IP address.
+
+You don't _have_ to enable sessions to support logins in Foswiki. However it is *strongly* recommended. Foswiki needs some way to remember the fact that you logged in from a particular browser, and it uses sessions to do this. If you don;t enable sessions, Foswiki will try hard to remember you, but due to limitations in the browsers it may also forget you (and then suddenly remember you again later!). So for the best user experience, you should enable sessions.
+
+There are a number of [[%SYSTEMWEB%.Macros][macros]] available that you can use to interrogate your current session. You can even add your own session variables to the Foswiki cookie. Session variables are referred to as "sticky" variables.
+
+---++++ Getting, Setting, and Clearing Session Variables
+
+You can get, set, and clear session variables from within Foswiki web pages or by using script parameters. This allows you to use the session as a personal "persistent memory space" that is not lost until the web browser is closed. Also note that if a session variable has the same name as a Foswiki preference, the session variables value takes precedence over the Foswiki preference. *This allows for per-session preferences.*
+
+To make use of these features, use the tags:
+
+<!-- %JQREQUIRE{"chili"}% -->
+<verbatim class='tml'>
+%SESSION_VARIABLE{ "varName" }%
+%SESSION_VARIABLE{ "varName" set="varValue" }%
+%SESSION_VARIABLE{ "varName" clear="" }%</verbatim>
+
+<div class='foswikiHelp'>%X% [[AccessControls][Access controls]] cannot be modified in this way</div>
+
+---++++ Cookies and Transparent Session IDs
+
+Foswiki normally uses cookies to store session information on a client computer. Cookies are a common way to pass session information from client to server. Foswiki cookies simply hold a unique session identifier that is used to look up a database of session information on the Foswiki server.
+
+For a number of reasons, it may not be possible to use cookies. In this case, Foswiki has a fallback mechanism; it will automatically rewrite every internal URL it sees on pages being generated to one that also passes session information.  Passing session identification in the URL is not considered secure and is strongly discouraged.
+
+---++++ Sessions and Roaming or Mobile Users
+
+If =$Foswiki::cfg{Sessions}{UseIPMatching}= is enabled,  =CGI::Session= code will compare the current user's IP Address to the address that was used
+when the session was initially created.
+If the IP address has changed, then the session is invalidated and the user is required to re-authenticate.
+There is further information about this option in the [[%SCRIPTURLPATH{"configure"}%][configure]] interface, =Security And Authentication= tab.
+
+This option is enabled by default in Foswiki 2.0.  It should be disabled if mobile users encounter issues due to frequent IP address changes.  It is of
+limited value if the users access Foswiki via a proxy or other device that causes multiple users to share the same IP address.
+
+---++++ Optional Sessions for Guest users
+
+_EXPERIMENTAL feature:_ In Foswiki version 2.0, sessions can be suppressed for guest users.   This is generally safe if guests have no ability to update.
+However if guests are permitted to update, such as by using the CommentPlugin, or if any wiki applications make use Session Variables, (See VarSESSIONVAR) then guest sessions should be enabled. See the
+[[%SCRIPTURLPATH{"configure"}%][configure]] interface, =Security And Authentication= tab for more information.
+
+#HowTo
+---++ Important Considerations
+
+Finally, some points you need to consider when selecting an authentication method.
+
+One of the key features of Foswiki is that it is possible to add HTML to topics. No authentication method is 100% secure on a website where end users can add HTML, as there is always a risk that a malicious user can add code to a topic that gathers user information, such as session IDs. The Foswiki developers have been forced to make certain tradeoffs, in the pursuit of efficiency, that may be exploited by a hacker.
+
+This section discusses some of the known risks. You can be sure that any potential hackers have read this section as well!
+
+The most secure method is to only use Foswiki via SSL (Secure Sockets Layer), with a login manager installed and Client Sessions turned *off*. However this is rather extreme. Using Foswiki with sessions turned off is a pain, though, as with all the login managers there are occasions where Foswiki will forget who you are. The best user experience is achieved with sessions turned *on*.
+
+As soon as you allow the server to maintain information about a logged-in user, you open a door to potential attacks. There are a variety of ways a malicious user can pervert Foswiki to obtain another users session ID, the most common of which is known as a [[http://www.perl.com/pub/a/2002/02/20/css.html][cross-site scripting]] attack. Once a hacker has an SID they can pretend to be that user.
+
+To help prevent these sorts of attacks, Foswiki supports *IP matching*, which ensures that the IP address of the user requesting a specific session is the same as the IP address of the user who created the session. This works well as long as IP addresses are unique to each client, and as long as the IP address of the client can't be faked.
+
+Session IDs are usually stored by Foswiki in cookies, which are stored in the client browser. Cookies work well, but not all environments or users permit cookies to be stored in browsers. So Foswiki also supports two other methods of determining the session ID. The first method uses the client IP address to determine the session ID. The second uses a rewriting method that rewrites local URLs in Foswiki pages to include the session ID in the URL.
+
+The first method works well as long as IP addresses are *unique* to each individual client, and client IP addresses can't be faked by a hacker. If IP addresses are unique and can't be faked, it is almost as secure as cookies + IP matching, so it ranks as the *fourth most secure method*.
+
+If you have to turn IP matching off, and cookies can't be relied on, then you may have to rely on the second method, URL rewriting. This method exposes the session IDs very publicly, so should be regarded as "rather dodgy".
+
+Most Foswiki sites don't use SSL, so, as is the case with *most* sites that don't use SSL, there is always a possibility that a password could be picked out of the aether. Browsers do not encrypt passwords sent over non-SSL links, so using Apache Login is no more secure than Template Login.
+
+Of the two shipped login managers:
+
+*Apache Login* is useful if you want to do this sort of thing:
+<tt>wget --http-user=RogerRabbit --http-password=i'mnottelling <nop>http://www.example.com/bin/save/%SANDBOXWEB%/StuffAUTOINC0?text=hohoho,%20this%20is%20interesting</tt>
+i.e. pass in a user and password to a request from the command-line. However it doesn't let you log out.
+
+*Template Login* degrades to url re-writing when you use a client like dillo that does not support cookies. However, you can log out and back in as a different user.
+
+Finally, it would be really neat if someone was to work out how to use certificates to identify users.....
+
+See Foswiki:Support.SupplementalDocuments for more information.
+
+%STOPINCLUDE%
+<!--
+%STARTSECTION{"TESTING"}%   1 Verify that registration works by registering yourself with the %IF{"$skin = 'plain'" then="<nop>%SYSTEMWEB%.<nop>UserRegistration" else="[[$percntSYSTEMWEB$percnt.UserRegistration]]"}% topic. If there are problems, try these troubleshooting tips: %IF{
+      "'%INSTALLGUIDE%'='1'"
+      then="$n      1 If you are reading this from the INSTALL.html file, you can enter [[%SYSTEMWEB%.UserRegistration]] into the 'Jump' box in the top right of any Foswiki page."}%
+      1 %STARTSECTION{"SMTPNOTE"}%*Note:* If e-mail is enabled in %IF{"$skin = 'plain'" then="configure" else="[[%SCRIPTURLPATH{"configure"}%][configure]]"}%, Foswiki will  not allow any new registrations unless e-mail is functional. In order to avoid issues, return to the =Mail and Proxies=, =Email Test= tab in =configure= and verify that Foswiki can successfully send e-mail.%ENDSECTION{"SMTPNOTE"}%
+      1 If your !PasswordManager is =HtPasswdUser= (the default), check the =.htpasswd= file is being updated correctly with a new entry. If not, check ={Htpasswd}{FileName}= is correct (under =Security and Authentication= on the =Password= tab in =configure=), and that the webserver user has write permission.
+   1 Create a new topic (in  %IF{"$skin = 'plain'" then="<nop>%SANDBOXWEB%.%HOMETOPIC%" else="[[$percntSANDBOXWEB$percnt.%HOMETOPIC%][$percntSANDBOXWEB$percnt]]"}% web for example) to confirm that authentication works.
+   1 *Add users to the %USERSWEB%.AdminGroup*. Edit the %USERSWEB%.AdminGroup topic in the %USERSWEB% web to include users that should have administrator status. Read [[InstallationGuide#AboutAdminUsers][defining adminstrator user(s)]] for more information.
+   <div class="foswikiHelp"> %X% *This is a very important step*, as users in this group can access _all_ topics, independent of Foswiki access controls.</div>%ENDSECTION{"TESTING"}%
+-->
+---
+
+*%MAKETEXT{"Related Topics:"}%* AdminDocumentationCategory, AccessControl

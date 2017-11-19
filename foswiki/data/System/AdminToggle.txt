@@ -1,0 +1,34 @@
+%META:TOPICINFO{author="ProjectContributor" comment="reprev" date="1426913092" format="1.1" reprev="2" version="1"}%
+---+ Group Member Toggle
+
+This topic implements a button that will turn Admin status on or off for the
+current user (!%WIKINAME%), by adding or removing the user from the
+!AdminGroup.  This new function is recommended to replace _internal admin_ login when
+possible.  It provides better security and allows changes to be tracked to the
+user making the change instead of the anonymous !AdminUser.
+
+%T% This is actually a generic capability.  Any group membership can be toggled using this function.
+
+<div class='foswikiHelp'>
+  %T% Note: This feature is only usable if your User Mapper allows group membership to be modified from the Wiki.
+</div>
+
+---++ Configuration
+   * Edit the settings for %USERSWEB%.AdminGroup
+      * Allow the users who are permitted to gain "Admin Rights" to modify the topic.
+      * Ex. =* ALLOWTOPICCHANGE = !AdminGroup, !JoeTheAdmin, !AnotherAdmin=
+   * Remove those users from the !AdminGroup. They can add themselves using the below button.
+   * Notify the potential administrators that they can either use this topic, or =%I<nop>NCLUDE{"AdminToggle"}%= in their custom sidebar topic, or somewhere else convenient.
+
+---++ Operation
+
+_If you (<nop>%WIKINAME%) has permission to change the %USERSWEB%.AdminGroup topic,  a button to add or remove yourself from the !AdminGroup will appear below:_
+Be sure that you have explicit CHANGE authority on the !AdminGroup or removing yourself from the group will be permanent.
+
+%STARTINCLUDE%%INCLUDE{"%USERSWEB%.GroupViewTemplate" section="manageself" groupname="AdminGroup"}%%STOPINCLUDE%
+
+---+++ More enhancements
+
+You can add this button to your custom sidebar for any group, by using the following include macro:
+<verbatim>
+%INCLUDE{"%USERSWEB%.GroupViewTemplate" section="manageself" groupname="AdminGroup"}%</verbatim>

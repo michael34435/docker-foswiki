@@ -1,0 +1,22 @@
+%META:TOPICINFO{author="ProjectContributor" date="1433037425" format="1.1" version="1"}%
+---+!! %MAKETEXT{"Welcome to the [_1] web" args="<nop>%WEB%"}%
+Congratulations, you have finished installing Foswiki.
+
+This site is running Foswiki release *%WIKIRELEASE%*, Plugin API version *%PLUGINVERSION{}%*
+
+To learn more about Foswiki, visit the [[%SYSTEMWEB%.%HOMETOPIC%][%SYSTEMWEB% web]]. Please ensure that the read/write
+permissions for each web on your site match your access control policies (see [[%SYSTEMWEB%.%WIKIPREFSTOPIC%]] 
+and [[%LOCALSITEPREFS%]]). Replace this text with a description of your new
+%IF{"defined WIKITOOLNAME" then="<nop>%WIKITOOLNAME%" else="Foswiki"}% site. 
+
+---++ <nop>%WEB% Web Utilities
+   * [[%SYSTEMWEB%.WelcomeGuest][WelcomeGuest]] - for first time visitors %IF{"context registration_enabled" then="
+   * [[%SYSTEMWEB%.UserRegistration][Registration]] - become a <nop>%WIKITOOLNAME% user"}% %IF{"istopic '%WIKIUSERSTOPIC%'" then="
+   * [[%WIKIUSERSTOPIC%]] - list of users of this <nop>%WIKITOOLNAME% site"}%
+   * [[WikiGroups]] - list of groups used for access control
+   * [[WebTopicList]] - all topics in alphabetical order
+   * [[WebChanges]] - recent topic changes in this web
+   * [[WebNotify]] - subscribe to an e-mail alert sent when topics change
+   * [[WebRss]], [[WebAtom]] - RSS and ATOM news feeds of topic changes %IF{"istopic '%STATISTICSTOPIC%'" then="
+   * [[%STATISTICSTOPIC%]] - listing popular topics and top contributors"}%
+   * [[WebPreferences]] - preferences of this web

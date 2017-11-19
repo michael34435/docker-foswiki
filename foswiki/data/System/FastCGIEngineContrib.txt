@@ -1,0 +1,261 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1496065343" format="1.1" version="1"}%
+---+!! <nop>FastCGI Engine Contrib
+Permits Foswiki to be executed with FastCGI
+
+%TOC%
+
+---++ Overview
+
+[[http://www.fastcgi.com][FastCGI]] is a technology to deliver dynamic web
+content. It differs from [[http://hoohoo.ncsa.uiuc.edu/cgi/][CGI]] cause it
+remains persistent between requests, instead of CGI approach of a new forked
+process per request. This way there is a significant performance improvement,
+since all overhead related to create a new process, load the interpreter and
+compile the code is skipped.
+
+Some !FastCGI features:
+   * The number of persistent processes is configurable, independent of the web server. This leads to easier capacity planning/management.
+   * Processes can be run with a different user: more security.
+   * Processes can be run on another machines: easier load balancing.
+
+---++ Installation Instructions
+
+<div class="foswikiHelp">%T% We recommend that you use the thoroughly tested Foswiki:Support.ApacheConfigGenerator for creating your apache configuration.  It can generate a comprehensive Apache configuration for your installation.
+</div>
+
+
+This section is about how to configure FastCGIEngineContrib, considering many possible environments:
+
+   * [[http://httpd.apache.org][Apache]] web server 
+      * Using only =.htaccess= (typically on host services)
+      * With access to apache configuration files
+         * Remote !FastCGI processes
+      * Using =mod_fcgid= or =mod_fastcgi=
+   * [[http://www.lighttpd.net/][Lighttpd]] web server 
+      * Remote !FastCGI processes
+   * [[http://nginx.org/][nginx]] web server
+      * remote !FastCGI processes
+
+
+---+++ Installation of the FCGI CPAN library
+<noautolink>
+FastCGIEngineContrib uses a CPAN library called FCGI which is not normally distributed with Perl. Version of FCGI should be 0.67 or later.
+See SystemRequirements (Foswiki:System.SystemRequirements) for a detailed requiremments by server distribution.
+
+   * Debian / Ubuntu:  =apt-get install libfcgi-perl=
+   * RedHat / Centos:  =yum install perl-FCGI= 
+   * SuSE: =zypper install  perl-FCGI=
+   * Gentoo: =emerge dev-perl/FCGI=
+   * FreeBSD: =pkg install p5-FCGI=
+   * CPAN: =cpanm FCGI=
+</noautolink>
+---+++ Apache
+
+---++++ Apache Module
+
+There are two options that basicly do the same thing
+
+   * mod_fastcgi which is the oldest implementation. It is released under a custom non-free license but it is free of charge.
+   * mod_fcgid which is the newer implementation released under the GPL license and now part of the Apache Foundation.
+
+=mod_fcgid= is provided by default with apache2, and is recommended for simplicity of installation and configuration.
+
+Below are some resources for the most common Linux distributions. The actual versions of the latest packages may have changed since this documentation was written.
+
+mod_fcgid resources
+   * Sources - http://httpd.apache.org/mod_fcgid/
+   * Debian - http://packages.debian.org/search?searchon=names&keywords=libapache2-mod-fcgid
+
+mod_fastcgi resources
+   * !RedHat/Centos - http://rugmonster.org/2009/03/building-mod_fastcgi-on-rhel5/ and http://www.nagare.org/trac/blog/apache_mod_fastcgi
+
+---++++ Apache Configuration
+
+<div class="foswikiHelp"> 
+%X% It is strongly recommended that users work from
+Foswiki:Support.ApacheConfigGenerator to create initial Apache configurations.
+This config generator is comprehensive and well tested.
+
+Foswiki also ships  with an example apache configuration, and example
+=.htaccess= files which include Fcgi example configurations.
+</div>
+
+---+++ Lighttpd
+<div class="foswikiHelp">
+Edit the url (=/foswiki/bin=) and file system paths (=/var/www/foswiki=) below
+as appropriate for your system.
+</div>
+
+You need to load [[http://redmine.lighttpd.net/wiki/lighttpd/Docs:ModFastCGI][mod_fastcgi]].
+
+<pre class="bash">
+# Example with FastCGI processes launched by the webserver
+
+$HTTP["url"] =~ "^/foswiki/bin/" {
+    alias.url += ( "/foswiki/bin" => "/var/www/foswiki/bin/foswiki.fcgi" )
+    fastcgi.server = ( ".fcgi" => (
+            (
+                "socket"    => "/var/www/foswiki/working/tmp/foswiki.sock",
+                "bin-path"  => "/var/www/foswiki/bin/foswiki.fcgi",
+                "max-procs" => 3
+            ),
+        )
+    )
+}
+</pre>
+
+<pre class="bash">
+# Example with external FastCGI processes (running on the same host, with another user or at a remote machine)
+
+$HTTP["url"] =~ "^/foswiki/bin/" {
+    alias.url += ( "/foswiki/bin" => "/var/www/foswiki/bin/foswiki.fcgi" )
+    fastcgi.server = ( ".fcgi" => (
+            (
+                "host"    => "example.com",
+                "port"    => "8080",
+            ),
+        )
+    )
+}
+</pre>
+
+---+++ Nginx
+
+In contrast to Apache or Lighttpd, Nginx does not control the life time of the =foswiki.fcgi= backend process. Instead you will
+have to start it yourself using the system's init process. The FCGI::ProcManager class will then take care of (re-)spawning 
+enough child processes as required.
+
+First, let's configure nginx to contact a =foswiki.fcgi= process on some socket on the localhost:
+
+<div class="foswikiHelp">
+Edit the file system paths (=/var/www/foswiki=, =/var/log/nginx=) below as appropriate for your system.  This configuration
+uses "short URLs".
+</div>
+
+<pre class="bash">
+server {
+    listen       80;
+    server_name  nginx.domain.com;
+
+    set $foswiki_root "/var/www/foswiki";
+    root $foswiki_root;
+
+    access_log  /var/log/nginx/foswiki-access.log;
+    error_log   /var/log/nginx/foswiki-error.log;
+    #error_log   /var/log/nginx/foswiki-error.log debug;
+
+    client_max_body_size 10M;   # Set to maximum attachment size, See also ATTACHFILESIZELIMIT
+
+    location = / {
+        root $foswiki_root;
+    rewrite .* /Main/WebHome;
+    }
+
+    location ~ (^/pub) {
+        allow all;
+    }
+
+    location ~ ^/bin/ {
+           gzip off;
+           #fastcgi_pass             unix:/var/run/nginx/foswiki.sock;
+           fastcgi_pass             127.0.0.1:9000;
+           fastcgi_split_path_info  ^(/bin/\w+)(.*);
+           #  Captures two variables   ($fastcgi_script_name) and ($fastcgi_path_info)
+           fastcgi_param            SCRIPT_FILENAME $foswiki_root/bin/$fastcgi_script_name;
+           fastcgi_param            SCRIPT_NAME     $fastcgi_script_name;
+           fastcgi_param            PATH_INFO       $fastcgi_path_info;
+           include fastcgi_params;
+       }
+
+    location ~ (^/lib|^/data|^/locale|^/templates|^/tools|^/work) {
+        deny all;
+    }
+
+    if ($http_user_agent ~
+^SiteSucker|^iGetter|^larbin|^LeechGet|^RealDownload|^Teleport|^Webwhacker|^WebDevil|^Webzip|^Attache|^SiteSnagger|^WX_mail|^EmailCollector|^WhoWhere|^Roverbot|^ActiveAgent|^EmailSiphon|^CrownPeak-HttpAgent|^$) {
+        rewrite .* /404.html break;
+   }
+
+    location ~ ^/(.*)$ {
+        rewrite ^/(.*)$ /bin/view/$1;
+    }
+}
+</pre>
+
+Next, to integrate the =foswiki.fgi= process into the system's init process use the two helper scripts in the =tools= directory:
+
+   * Conventional init scripts (Should also work with systemd)
+      * =tools/foswiki.init-script=: copy this to =/etc/init.d/foswiki=; make the file executable using =chmod +x /etc/init.d/foswiki=, and ensure that it is assigned to user/group root.
+      * =tools/foswiki.defaults=: copy this to =/etc/default/foswiki= and make appropriate adjustmenst; 
+         * make sure the process uses the same socket as configured in nginx (see above, defaults to =127.0.0.1:9000=)
+         * verify that the =FOSWIKI_ROOT= setting points to your foswiki installation.
+
+   * systemd specific service files (Used _in place of the init scripts_. Don't use both!)
+      * =tools/systemd/foswiki-fastcgi.service=: copy this to =/etc/systemd/system/foswiki.service=.
+<div class="foswikiHelp">%X% *Note:* The service file does not honor all of
+the variables in =tools/foswiki.defaults=.  If you need to override any of:
+   * The user/group - defaults to =www-data=
+   * The PIDFile - defaults to =/var/www/foswiki/working/foswiki.pid=
+   * The scripts directory - defaults to =/var/www/foswiki/bin/=
+Then the =/etc/systemd/system/foswiki.service= file must be edited directly, or overridden by a systemd "drop-in" file created in
+=/etc/systemd/system/foswiki.d/foswiki.conf=.
+</div>
+
+If your system uses =systemd=, then you will need to trigger a re-read of the init scripts and service files by running (as root): =systemctl daemon-reload=.
+*This must be done any time the init scripts or service files are modified.*
+
+You should now be able to control the backend processes using either:
+   * =service foswiki start/stop/reload/restart/status=. _or_
+   * =/etc/init.d/foswiki start/stop/reload/restart/status=
+
+Finally, add the service to the runlevels using =update-rc.d foswiki defaults= to make sure the service is started on system startup time.
+
+---++ Tuning
+
+Except from Apache configured using only =.htaccess= file, it's possible to adjust the number of !FastCGI processes. There is no _magic number_: it depends on some variables, like the hardware resources and access load. If you set this number too low, users may experience high latencies and you'll not use all hardware potential, on the other hand if this setting is adjusted too high then the server can be forced to use swap, what degrades performance a lot.
+
+Due to possible memory growth, it's recommended to automatically restart the FCGI handlers afer they serve some number of requests.  On Apache, this is
+done using the =FcgidMaxRequestsPerProcess 500= setting.  On other web servers, use the Foswiki configuration setting: ={FastCGIContrib}{MaxRequests} = 100=
+ 
+Dynamic servers are more useful when Foswiki access load on the server is low and/or it's used for something in addition to Foswiki. Under high loads, static servers can deliver better performance.
+
+---++ Known Issues
+
+<div class="foswikiHelp">
+%X% This is a persistent engine, so you need to restart the web server after any configuration changes. 
+The Foswiki FastCGI implementation on Apache has an auto-reload mechanism that can detect and restart the handlers when the =LocalSite.cfg= is changed. However there is a delay, and it is recommended to restart apache.
+After the update, each process will still serve one more request before reloading itself (e.g. if you're using 3 processes, the next 3 requests after the update will not be affected. The update will take effect on the requests made after the initial 3). This reloading mechanism works only on operating systems that have the =exec(2)= system call, like Linux and other POSIX compliant systems.
+
+%X% !FastCGI support on IIS 6.0 (and maybe other versions) is *broken* with respect to the =STDERR= stream. This may cause problems.
+</div>
+
+---++ Info
+
+| Change History: | |
+|  21 May 2017 | (1.04) Foswikitask:Item14346 - Fix issues in the systemd service file. Improve documentation.<br/>\
+                        Foswikitask:Item14402 - Fix default Foswiki root location. along with more doc improvements. |
+|  04 Oct 2016 | (1.03) Foswikitask:Item13883 - Documentation updates, Foswikitask:Item14086 - Add a systemd example service file. |
+|  14 Jun 2015 | (1.02) Foswikitask:Item10751 - Prepare for Unicode core. |
+|  29 Mar 2015 | (1.01) Foswikitask:Item13342 - Add missing dependency, don't re-init back end after every transaction while bootstrapping. |
+|  14 Jan 2015 | (1.00) Foswikitask:Item13010 - make checking =LocalSite.cfg= for changes optional so that it can be disabled for improved stability on high traffic sites |
+|  29 Aug 2014 | (0.97) Foswikitask:Item13010 - fixed instability running under FCGI::ProcManager |
+|  20 Feb 2014 | (0.96) Foswikitask:Item12755 - fixed socket not being closed properly on a reExec; work around error in FCGI.pm; added =quiet= parameter to suppress normal messages; fixed tainted pid filename; | 
+|  08 Sep 2011 | (0.95) Foswikitask:Item9957 - remove uninitialised value log message |
+|  26 Oct 2010 | (0.94) Foswikitask:Item9902 - Adding more resources about how to get and install CPAN lib and mod_fcgid or mod_fastcgi. Also includes temporary fix from Foswikitask:Item1515: added maxRequests to ease memory leaks and fix for Foswikitask:Item9456: Taint error with foswiki.fcgi  |
+|  17 Sep 2010 | (0.93) Foswikitask:Item9701 - Documentation update, suggest =mod_fcgid= preferred over =mod_fastcgi= |
+|  03 Sep 2010 | Foswikitask:Item9456 - Taint error, Foswikitask:Item9390 - !LocalSite.cfg error handling, Foswikitask:Item8765 - Perl coding issue,  Foswikitask:Item1315 - Support information |
+|  21 Dec 2009 | Foswiki:Main.ItaloValcy: fix Foswikitask:Item8238 |
+|  24 Jan 2009 | Documentation enhancements and some fixes (Foswikitask:Item853) |
+|  25 Dec 2008 | Initial Release |
+| Dependencies: | <table border="1" class="foswikiTable"><tr><th>Name</th><th>Version</th><th>Description</th></tr><tr><td align="left">FCGI</td><td align="left"> &gt;0.67</td><td align="left">Optional. Required for nginx, and other web servers when configured for FastCGI support</td></tr><tr><td align="left">FCGI::ProcManager</td><td align="left"> &gt;0.23</td><td align="left">Optional. Required on nginx for dynamic FCGI handler management. Not used with Apache.</td></tr></table> |
+| Home page: | http://foswiki.org/Extensions/%TOPIC% |
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="[[Foswiki:Main.GilmarSantosJr][Gilmar Santos Jr]]"}%
+%META:FIELD{name="Copyright" title="Copyright" value="&copy; 2008-2016 Gilmar Santos Jr and Foswiki Contributors"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/FastCGIEngineContrib"}%
+%META:FIELD{name="License" title="License" value="[[http://www.gnu.org/copyleft/gpl.html][GPL (Gnu General Public License)]]"}%
+%META:FIELD{name="Release" title="Release" value="21 May 2017"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/distro"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/FastCGIEngineContrib"}%
+%META:FIELD{name="Version" title="Version" value="1.04"}%

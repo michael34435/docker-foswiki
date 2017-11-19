@@ -1,0 +1,266 @@
+%META:TOPICINFO{author="ProjectContributor" date="1480472285" format="1.1" version="1"}%
+%META:TOPICPARENT{name="UserDocumentationCategory"}%
+%STARTINCLUDE%
+---+ Query Search
+Query searches help you search the contents of forms attached to your topics, as well as the values of other meta-data attached to the topic. Using query searches you can search:
+   1 The fields of forms
+   1 Parent relationships
+   1 File attachment information (but *not* the attached files themselves)
+
+Query searches are defined using a simple query language. The language consists of _field specifiers_ and _constants_ joined with _operators_.
+
+%TOC%
+
+---++ Field specifiers
+You use field specifiers to say what value from the topic you are interested
+in.
+
+All meta-data in a topic is referenced according to a simple plan.
+
+   * =name= - name of the topic
+   * =web= - name of the web the topic is within
+   * =text= - the body text of the topic (without embedded meta-data)
+   * =META:FILEATTACHMENT=
+      * _for each attachment_
+         * =name=
+         * =attr=
+         * =path=
+         * =size=
+         * =user=
+         * =rev=
+         * =date=
+         * =comment=
+   * =META:TOPICPARENT=
+      * =name=
+   * =META:TOPICINFO=
+      * =author=
+      * =date=
+      * =format=
+      * =version= - topic version (integer)
+   * =META:TOPICMOVED=
+      * =by=
+      * =date=
+      * =from=
+      * =to=
+   * =META:FORM= - the main form of the topic
+      * =name=
+   * =META:FIELD= - the fields in the form.
+      * _for each field in the form_
+         * =name= - name of the field
+         * =title= - title of the field
+         * =value= - what is stored in the field
+         * =form= - name of the form the field is in (currently always equal to META:FORM.name)
+         * =attributes= - string stored in the attributes, like =H= for hidden
+   * =META:PREFERENCE=
+      * _for each preference in the topic_
+         * =name=
+         * =value=
+By default all queries are performed on the _latest_ version of a topic. If you need to access _older_ versions of the topic, then you can use the =versions= field to do so:
+   * =versions=
+      * _for each older version (*most recent first*)_
+         * _repeat of all the above fields_ (except =versions=).
+         * See [[#Working_with_Versions][Working with versions]] for more details.
+
+See MetaData for details of what all these entries mean. Note that the set
+of meta-data types (and the aliases used to refer to them) may be extended
+by Foswiki extensions.
+
+Most things at the top level of the plan - =META:TOPICPARENT=, =META:TOPICINFO= etc - are _structures_ which are indexed by _keys_. For example, =META:TOPICINFO= has 4 entries, which are indexed by the keys =author=, =date=, =format= and =version=. =META:FILEATTACHMENT=, =META:FIELD= and =META:PREFERENCE= are all _[[#Working_with_Arrays][arrays]]_, which means they can have any number of records under them. Arrays are indexed by _numbers_ - for example, the first entry in the =META:FIELD= array is entry [0].
+
+It's a bit clumsy having to type =META:FILEATTACHMENT= every time you want to refer to the array of attachments in a topic, so there are some predefined aliases that make it a bit less typing:
+   * =attachments= means the same as =META:FILEATTACHMENT=
+   * =info= means the same as =META:TOPICINFO=
+   * =parent= means the same as =META:TOPICPARENT=. *Note:* =parent= is itself a map; use =parent.name= to access the name of the parent topic
+   * =moved= means the same as =META:TOPICMOVED=
+   * =form= means the same as =META:FORM=, so to test if a topic has a form named 'UserForm' you test for ="form.name ~ '*.UserForm'"=
+   * =fields= means the same as =META:FIELD=, You can also use the name of the form (the value of =form.name= e.g. =PersonForm=)
+   * =preferences= means the same as =META:PREFERENCE=
+   * extensions may add additional aliases when they register new meta-data types
+
+Fields in this plan are referenced using a simple _field specifier_ syntax:
+| *Syntax* | *Means* | *Examples* |
+| =X= | refers to the field named =X=. | =info=, =META:TOPICMOVED=, =attachments=, =name=. |
+| =X.Y= | refers to the entry with the key =Y= in the structure named =X=. If =X= is an array of structure, then it returns an array made up from the =Y= entry of each member of the array. | =info.date=, =moved.by=, =META:TOPICPARENT.name=, =attachments.name= |
+| =X[<i>query</i>]= | refers to all the elements of the [[#Working_with_Arrays][array]] =X= that match _query_. | =attachments[size>1024]=, =DocumentContainer[name!='Summary' AND value~'top secret'].value=|
+| =X[N]= | where =X= is an [[#Working_with_Arrays][array]] and =N= is an integer number >= 0, gets the Nth element of the array =X=. Negative indices can be used to index the array from the end e.g. =attachments[-1]= to get the last attachment. | =attachments[3]= |
+| =X/Y= | accesses =Y= from the topic specified by the _value_ of =X=. =X= must evaluate to a topic name | =parent.name/(form.name='ExampleForm')= will evaluate to true if (1) the topic has a parent, (2) the parent topic has the main form type =ExampleForm=. |
+| ={X}= | expands to the value of the =configure= setting {X}, if it is accessible, or '' otherwise | only some configuration settings are available: %FORMAT{"%QUERY{"{AccessibleCFG}"}%" type="string" format="=$item=" separator=", "}% |
+
+Note: at some point Foswiki may support multiple forms in the same topic. For this reason you can use the name of the form on the left-hand side of =.= and =[]= expressions. As long as there is only one form in the topic, it will have the same effect as the =fields= accessor.
+
+If you use the name of a field (for example, =LastName=) in the query without a . before it, that is taken to mean "the value of the field named this". This works if and only if the field name isn't the same as of the top level entry names or their aliases described above. For example, the following expressions will all evaluate to the same thing:
+   * =Lastname=
+   * =PersonForm.Lastname=
+   * =Lastname.value=
+If the field name would conflict with the name of an entry or alias (e.g. it's =moved= or maybe =parent=), you can prepend the name of the form followed by a dot, as shown in the last example. You cannot refer to fields that have
+the same name as operators (e.g. =AND=, =not= etc)
+
+Note: some search implementations have difficulty with expressions that rely
+on database values to disambiguate the syntax of the expression. If you don't
+get the expected result from a query search, then make sure all references
+are fully qualified.
+
+---++ Basic Types
+The query language supports five basic types:
+   * String - string constants are delimited by single quotes. Any values taked from topics (such as field values) are by default interpreted as strings. The empty string evaluates to boolean 'false', as does the string "0". All others evaluate to 'true'.
+   * Number - numerical constants can be expressed using standard floating point number notation. Strings can also be used wherever a number is expected, in which case the string will be parsed as a number. Numerical 0 evaluates to boolean 'false', all others to 'true'.
+   * Undefined - an undefined value is a placeholder for a value.
+   * Array - ordered collections of values
+   * Structure - also known as a "hash", a structure is an associative array that maps names to values. Topics are structures, with fields as described above.
+
+---+++ Boolean values
+Foswiki is implemented in Perl, and the query language inherits perl semantics for the query operators. This is usually only a problem when determining if a value is "true" or not.
+
+---++ Constants
+You use constants for the values that you compare with fields. Constants are either strings, or numbers.
+
+---++ String Constants
+String constants are always delimited by single-quotes. You can use backslash =\= to include the following special characters:
+| *Code* | *Meaning* |
+| =\n= | newline |
+| =\t= | tab |
+| =\033= | octal character code |
+| =\x7f= | hexadecimal character code |
+| =\x{1234}= | hexadecimal wide character code |
+| =\\= | a single =\= | 
+All other occurrences of backslashes are carried through into the string, so =\d= means =\d= (unless the string is used as a regular expression, in which case it means any digit).
+
+---++ Numerical constants
+Numbers can be any signed or unsigned integer or floating point number using standard scientific notation e.g. -1.2e-3 represents -0.0012
+
+---++ Named constants
+| *Name* | *Meaning* |
+| =UNDEFINED= | The undefined value |
+| =NOW= | The current time, in seconds since midnight on 1st Jan, 1970 |
+Note that constant names are *not* case sensitive. =NOW= is the same as =now=.
+
+---++ Operators
+Field specifiers and constants are combined using _operators_ to create queries.
+| *Operator* | *Meaning* | *Example* |
+| <code>=</code> | Left-hand side (LHS) exactly matches the value on the Right-hand side (RHS). | <code>field = 'String'</code>, <code>age = 1</code>. Numbers and strings can be compared. |
+| <code>!=</code> | Inverse of <code>=</code>. | <code>age != 2</code> |
+| <code>~</code> | wildcard match ('*' will match any number of characters, '?' will match any single character | "PersonForm.Surname ~ '*Smit?'") Note: Surname ~ 'Smith' is the same as Surname = 'Smith' |
+| <code>=~</code> | regular expression match, see RegularExpressions for details. | <code>number =~ '^\d+$'</code> |
+| <code>&lt;</code> | LHS is less than RHS. If both sides are numbers, the order is numeric. Otherwise it is lexical (applies to all comparison operators) | =5 &lt; 4= |
+| <code>&gt;</code> | greater than | =4 &gt; 5= |
+| <code>&lt;=</code> | less than or equal to | <code>2 &lt;= 1</code> |
+| <code>&gt;=</code> | greater than or equal to | <code>2 &gt;= 1</code> |
+| =LC= | Converts string to lower case, Use for caseless comparisons. | =lc 'XYZ'= will yield ='xyz'= |
+| =UC= | Converts string to UPPER CASE. Use for caseless comparisons. | =uc 'xyz'= will yield ='XYZ'= |
+| =D2N= | Converts a string representing a date (expressed in [[TimeSpecifications][one of the formats that Foswiki can parse]]) to a number of seconds since 1st Jan 1970. This is the format dates are stored in inside Foswiki, and you have to convert a string date using =D2N= before you can compare it with - for example - the date an attachment was uploaded. Times without a timezone are assumed to be in server local time. If the text string is not recognised as a valid date, then =D2N= will return =undefined=. | =d2n '25-Dec-2011'= |
+| =NOT= | Invert the result of the subquery | <code>not(Size &lt; 2)</code> |
+| =AND= | Combine two subqueries | =(Length &gt; Width) and (Age &lt; Beauty)= |
+| =OR= | Combine two subqueries | =(Length &gt; Width) or (Age &lt; Beauty)= |
+| =INT= | return the integer portion of a value (returns undef if the string isn't an integer, so beware.) | =int SomeField= or =int -1.5= |
+| =()= | Bracketed subquery | =(Length &gt; Width)= |
+| =,= | Array separator. | =(1,2,3)= expands to an array containing the scalar values =[1,2,3]=, If either side of this operator returns an array value, that array will be flattened into the result i.e. =((1,2),(3,4))= is equivalent to =(1,2,3,4)= |
+| =+= | Arithmetic addition, and string concatenation. String concatenation applies if either side of the expression does not evaluate to a number. | =1 + 2= |
+| =-= | Arithmetic subtraction | =2 - 1= |
+| =-= | Unary minus | =-Size= |
+| =*= | Arithmetic multiplication | =Buck * Doe= |
+| =DIV= | Arithmetic (real number) division | =Rabbits div Stoats= |
+| =IN= | Test if a value is in a list | =1 in (2, 3, 4)= |
+Note that operator names are *not* case sensitive. =AND= is the same as =and=.
+
+<div class="foswikiHelp">
+%I% The same operators are supported by the [[VarIF][%IF]] and [[VarQUERY][%QUERY]] macros.
+
+%I% If you want to know if a field is undefined (has never been given a value) then you can compare it with =undefined=.
+<sticky> 
+%I% In the operators (<literal><code> = != ~ =~ &lt; &gt; &lt;= &gt;= NOT AND OR</code></literal>) an undefined operand is treated the same as numerical 0. For =lc uc d2n= an undefined operand will give an undefined result. For =length= and undefined operand will give a result of 0.
+</sticky>
+</div>
+
+---++ Putting it all together
+When a query is applied to a topic, the goal is to reduce to a TRUE or FALSE value that indicates whether the topic matches that query or not. If the query returns TRUE, then the topic is included in the search results.
+
+A query matches if the query returns one or more values when it is applied to the topic. So if I have a very simple query, such as ="attachments"=, then this will return TRUE for all topics that have one or more attachments. If I write ="attachments[size>1024 AND name ~ '*.gif']"= then it will return TRUE for all topics that have at least one attachment larger than 1024 bytes with a name ending in =.gif=.
+
+---++ Case sensitivity
+
+The =type=query= search is always case sensitive, with the exceptions of:
+   * operator names (=and= and =AND= are the same)
+   * constants (=now= and =NOW= are the same)
+Everything else is case sensitive.    In order to do comparisons that are case insensitive, the recommended solution is to  Use the ==lc()== or ==uc()== functions to convert either side of the comparison to be lower or upper case.
+This is further demonstrated below in the examples.
+
+---++ Working with arrays
+A number of fields in a topic are _arrays_, meaning that they refer to a list of values rather than a single value. Arrays are accessed using the square brackets ([]) and dot (.) operators.
+
+The square brackets operator is actually a bit more clever than a simple query or array index. You can use the _comma_ =,= operator inside the brackets to select a number of matching elements. For example,
+<verbatim>
+versions[0,-1]
+</verbatim>
+will select the _most recent_ version (stored at index 0) and the _oldest_ version.
+
+You can even _mix_ integer indices and conditions. For example, let's say we want to select all versions that are authored by 'RoaldDahl' and also select the _oldest_ revision.
+<verbatim>
+versions[-1,info.author='RoaldDahl']
+</verbatim>
+Note that if 'RoaldDahl' authored the first revision, then you will get that revision _twice_ in the result.
+
+When the dot operator is applied to an array, it is applied to each element of the array, and the result is a new array containing the results of each application.
+
+---++ Working with versions
+The =versions= field is mainly used with =[[VarQUERY][%<nop>QUERY]]= to provide a powerful view into the history of a topic. It is an [[#Working_with_Arrays][array]] of objects, one for each revision of the topic (including the most recent), where the most recent revision is in position [0] in the array, and the second most recent in [1] etc. You can use the =versions= field to select old versions based on a query. For example,
+<verbatim>
+versions[info.author='RoaldDahl']
+</verbatim>
+will return a list of all versions authored by !RoaldDahl. You can access field
+values in the topics _as they were at the time_ - for example,
+<verbatim>
+versions[info.author='RoaldDahl'].Published
+</verbatim>
+will return an array of the values of the Published field in all versions authored by !RoaldDahl.
+
+%X% When you access the topic history using the =versions= field, the history of the topic is loaded with the *most recent revision first* i.e. at index [0]. So versions[1] does *not* refer to version 1 of the topic; it refers to the version at position 1 in the array i.e. one before the most recent revision. If you want to access the version numbered '1', then you must use =versions[info.version=1]= (or =versions[-1]=).
+
+%X% WARNING: Some of the Foswiki store implementations use an external tool called =RCS= to store topic histories. RCS has very poor performance when it comes to recovering all versions. For this reason you should avoid use of queries that use =versions= if you are using one of these stores.
+
+---++ Gotchas
+   * Remember that in the query language, topic names are _constants_. You cannot write =%USERSWEB%.UserTopic/UserForm.firstName= because =%USERSWEB%.UserTopic= will be interpreted as a form field name. If you want to refer to topics you *must* enclose the topic name in quotes i.e. ='%USERSWEB%.UserTopic'/UserForm.firstName=
+   * Query operations are performed in the context of =%<nop>WEB% and =%<nop>TOPIC%. This can cause confusion when they are used in an  <code>%INCLUDE</code>ed topic, where you might expect them to operate in the context of the _including_ topic, rather than the _included_ topic.
+
+---++ Examples
+---+++ Query examples
+   * =attachments[name='purdey.gif']= - true if there is an attachment call =purdey.gif= on the topic
+   * =(fields[name='Firstname'].value='Emma' OR fields[name='Firstname'].value='John') AND fields[name='Lastname'].value='Peel'= - true for 'Emma Peel' and 'John Peel' but *not* 'Robert Peel' or 'Emma Thompson'
+   * =(Firstname='Emma' OR Firstname='John') AND Lastname='Peel'= - shortcut form of the previous query
+   * =History<nop>Form[name='Age'].value>2= - true if the topic has a =HistoryForm=, and the form has a field called =Age= with a value > 2
+   * =History<nop>Form.Age > 2= - shortcut for the previous query
+   * =preferences[name='FaveColour' AND value='Tangerine']= - true if the topic has the given [[%SYSTEMWEB%.PreferenceSettings][preference settings]] and value
+   * =Person/(<nop>ClothesForm[name='Headgear'].value ~ '*Bowler*' AND attachments[name~'*hat.gif' AND date < d2n('2007-01-01')])= - true if the form attached to the topic has a field called =Person= that has a value that is the name of a topic, and that topic contains the form =<nop>ClothesForm=, with a field called =Headgear=, and the value of that field contains the string ='Bowler'=, and the topic also has at least one attachment that has a name matching =*hat.gif= and a date before 1st Jan 2007. (Phew!)
+   * =length(fields[NOT lc(attributes)=~'h'])= - the number of fields that are not hidden
+   * =lc(name)=~'.*ann.*'= - Would match Anne, Maryann, !MaryAnn,  !AnnMarie...
+
+---+++ Search examples
+Find all topics that are children of this topic in the current web
+<verbatim class="tml">
+%SEARCH{"parent.name = '%TOPIC%'" web="%WEB%" type="query"}%
+</verbatim>
+Find all topics that have an attachment called 'grunge.gif'
+<verbatim class="tml">
+%SEARCH{"attachments[name='grunge.gif']" type="query"}%
+</verbatim>
+Find all topics that have form =ColourForm= where the form field 'Shades' is 'green' or 'yellow' but not 'brown'
+<verbatim class="tml">
+%SEARCH{"(lc(Shades)='green' OR lc(Shades)='yellow') AND NOT(lc(Shades) ~ 'brown')" type="query"}%
+</verbatim>
+Find all topics that have PNG attachments that have been added since 26th March 2007
+<verbatim class="tml">
+%SEARCH{"attachments[name ~ '*.png' AND date >= d2n('2007-03-26')]" type="query"}%
+</verbatim>
+Find all topics that have a field 'Threat' set to 'Amber' and 'cold virus' somewhere in the topic text.
+<verbatim class="tml">
+%SEARCH{"Threat='Amber' AND text ~ '*cold virus*'" type="query"}%
+</verbatim>
+Find all topics newer than one week old
+<verbatim class="tml">
+%SEARCH{"info.date >= %CALC{"$TIMEADD($TIME(), -7, day)"}%" type="query"}%
+</verbatim>
+Search for topic based upon browser input
+<verbatim class="tml">
+%SEARCH{"lc(name)=~lc('.*%URLPARAM{"q"}%.*')" type="query"}%
+</verbatim>
+__Related Topics:__ SearchHelp, VarSEARCH, FormattedSearch, QuerySearchPatternCookbook
+<!-- %JQREQUIRE{"chili"}% -->

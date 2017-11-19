@@ -1,0 +1,6 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434574342" format="1.1" version="1"}%
+%META:TOPICPARENT{name="DeprecatedMacros"}%
+---+ ALLVARIABLES -- list of currently defined macros
+Expands to a table showing all defined [[macros]] in the current context
+
+*Deprecated 2009-04-29* in favour of [[VarSHOWPREFERENCE][SHOWPREFERENCE]]

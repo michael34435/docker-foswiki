@@ -1,0 +1,13 @@
+%META:TOPICINFO{author="ProjectContributor" date="1252458401" format="1.1" version="1"}%
+%META:TOPICPARENT{name="WebHome"}%
+Preferences
+   * Set WEBBGCOLOR = #FFD8AA
+      * Set SITEMAPWHAT = 
+      * Set SITEMAPUSETO = 
+---+++ Don't advertise the TWiki Compatibility web
+      * Set SITEMAPLIST = 
+      * Set NOSEARCHALL = on
+---+++ Admin group only
+      * Set ALLOWWEBCHANGE = %USERSWEB%.AdminGroup
+      * Set ALLOWWEBRENAME = %USERSWEB%.AdminGroup
+      * Set ALLOWTOPICCHANGE = %USERSWEB%.AdminGroup

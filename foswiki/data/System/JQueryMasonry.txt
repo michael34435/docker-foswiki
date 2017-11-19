@@ -1,0 +1,158 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1461624105" format="1.1"  version="1"}%
+%META:TOPICPARENT{name="JQueryPlugin"}%
+---+ %TOPIC%
+%JQPLUGINS{"masonry"
+  format="
+    Homepage: $homepage <br />
+    Author(s): $author <br />
+    Version: $version
+  "
+}%
+
+%STARTSECTION{"summary"}%
+Masonry is a <nop>JavaScript grid layout library. It works by placing elements in optimal 
+position based on available vertical space, sort of like a mason fitting stones in a wall. 
+You've probably seen it in use all over the Internet.
+%ENDSECTION{"summary"}%
+
+---++ Screenshot
+
+<img src="%ATTACHURL%/jQuery-Masonry.jpg" alt="jQuery-Masonry.jpg" width="547" height="351" />
+
+---++ Usage
+
+---+++ <nop>JavaScript API
+
+Configuring Masonry is fairly easy. Simply attach the =.masonry()= method 
+to the wrapping container element in your jQuery script. Depending on the layout,
+you&#8217;ll most likely need to specify one option.
+
+For layouts with elements that span multiple widths:
+
+<verbatim class="js">
+$('#wrapper').masonry({ columnWidth: 200 });
+</verbatim>
+
+---+++ Foswiki integration
+
+All containers classified as =jqMasonry= will be processed by this plugin. Options can be specified
+using HTML5 data attributes.
+
+<verbatim class="tml">
+<div class="jqMasonry" data-item-selector=".grid-item">
+   <div class="grid-item">...</div>
+   <div class="grid-item">...</div>
+   <div class="grid-item">...</div>
+...
+</div>
+</verbatim>
+
+---++ Options
+
+All options are optional, but columnWidth and itemSelector are recommended.
+
+   * =columnWidth: 240= %BR%
+     Width of a column of your grid, specified as an integer, an element selector, or a dom node.
+     default: outer width of the first element of the grid
+   * =itemSelector: '.grid-item'= %BR%
+     selector to specify which elements inside
+     the wrapping element will be rearranged.
+   * =gutter: 0= %BR%
+     Adds horizontal between item elements (to set vertical space between elements use css margin), specified as an integer or an element selector
+   * =percentPosition: false= %BR%
+     if set to =true= integer values in =columnWidth= and =gutter= will be in percentage instead of in pixel
+   * =stamp: 'item selector'= %BR%
+     Specifies which elements are stamped within the layout. Masonry will layout items below stamped elements.
+   * =isFitWidth: false= %BR%
+     If enabled, Masonry will size the width of the container to the nearest column. 
+     When enabled, Masonry will measure the width of the container's parent element, 
+     not the width of the container. This option is ideal for centering Masonry layouts.
+   * =isOriginLeft: true= %BR%
+     Controls the horizontal flow of the layout. By default, item elements start positioning at the left, with =isOriginLeft: true=. Set =isOriginLeft: false= for right-to-left layouts.
+   * =isOriginTop: true= %BR%
+     Controls the vertical flow of the layout. By default, item elements start positioning at the top, with =isOriginTop: true=. Set =isOriginTop: false= for bottom-up layouts. It's like Tetris!
+   * =containerStyle: {position:relative}= %BR%
+     CSS styles that are applied to the container element, set to =null= to disable any css
+   * =transitionDuration: '0.4s'=
+     Duration of the transition when items change position or appearance, set in a CSS time format.
+   * =isResizeBound: true= %BR%
+     Adjusts sizes and positions when window is resized.
+   * =isInitLayout: true= %BR%
+     Set isInitLayout: false to disable layout on initialization, so you can use methods or add events before the initial layout.
+
+---++ Examples
+%JQREQUIRE{"Masonry"}%
+
+See more demos at http://masonry.desandro.com/
+
+<div class="jqMasonry" data-percent-position="true" data-gutter="2" data-column-width="23">
+  <div class="box">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.
+    Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna
+    nibh, viverra non, semper suscipit, posuere a, pede.
+  </div>
+  <div class="box">
+     Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris
+     sit amet orci.
+  </div>
+  <div class="box">
+    Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper
+    vehicula
+  </div>
+  <div class="box">
+    Sit amet mi ullamcorper vehicula
+  </div>
+  <div class="box">
+    adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque
+    mauris ut lectus.
+  </div>
+  <div class="box">
+    Sit amet mi ullamcorper vehicula
+  </div>
+  <div class="box">
+    Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.
+  </div>
+  <div class="box">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio.
+    Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna
+    nibh, viverra non, semper suscipit, posuere a, pede.
+  </div>
+  <div class="box">
+     Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris
+     sit amet orci.
+  </div>
+  <div class="box">
+    Fusce accumsan mollis eros. Pellentesque a diam sit amet mi ullamcorper
+    vehicula
+  </div>
+  <div class="box">
+    Sit amet mi ullamcorper vehicula
+  </div>
+  <div class="box">
+    adipiscing in, lacinia vel, tellus. Suspendisse ac urna. Etiam pellentesque
+    mauris ut lectus.
+  </div>
+  <div class="box">
+    Sit amet mi ullamcorper vehicula
+  </div>
+  <div class="box">
+    Phasellus pede arcu, dapibus eu, fermentum et, dapibus sed, urna.
+  </div>
+</div>
+
+<literal>
+<style type="text/css">
+.box {
+   margin-bottom:1em;
+   padding: 0.5em;
+   box-sizing:border-box;
+   width:23%;
+   background: #D8D5D2;
+   -moz-border-radius: 0.5em;
+   -webkit-border-radius: 0.5em;
+   border-radius: 0.5em;
+}
+</style>
+</literal>
+
+%META:FILEATTACHMENT{name="jQuery-Masonry.jpg" attr="h" comment="" date="1461624105" size="35840" user="ProjectContributor" version="1"}%

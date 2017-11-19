@@ -1,0 +1,383 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1494884408" format="1.1" version="1"}%
+---+!! !EditRowPlugin
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = Replacement for some of !EditTablePlugin, some of !EditTablerowPlugin and some of !TablePlugin.
+%JQREQUIRE{"UI"}%
+   * Set UICON = <button type="button" class="ui-icon erp-button ui-icon-
+   * Set NOCIU = " ></button>
+-->
+<literal>
+<style type="text/css">
+@import url(%PUBURL%/%WEB%/%TOPIC%/erp.uncompressed.css);
+</style>
+</literal>
+
+%SHORTDESCRIPTION%
+
+<img src="%ATTACHURLPATH%/screenshot1.png" alt="" width="60%" style="float:right" />
+
+%TOC%
+
+Features:
+   1 You can edit one row, or even one cell at a time, instead of having to edit the entire
+     table.
+   1 Supports footer rows.
+   1 Supports sorting columns in tables using Javascript, avoiding the
+     round-trip to the server required by !TablePlugin.
+   1 Simple interface to moving rows around in the table, deleting and
+     adding rows.
+   1 Gets row numbering right (takes account of headers).
+   1 It's _much_ faster than the individual plugins it replaces.
+   1 (geeky) Coded using a clean object-oriented architecture, which
+     makes it easily extensible.
+   1 (geeky) Uses a simple REST interface for saving changes, which allows
+     Javascript table editors to use the same interface to save.
+   1 (geeky) Tolerant to Javascript being disabled in the browser
+
+Note that this plugin is designed for use with tables of up to ~1000 rows. Tables
+larger than this will work, but they put considerable stress on the browser
+and the server. For manipulating larger tables, you are recommended to investigate
+Foswiki:Extensions.JQGridPlugin.
+
+<div class='foswikiHelp'>%X% This plugin makes some changes on the server immediately,
+such as add and delete rows.  *Cancel does not roll back server side changes.*
+If necessary, roll back changes using the More topic actions "revert".</div>
+
+---++ Usage
+
+Works like the !EditTablePlugin (it uses exactly the same =%EDITTABLE= macro)
+and you can use it to edit the entire table, or just one row at a time.
+
+An =%<nop>EDITTABLE{...}%= in the topic will be associated with the next table
+in the topic. If there is no existing table, or another
+=%<nop>EDITTABLE{...}%= is seen before the next table, then a new table will
+be created.
+
+Parameters:
+
+   * ==format== - The format of the cells in a row of the table. The format is
+     defined like a table row, where the cell data specify the type for each
+     cell. For example, =format="| text,16 | label |"=. Cells can be any of
+     the following types:
+      * =text, &lt;size&gt;, &lt;initial value&gt;= Simple text field. Initial value is optional.
+      * =textarea, &lt;rows&gt;x&lt;columns&gt;, &lt;initial value&gt;=
+        Multirow text box. Initial value is optional.
+      * =select, &lt;size&gt;, &lt;option 1&gt;, &lt;option 2&gt;, etc=
+        Select one from a list of choices.
+      * =radio, &lt;size&gt;, &lt;option 1&gt;, &lt;option 2&gt;,= etc.
+        Radio buttons. =size=
+        indicates the number of buttons per line in edit mode.
+      * =checkbox, &lt;size&gt;, &lt;option 1&gt;, &lt;option 2&gt;, etc=
+        Checkboxes. =size=
+        indicates the number of buttons per line in edit mode.
+      * =label, 0, &lt;label text&gt;= Fixed label.
+      * =row= The row number, automatically worked out.
+      * =date, &lt;size&gt;, &lt;initial value&gt;, &lt;DHTML date format&gt;= Date. Initial value and date format are both optional.
+   * ==changerows== - Rows can be added and removed if ="on"=. Rows can be
+     added but not removed if ="add"=. Defaults to the value of the
+     [[%SYSTEMWEB%.Macros][preference]] =CHANGEROWS=, or ="on"= if it isn't set.
+   * ==disable== - By default, the plugin shows both full table and individual row editing controls.
+     You can choose to disable one or both of these modes using the =disable= parameter, by setting it to =row= or =full=
+     (or =row,full= to disable all editing and just leave sorting). If full table editing is disabled, but =changerows= is =on=,
+     then the <button type="button" class="erp-edittable"></button> (edit table) button will be replaced with a
+     <button type="button" class="erp-addrow""></button> (add row) button. Defaults to the value of the
+     [[%SYSTEMWEB%.Macros][preference]] =EDITROWPLUGIN_DISABLE=, or =none= if it isn't set.
+   * ==buttons== - set to =left= or =right= (the default) to position edit controls in the first or last columns in the table. =buttons="right"= may be required if you are using other plugins that expect a certain column order, such as %SYSTEMWEB%.TablePlugin.
+   * ==quietsave== - Quiet Save button is shown if ="on"=. Defaults to the
+     value of the [[%SYSTEMWEB%.Macros][preference]] =QUIETSAVE=, or =off= if it
+     isn't set.
+   * ==include== -
+     Name of another topic defining the EDITTABLE parameters. The first
+     %<nop>EDITTABLE% in the topic is used. This is useful if you have many
+     topics with the same table format and you want to update the format in
+     one place.
+   * ==headerrows== -
+     Number of rows to treat as headers. Header rows are not 
+     editable, and will not be sorted. =headerislabel= is also 
+     supported for EditTablePlugin compatibility (equivalent 
+     to =headerrows="1"=)
+   * ==header== -
+     Specify the single-row header format of a new table. For example,
+     ="%VBAR%*Food*%VBAR%*Drink*%VBAR%"=. Provided to allow you to create a new table in a document, and to have a header that is truly readonly. If =header=
+     is defined on an empty table then a header row will be automatically
+     created.<br />
+     NOTE: if neither =header= nor =headerrows= is given, but there are
+     existing headers in the table (rows in which every column is bold)
+     then those rows will automatically be taken as the table header.
+   * ==footerrows== -
+     Number of rows to treat as footers. Footer rows are not 
+     editable and will not be sorted.
+   * ==orientrowedit== -
+     unique to !EditRowPlugin, this parameter controls the 
+     orientation of a row when it is being edited. It can be
+     set to =horizontal= (the default) or =vertical=, which
+     will present the columns of the row as rows in the editor. This makes
+     editing very wide tables much easier. Has no effect in whole table
+     editing mode.
+   * ==helptopic== Topic name containing help text shown when editing a table. The [[VarSTARTINCLUDE][%<nop>STARTINCLUDE%]] and [[VarSTOPINCLUDE][%<nop>STOPINCLUDE%]] markers can be used in the topic to specify what is shown. Note that newlines are removed from the included text so the that text can be used inside a table.
+   * ==js== gives local, per-table control over the =EDITROWPLUGIN_JS= preference <a href="#js">described below</a>.
+Table rows are shown with a row edit button %UICON%pencil%NOCIU% in the first column,
+and a table edit button <button type="button" class="erp-edittable"></button> after the
+table. When the table is
+edited, then a number of buttons may be shown depending on the
+settings of =changerows= and =quietsave=.
+   * %UICON%disk%NOCIU% saves the changes
+   * <button type="button" class="erp-button erp-quietsave"></button> saves without notification.
+   * %UICON%cancel%NOCIU% cancels the open edit
+   * The following actions are applied to the topic on the server immediately and are not reverted by the Cancel action,
+      * %UICON%plusthick%NOCIU% adds a new row after the current row, taking for its contents the initial values specified in the EDITTABLE macro.
+      * %UICON%minusthick%NOCIU% deletes the row.
+      * %UICON%arrow-1-n%NOCIU% Move this row up one row in the table
+      * %UICON%arrow-1-s%NOCIU% Move this row down one row in the table
+
+---++ Per Cell Settings
+
+An individual edit field type can be defined for each individual table cell. Place an =%<nop>EDITCELL{ "type, ..." }%= macro at the end of the cell content. This is useful to override the per column =%<nop>EDITTABLE{ format="..." }%= settings, or to create tables with key/value rows. All edit field types of the =format="..."= parameter are supported. For example, to define a text field, type: =| cell content %<nop>EDITCELL{ "text, 20" }% |=
+
+__Note:__ The =%<nop>EDITCELL{}%= macro cannot be used by itself; place an =%<nop>EDITTABLE{ }%= macro at the beginning of a table where you want to use =%<nop>EDITCELL{ }%= macros.
+
+---++ Examples
+Copy the following examples and paste them into a topic in the %SANDBOXWEB% web
+(or another web where you have write access). The !EditRowPlugin is
+%IF{"{Plugins}{EditRowPlugin}{Enabled}"
+else=" *not* enabled on this site, so the examples will be disabled."
+then="enabled in this site. Click on the buttons to try it out."}%
+
+---+++ Example 1
+<verbatim>
+%EDITTABLE{ format="| row, -1 | text, 20, init | select, 1, not started, starting, ongoing, completed | radio, 3,:-),:-I,:-( | date, 20 |" changerows="on" quietsave="on"}%
+| *Nr* | *Project* | *State* | *Progress* | *Timestamp* |
+| 1 | Sliced yoghourt | completed | :-) | 26 Jun 2002 |
+| 2 | Cubical turkeys | not started | :-( | 27 Oct 2007 |
+| 3 | Self-eating burritos | ongoing | :-D | 1 Apr 2008 | 
+| 4 | Unified field theory | completed | :-) | 1 Apr 2012 |
+</verbatim>
+<img src="%ATTACHURLPATH%/screenshot1.png" alt='Example 1' />
+
+---+++ Example 2
+<verbatim>
+%EDITTABLE{ format="| label,12 | textarea, 3x30 |" }%
+| *Model* | *Description* |
+| 345TG66 | Short, with sightly concave upper surface, and devilish nuts |
+| 9A-11 | A new model for 2007, but not quite as pretty as the 9A-10 |
+| RR717-D | Solid performer, dependable in vacuum grinders |
+</verbatim>
+<img src="%ATTACHURLPATH%/example3.png" alt='Example 1'/>
+
+---+++ Example 3
+<verbatim>
+%EDITTABLE{ format="| text,100 | text,100 |" orientrowedit="vertical" headerislabel="on"}%
+| *Line* | *Explanation* |
+| He took his _vorpal_ sword in hand | A vorpal sword is made from broken bits of Commodore 64 disk-drives |
+| Long time the _manxome_ foe he sought | manxome: possibly from 'manky'; or from the Isle of Man |
+| So rested he by the _Tumtum_ tree, | Tumtum is a Nilo-Saharan language and people |
+| And stood awhile in _thought_ | _thought_ a process not often employed by example writers |
+</verbatim>
+<img src="%ATTACHURLPATH%/example4.png" alt='Example 3'/>
+
+---+++ Example 4
+<verbatim>
+%EDITTABLE{ format="| label | text, 40 |" }%
+|*Key*|*Value*|
+| Name: | John Smith |
+| Gender: | M %EDITCELL{select, 1, , F, M}% |
+| DOB: | 18 October 2007 %EDITCELL{date, 10}% |
+| City: | New York |
+</verbatim>
+<img src="%ATTACHURLPATH%/example5.png" alt='Example 4'/>
+
+---+++ Javascript Editing
+<div style="float:right">
+=%<nop>EDITTABLE{ format="| text,12 | textarea, 3x30 |" js="assumed"}%= <br />
+<img src="%ATTACHURLPATH%/screenshot2.png"></div>
+When a table is editable and Javascript is enabled, then when the user rolls the mouse over a table row:
+   * individual table cells have a yellow stain <button type="button" class="erp-editbutton"></button> on the corner that can be clicked to open an in-place editor,
+   * table rows *that contain at least one editable cell* can be manually sorted using drag-and-drop, by dragging the %UICON%arrowthick-2-n-s%NOCIU% (though beware that a =TABLE= tag with an =initsort= will override this, which can be confusing),
+Table columns can be sorted in the browser, by clicking the heading above the row.
+
+Note that javascript editing is automatically disabled if:
+   * The current user does not have CHANGE access to the topic
+   * No user is logged in, but the =rest= script is listed in the ={AuthScripts}= admin setting.
+
+<a name="js"></a>
+---++ Preferences
+The plugin interprets a couple of [[%SYSTEMWEB%.Macros][preferences]], in common with the !EditTablePlugin.
+| =QUIETSAVE= | Gives a default value for the =quietsave= parameter. Default is =off=. |
+| =CHANGEROWS= | Gives a default value for the =changerows= parameter. Default is =on=. |
+Also, the plugin has a couple of its own settings:
+| =EDITROWPLUGIN_JS= | Usually the plugin expects to be able to use Javascript to generate controls. However sometimes users disable Javascript in the browser, so the plugin also generates a minimal set of fallback controls to give non-JS access to the main features, even if Javascript is disabled. You can use this preference to control whether Javascript is preferred, ignored, or assumed when generating the controls.<ul><li> =preferred= means "use JS if it's available, but keep the non-JS fallback controls visible", </li><li> =ignored= means "never use JS, only display the non-JS controls", </li><li> =assumed= means "assume that JS will be available in the browser, and don't display the fallback controls". </li></ul> You can control the setting on a per-table basis using the =js= parameter to the =EDITTABLE= macro. |
+| =EDITROWPLUGIN_DISABLE= | Set to =on= to disable the plugin. Default is =off=. |
+These preferences can be defined in %LOCALSITEPREFS%, in <nop>%WEBPREFSTOPIC% for an individual web, or in the topic.
+
+There is also a =configure= (expert) setting that allows you to change the name of the macro used to carry table editor parameters. This is usually =EDITTABLE= but can be changed to help work around problems with other plugins.
+
+---++ Installation Instructions
+
+You do not need to install anything in the browser to use this extension. The following instructions are for the administrator who installs the extension on the server.
+
+Open configure, and open the "Extensions" section. "Extensions Operation and Maintenance" Tab -&gt; "Install, Update or Remove extensions" Tab.  Click the "Search for Extensions" button.  
+Enter part of the extension name or description and press search.   Select the desired extension(s) and click install. If an extension is already installed, it will *not* show up in the
+search results.
+
+You can also install from the shell by running the extension installer as the web server user: (Be sure to run as the webserver user, not as root!)
+<verbatim>
+cd /path/to/foswiki
+perl tools/extension_installer <NameOfExtension> install
+</verbatim>
+
+If you have any problems, or if the extension isn't available in =configure=, then you can still install manually from the command-line. See https://foswiki.org/Support/ManuallyInstallingExtensions for more help.
+
+
+---++ Using the REST API
+The plugin provides a couple of useful [[http://en.wikipedia.org/wiki/Representational_State_Transfer][REST]] handlers. Javascript developers may find
+this API useful when developing their own tools that
+manipulate tables.
+
+There are two entry points, =get= and =save=. The =get= handler can be used to retrieve the contents of
+a table. Parameters are:
+   * =erp_topic= the web.wikiname of the topic
+   * =erp_table= the table (numbered from 1)
+   * =erp_row= - the row (numbered from 1)
+   * =erp_col= - the column (numbered from 1)
+The handler returns a row, a column, or the entire table depending on the presence of the =erp_row=
+and =erp_col= parameters. If neither is given, the entire table is returned. If only =erp_row= is given, just that row will be returned, etc. The data is returned in JSON format.
+
+For example, a URI to retrieve column 2 from the table =EDITTABLE_1= from this topic would look like this:
+
+[[%SCRIPTURL{rest}%/EditRowPlugin/get?erp_topic=%WEB%.%TOPIC%;erp_table=EDITTABLE_1;erp_col=2]]
+
+The =save= handler is used to save cells, and accepts the following parameters:
+   * =erp_topic= the web.wikiname of the topic to be changed
+   * =erp_table= the table to be changed (numbered from 1)
+   * =erp_row= - the row to be changed (numbered from 1, or -1 for the whole table)
+   * =saveRowCmd.x= - if nonzero, this is a save
+   * =saveRowQuietlyCmd.x= - if nonzero, this is a quietsave
+   * =upRowCmd.x= - if nonzero, this is a row move
+   * =downRowCmd.x= - if nonzero, this is a  row move
+   * =deleteRowCmd.x= - if nonzero, this is a row deletion
+   * =cancelCmd.x= - if nonzero, this is a cancel
+   * =noredirect= - if set, suppresses the redirect and gets a status code instead
+The value of each individual cell is stored in a parameter called =erp_&lt;table>_&lt;row>_&lt;column>=
+
+---++ Relationship to other plugins
+---+++ !EditTablePlugin
+At this time most features of !EditTablePlugin are supported. Known exceptions
+are:
+   * the =editbutton= parameter,
+   * Plugin preferences (though global preferences are compatible)
+---+++ !TablePlugin
+Javascript sorting in !EditRowPlugin is much faster than !TablePlugin. However
+!TablePlugin has many features this plugin does not support. For the most part,
+the two plugins can safely be used together. *However* if you use a TABLE statement with
+an =initsort= parameter, it is likely to cause great confusion, as the table will be
+re-sorted each time a row is opened for edit, and when the table is edited in full table
+mode.
+
+All parameters to an applicable =%TABLE= macro are respected. If the same setting is repeated in the EDITTABLE tag, then that takes precedence *even if the TABLE tag is later in the text*.
+
+---+++ !EditTablerowPlugin
+Provides the vertical row editing interface like
+!EditTablerowPlugin, with the row being edited shown in context in the table.
+
+---++ Plugin Info
+Another great Foswiki extension from the <a style="text-decoration:none" href="http://wikiring.com"><img src="%ATTACHURLPATH%/wikiringlogo20x20.png" alt="" /> *WikiRing* </a> - working together to improve your wiki experience!
+
+|  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  3.318 (15 May 2017) | Foswikitask:Item14351: Uninitialized value warning when changerows is used with EditRowPlugin. <br/>\
+                        Foswikitask:Item13766: EditRowPlugin columns widths are jumping to wider size when you hoover the mouse over the table. <br/>\
+                        Foswikitask:Item14234: Clicking pencil for first row (erp_row=0) opens editor on entire table. <br/>\
+                        Foswikitask:Item14349: Edit Table button not functional on IE 11.|
+|  3.317 (21 Jan 2017) | Foswikitask:Item14107 Document that move, add & delete row actions are immediate, not subject to cancel. |
+|  3.316 (26 Nov 2016) | Foswikitask:Item14174 css.gz and js.gz files missing from MANIFEST<br/> \
+                         Foswikitask:Item14213 Warning logged about uninitialized values <br/>\
+                         Foswikitask:Item14218 Not fuctional on recent versions of IE. <br/>\
+                         Foswikitask:Item14258 Crash with empty column format. |
+|  3.315 (19 Mar 2016) | Foswikitask:Item13941 Remove EDITTABLE macro in static context.<br/> \
+                         Foswikitask:Item14000 Delete row removes next to last row.<br/> \
+                         Foswikitask:Item14004 Textarea fields rendered with incorrect size. |
+|  3.314 (02 Feb 2016) | Foswikitask:Item10916 Pencils disappear after row move when both js and non-js controls are present.|
+|  3.313 (26 Oct 2015) | Foswikitask:Item13834 Unable to edit cells containing utf-8 data.<br/> \
+                         Foswikitask:Item13815 Typo in regular expression.<br/> \
+                         Foswikitask:Item13817 Performance issues with large tables. |
+|  3.312 (02 Oct 2015) | Foswikitask:Item13781 Update dependency on TablesContrib version for Foswiki 1.1 compatibility. |
+|  3.311 (30 Sep 2015) | Foswikitask:Item13672 EditRowPlugin doesn't save under mod_perl<br/>\
+                         Foswikitask:Item13570 EditRowPlugin does not work on page with TABLE macro.<br/>\
+                         Foswikitask:Item13662 EditRowPlugin does not leave at least one space in an empty cell.<br/>\
+                         Foswikitask:Item13672 EditRowPlugin not working on mod_perl systems.<br/>\
+                         Foswikitask:Item13692 EditRowPlugin puts the edit button the wrong place when EDITTABLE comes before TABLE.<br/>\
+                         Foswikitask:Item13693 EditRowPlugin deletes macros from text area fields.<br/>\
+                         Foswikitask:Item13711 EditRowPlugin makes TablePlugin apply its formatting to the wrong column.<br/>\
+                         Foswikitask:Item13714 EditRowPlugin adding and deleting rows fails in TestCases/TestCaseEditTableJavaScript.<br/>\
+                         Foswikitask:Item13715 EditRowPlugin does not always handle the EDITTABLE macro correctly case 2.<br/>\
+                         Foswikitask:Item13717 EditRowPlugin creates massive copies of macros when you edit tables.<br/>\
+                         Foswikitask:Item13720 EditRowPlugin make the headline sort mark up the wrong column as the sorted.<br/>\
+                         Foswikitask:Item13765 EditRowPlugin TestCaseEditTableMacrosInSettings removes content of footer and label type cells.<br/>\
+                         Foswikitask:Item13767 EditRowPlugin does not completely turn off sorting by clicking header when TABLE has sort="off".<br/>\
+                         Foswikitask:Item13769 EditRowPlugin sorting only works the first time you click a header and will not reverse sort when clicking same again.<br/>\
+                         Foswikitask:Item13770 EditRowPlugin treats bold text in footer row as something related to sort but without function.<br/>\
+                         Foswikitask:Item13771 EditRowPlugin has hardcoded its Macro in TableParser.pm. |
+|  3.200 (30 Mar 2015) | Foswikitask:Item13309: fixed for compatibility with !TablePlugin |
+|  3.100 (18 Dec 2014) | Foswikitask:Item12855: Core extensions should require JQueryPlugin 6.00<br />\
+                         Foswikitask:Item13125: Support Request multi_param<br />\
+                         Foswikitask:Item13115: Don't require JQuery theme<br />\
+                         Foswikitask:Item12953: an empty table with a header row was crashing<br />\
+                         Foswikitask:Item12952: Spec changes for new configure<br />\
+                         Foswikitask:Item11737: Replace Sandbox with =%<nop>SANDBOXWEB%= <br />\
+                         Foswikitask:Item12839: Update rest authority for EditRowPlugin |
+|  3.0.7 (28 Apr 2014) | Foswiki:Tasks/Item12814 disable edit on tables with no macro<br />\
+                         Foswiki:Tasks/Item128120 fix row moving, zero-width edit boxes on Chromium, and header clearing on table edit close.<br />\
+                         Foswiki:Tasks/Item12871: support StrikeOne validation and clean REST authentication checking |
+|  3.0.6 (13 Nov 2013) | Foswiki:Tasks/Item11920 syntax error in JS was causing failure on IE 7 |
+|  3.0.5 (12 Nov 2013) | Foswiki:Tasks/Item12654: Fixed interactive row moving, add wait cursor during REST request |
+|  3.0.4 (11 Nov 2013) | Foswiki:Tasks/Item12132: Workaround for CSS problem in PatternSkin |
+|  3.0.3 (8 Jan 2013) | Foswiki:Tasks/Item12144: add foswikiIcon to icons Foswiki:Tasks/Item12148: added missing tooltips, changed stain cursor to match button behaviour |
+|  3.0.2 (19 Aug 2012) | Foswiki:Tasks/Item10770: Don't expand macros in select values |
+|  3.0.1 (28 Jan 2012) | Foswiki:Tasks/Item11381: automatically disable JS if rest script is in {AuthScripts} and no-one is logged in |
+|  3.0.0 (8 Dec 2011) | Foswiki:Tasks/Item11140: recoded to only instrument the table when the rows are actually rolled over. Reduced the amount of HTML generated by the server enormously. Added REST API. |
+|  2.2.9 (7 Oct 2011) | Foswiki:Tasks/Item11140: optimisations for use with very large tables Foswiki:Tasks/Item11342: added REST handler to get cell contents for editing |
+|  2.2.8 (8 Aug 2011) | Foswiki:Tasks/Item11028: JS date editor now picks up existing value Foswiki:Tasks/Item11029: JS date editor now uses consistent date formats |
+|  2.2.7 (03 Aug 2011) | Foswiki:Tasks/Item11010: better default for editable cell width Foswiki:Tasks/Item11018: fixed date format in non-JS edit mode |
+|  2.2.6 (18 Jul 2011) | Foswiki:Tasks/Item10982: fix crash when adding rows with date fields that have no default value |
+|  2.2.5 (27 Jun 2011) | Foswiki:Tasks/Item10915: fix EDITCELL handling on save. Foswiki:Tasks/Item10922: abort save on clash with a synchronous edit by another user |
+|  2.2.4 (14 Jun 2011) | Foswiki:Tasks/Item10876: return to non-edit mode after row move invokes authentication. Foswiki:Tasks/Item10876: fix textarea. |
+|  2.2.3 (10 Jun 2011) | Foswiki:Tasks/Item10862: pick up initial values for all field types. Foswiki:Tasks/Item10864: protect full-table edits when adding and removing rows. Foswiki:Tasks/Item10865: remove edit stain from label cells. |
+|  2.2.2 (7 Jun 2011) | Foswiki:Tasks/Item10853: Remove =REQUIRE_JS and =require_js=, add =js= and =EDITROWPLUGIN_JS= to improve support of non-JS environments |
+|  2.2.1 (3 Jun 2011) | Foswiki:Tasks/Item10821: stop yellow stain from overlaying pop-up calendar. Foswiki:Tasks/Item10822: fix auth of single-cell edit |
+|  2.2.0 (25 May 2011) | Foswiki:Tasks/Item2016: work around core code limitations when cell content is 0; Foswiki:Tasks/Item10591: silence noisy "Click to edit" statements; change to a control for editing cells, due to the "wikiword selection" problem Foswiki:Tasks/Item10592: row move now uses an external handle, to allow for cursor select of table contents. Add feedback for saves. Foswiki:Tasks/Item10768: fix edit/save buttons in IE 7; Foswiki:Tasks/Item10777: make sure full table edit is working, and there is no risk of data loss when adding/removing rows |
+|  2.1.4 (18 May 2011) | Foswiki:Tasks/Item10752: fix HTML comments in cells Foswiki:Tasks/Item10753: correct interpretation of changerows="add" |
+|  2.1.3 (19 Apr 2011) | Foswiki:Tasks/Item10583: support for sort order in select cells Foswiki:Tasks/Item10583: fixes for EDITCELL |
+|  2.1.2 (14 Mar 2011) | Foswiki:Tasks/Item2016: editor was not handling a table cell that contained only "0" correctly |
+|  2.1.1 (25 Feb 2011) | Some minor tweaks |
+|  2.1.0 (21 Feb 2011) | Foswiki:Tasks/Item5618: Foswiki:Tasks/Item5714: Foswiki:Tasks/Item5715: row moves and single-cell edits are now done client-side as much as possible. Row moves are drag and drop. Using JS lets us maintain the column numbering so that other plugins still work (e.g. table plugin init sort) as well as being a lot faster. Foswiki:Tasks/Item10363: Support button placement at the ends of table rows. Foswiki:Tasks/Item10388: broke out JEditable into a separate package |
+|  2.0.2 (2 Feb 2011) | Foswiki:Tasks/Item2016: doesn't save "0" in table cells; fixed.Foswiki:Tasks/Item2229: needs better headings support; fixed. Foswiki:Tasks/Item1186: textarea newlines are not saved with whitespace around br; fixed. Foswiki:Tasks/Item9091: orientrowedit=vertical does not show the header labels; fixed. Foswiki:Tasks/Item9775: missing section headings from Config.spec; fixed. |
+|  2.0.1 (24 Feb 2009) | Foswikitask:Item1139: fixed restoration of labels after an edit Foswikitask:Item1140: fixed loading of multi-valued parameters |
+|  2.0.0 (15 Feb 2009) | Foswikitask:Item451: ported to foswiki Foswikitask:Item5757: not respecting footer rows when saving Foswikitask:Item5681: help not fully rendered before inclusion in a TML table Foswikitask:Item1086: Macros were being expanded before editing Foswikitask:Item5924: refactor for reusability |
+|  Earlier version history can be found in the Subversion repository |
+|  Dependencies: | <table border="1" class="foswikiTable"><tr><th>Name</th><th>Version</th><th>Description</th></tr><tr><td align="left">Foswiki::Contrib::JSCalendarContrib</td><td align="left">&gt;0</td><td align="left">Javascript calendar module</td></tr><tr><td align="left">Foswiki::Plugins::JQueryPlugin</td><td align="left">&gt;=6.00</td><td align="left">JQuery</td></tr><tr><td align="left">Foswiki::Contrib::JEditableContrib</td><td align="left">&gt;0</td><td align="left">Required, JQuery plugin</td></tr><tr><td align="left">JSON</td><td align="left">&gt;=0</td><td align="left">Required, for REST</td></tr><tr><td align="left">Foswiki::Contrib::TablesContrib</td><td align="left">&gt;=1.05</td><td align="left">Required for Foswiki < 2.0</td></tr></table> |
+
+<!-- Do _not_ attempt to edit this topic; it is auto-generated. Please use the Foswiki support pages to ask questions and report problems instead. -->
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="Crawford Currie http://c-dot.co.uk"}%
+%META:FIELD{name="Version" title="Version" value="3.318"}%
+%META:FIELD{name="Release" title="Release" value="15 May 2017"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/distro"}%
+%META:FIELD{name="Copyright" title="Copyright" value="&copy; 2007-2011 Wind<nop>River Inc.<br/> &copy; 2008-2017 Foswiki Contributors"}%
+%META:FIELD{name="License" title="License" value="[[http://www.gnu.org/licenses/gpl.html][GPL (Gnu General Public License)]]"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/EditRowPlugin"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/EditRowPlugin"}%
+%META:FILEATTACHMENT{name="icons.png" attr="h" comment="" date="1494884408" size="2457" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="example3.png" attr="h" comment="" date="1494884408" size="15337" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="example4.png" attr="h" comment="" date="1494884408" size="22834" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="erp.css" attr="h" comment="" date="1494884408" size="1454" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="screenshot2.png" attr="h" comment="" date="1494884408" size="12013" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="TableSort.uncompressed.js" attr="h" comment="" date="1494884408" size="6803" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="erp.js" attr="h" comment="" date="1494884408" size="11898" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="erp.uncompressed.css" attr="h" comment="" date="1494884408" size="2130" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="example5.png" attr="h" comment="" date="1494884408" size="9132" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="erp.uncompressed.js" attr="h" comment="" date="1494884408" size="26625" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="screenshot1.png" attr="h" comment="" date="1494884408" size="19461" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="TableSort.js" attr="h" comment="" date="1494884408" size="3626" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="wikiringlogo20x20.png" attr="h" comment="" date="1494884408" size="1343" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="clock.gif" attr="h" comment="" date="1494884408" size="1418" user="ProjectContributor" version="1"}%

@@ -1,0 +1,1 @@
+foswiki.Event={addLoadEvent:function(inFunction,inDoPrepend){if(typeof inFunction!="function"){return}var oldonload=window.onload;if(typeof window.onload!="function"){window.onload=function(){inFunction()}}else{var prependFunc=function(){inFunction();oldonload()};var appendFunc=function(){oldonload();inFunction()};window.onload=inDoPrepend?prependFunc:appendFunc}}};

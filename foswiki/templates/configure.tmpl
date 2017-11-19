@@ -1,0 +1,98 @@
+%{
+
+Template for the HTML page used by the =configure= script.
+This is a separate template because it is *not* run through the
+renderer, but is instead entirely native HTML managed by the
+configure.js script.
+
+}%<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Foswiki Configuration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5, user-scalable=yes" />
+  <meta name="robots" content="noindex" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="foswiki.is_bootstrapped" content="%BOOTSTRAPPED%" />
+  <meta name="foswiki.scriptsuffix" content="%SCRIPTSUFFIX%" />
+  <meta name="description" content="Foswiki Configuration" />
+  <link rel="icon" href="%FAVICON%" type="image/x-icon" /> <link rel="shortcut icon" href="%FAVICON%" type="image/x-icon" />
+  <meta content="noindex" name="robots" />
+  <link type="image/x-icon" rel="icon" href="%PUBURLPATH%/%SYSTEMWEB%/ConfigurePlugin/foswiki-icon.ico" />
+  <link type="image/x-icon" rel="shortcut icon" href="%PUBURLPATH%/%SYSTEMWEB%/ConfigurePlugin/foswiki-icon.ico" />
+  <link type="text/css" media="all" rel="stylesheet" href="%PUBURLPATH%/%SYSTEMWEB%/ConfigurePlugin/reset.css" />
+  <link type="text/css" media="all" rel="stylesheet" href="%PUBURLPATH%/%SYSTEMWEB%/SkinTemplates/base.css" />
+%JQREQUIRE{"configure"}%%RENDERZONE{"head"}%%RENDERZONE{"script"}%
+ </head>
+ <body>
+  <div class="header clearfix">
+    <img class="logo" src="%PUBURLPATH%/%SYSTEMWEB%/ConfigurePlugin/foswiki-logo.png" alt="Foswiki configure" height="60" />
+<a id="visitSite" href="%SCRIPTURL{view}%" title="Open configured site in a new window" target="_blank">%SCRIPTURL{view}%</a>
+    <div class="top_level_buttons">
+      <input type="text" style="width:30em" id="searchInput" placeholder="search"/>
+      <button id="searchButton" title="Search in titles and keys">Search</button>
+      <input id="showExpert" type="checkbox"><label for="showExpert" class="showExpertButton">Show expert options</label>
+      <button id="saveButton">Save</button>
+    </div>
+    <div id="bootstrap_warning" class="foswikiAlert">
+      <strong>Warning</strong> Foswiki is running in 'bootstrap' mode, which means
+      that there is no existing configuration (LocalSite.cfg is missing or is
+      unreadable). Before you save, you
+      <strong>must</strong> make sure you have configured some way to log in as
+      an admin (see 'Security and Authentication'), or you might lock yourself out
+      from this interface.
+    </div>
+  </div>
+  <div class="searchResults" style="display:none">
+   <h3 class="searchTitle"></h3>
+   <ol><li>x</li></ol>
+   <button id="closeSearchButton">Close</button>
+  </div>
+  <div id="root" class="main"><span class="splash">Loading ...</span>
+      If you are seeing this message, javascript may be blocked or failing to load. Verify that:
+      <ul><li>pub files are reachable and that the path is correct. (Current path is <tt>%PUBURLPATH%</tt>)
+      <ul style="list-style-type:none"><li>Hint: Is the Foswiki logo displayed above?</ul>
+      <li>javascript execution is enabled in the browser, and not blocked by a script blocker
+      <li>there are no javascript errors that are preventing execution, and
+      <li>if pub files require authentication to access, authenticate and try again.
+      </ul>
+  </div>
+  <!-- Dialogs and messages -->
+  <div id="auth_prompt" title="Requires authentication">
+    <div id="auth_note"></div>
+    <table class="foswikiLayoutTable">
+      <tr>
+        <th>Username</th>
+        <td><input type="text" name="username" id="username" value="testuser" class="text ui-widget-content ui-corner-all"></td>
+      </tr>
+      <tr>
+        <th>Password</th>
+        <td><input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all"></td>
+      </tr>
+    </table>
+  </div>
+  <div id="hogwarts" style="display:none">
+    <!-- Dialog showing active wizards -->
+  </div>
+  <div id="webCheckAuthMessage" style="display:none">
+    The web server <i>may</i> need authentication to check access to resources.
+  </div>
+  <div id="confirm_prompt" title="Confirm">
+    <div id="confirm_note"></div>
+  </div>
+  <div id="saveMessage" style="display:none">
+    Save changes to
+  </div>
+<!--
+   This is Foswiki <tt>configure</tt>. From this interface you can access all the setup for your Foswiki. Use
+   <button class="help_button control_button" name="info-icon"></button> to get help on an item.
+   <button class="help_button control_button" name="undo-icon"></button> will undo any changes to the item.
+   <button class="help_button control_button" name="default-icon"></button> will reset the item to the default - hover over it to see what that is.
+When you are ready to save your changes, click the 'Save' button at the top right.
+-->
+ </body>
+</html>

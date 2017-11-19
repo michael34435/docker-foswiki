@@ -1,0 +1,402 @@
+%META:TOPICINFO{author="ProjectContributor" date="1443185186" format="1.1" version="1"}%
+%META:TOPICPARENT{name="UserDocumentationCategory"}%
+---+ Formatted Search
+Customize the display of search results.
+
+The default output format of a =[[VarSEARCH][%<nop>SEARCH{...}%]]= is a table consisting of topic names and topic summaries. Use the =format="..."= parameter to customize the search result. The format parameter typically defines a bullet or a table row containing macros, such as =%<nop>SEARCH{ "food" format="| $topic | $summary |" }%=. See =[[VarSEARCH][%<nop>SEARCH{...}%]]= for other search parameters, such as =separator=""=.
+
+%TOC%
+
+---++ Syntax
+
+Three parameters can be used to specify a customized search result:
+
+---+++ 1. =header="..."= parameter
+
+Use the header parameter to specify the header of a search result. It should correspond to the format of the format parameter. This parameter is optional.
+*Example:* <verbatim class="tml">header="| *Topic:* | *Summary:* |"</verbatim>
+
+Format tokens that can be used in the header string:
+
+| *Name:* | *Expands To:* |
+| =$web= | Name of the web |
+| =$ntopics= | Number of topics found in current web. Will be 0 (zero). |
+| =$nhits= | Number of hits if =multiple="on"=. Will be 0 (zero). |
+| =$pager= | pager control - can be optionally customised using the =pagerformat= below |
+%INCLUDE{"FormatTokens"}%
+
+<div class="foswikiHelp">%X% Note that if the separator parameter for SEARCH is not defined a newline is added after the header.</div>
+
+---+++ 2. =footer="..."= parameter
+
+Use the footer parameter to specify the footer of a search result. It should correspond to the format of the format parameter. This parameter is optional.
+*Example:* <verbatim class="tml">footer="| *Total:* | *$nhits* |"</verbatim>
+
+Format tokens that can be used in the footer string:
+
+| *Name:* | *Expands To:* |
+| =$web= | Name of the web |
+| =$ntopics= | Number of topics found in current web |
+| =$nhits= | Number of hits if =multiple="on"=. Cumulative across all topics in current web. Identical to =$ntopics= unless =multiple="on"= |
+| =$pager= | pager control - can be optionally customised using the =pagerformat= below |
+%INCLUDE{"FormatTokens"}%
+
+<div class="foswikiHelp">%X% Note that if the separator parameter for SEARCH is not defined a newline is added after the last search result.</div>
+
+---+++ 3. =pagerformat="..."= parameter
+
+Use the pagerformat parameter to customise the appearance of the paging control. 
+It should correspond to the format of the format parameter. 
+This parameter is optional.
+*Example:* <verbatim class="tml">pagerformat="Page $currentpage of $numberofpages [[$nexturl][next page]]"</verbatim>
+
+Format tokens that can be used in the pagerformat string:
+
+| *Name:* | *Expands To:* |
+| =$previouspage= | The page number before the currently displayed one |
+| =$currentpage= | The currently displayed page number |
+| =$nextpage= | The page number after the currently displayed one  |
+| =$numberofpages= | Total number of pages there are results for |
+| =$pagesize= | The number of results per page |
+| =$previousurl= | full URL to the previous page - _IF_ using the built in pager system |
+| =$nexturl= | full URL to the previous page - _IF_ using the built in pager system |
+| =$previousbutton= | skin template (SEARCH:pager_previous) html for the full URL to the previous page - _IF_ using the built in pager system |
+| =$nextbutton= | skin template (SEARCH:pager_next) html for the full URL to the previous page - _IF_ using the built in pager system |
+%INCLUDE{"FormatTokens"}%
+
+---+++ 4. =format="..."= parameter
+
+Use the format parameter to specify the format of one search hit.
+*Example:* <verbatim class="tml">format="| $topic | $summary |"</verbatim>
+
+Format tokens that can be used in the format string:
+
+| *Name:* | *Expands To:* |
+| =$web= | Name of the web |
+| =$topic= | Topic name |
+| =$topic(20)= | Topic name, "<tt>- </tt>" hyphenated every 20 characters |
+| =$topic(30, -&lt;br /&gt;)= | Topic name, hyphenated every 30 characters with separator "<tt>-&lt;br /&gt;</tt>" |
+| =$topic(40, ...)= | Topic name, shortened to 40 characters with trailing ellipsis. |
+| =$parent= | Name of parent topic; empty if not set |
+| =$parent(20)= | Name of parent topic, same hyphenation/shortening as =$topic()= |
+| =$text= | Formatted topic text. In case of a =multiple="on"= search, it is the line found for each search hit. |
+| =$locked= | LOCKED flag (if any) |
+| =$date= | Time stamp of last topic update, e.g. =%GMTIME{"$day $mon $year - $hour:$min"}%= |
+| =$isodate= | Time stamp of last topic update, e.g. =%GMTIME{"$year-$mo-$dayT$hour:$minZ"}%= |
+| =$index= | number of total results - can be used as a running counter in the =format=, or in the =footer=. This $index is not affected by web based partitioning of results. |
+| =$item= | the full name of a result item - in a SEARCH context, equivalent to =$web.$topic= |
+| =$rev= | Number of last topic revision, e.g. =4= |
+| =$username= | Login username of last user to update the topic, e.g. =jsmith= |
+| =$wikiname= | WikiName of last user to update the topic, e.g. =<nop>JohnSmith= |
+| =$wikiusername= | WikiName of last usr to update the topic, like =%USERSWEB%.<nop>JohnSmith= |
+| =$createdate= | Time stamp of topic revision 1 |
+| =$createusername= | Login username of topic revision 1, e.g. =jsmith= |
+| =$createwikiname= | WikiName of topic revision 1, e.g. =<nop>JohnSmith= |
+| =$createwikiusername= | WikiName topic link of topic revision 1, e.g. =%USERSWEB%.<nop>JohnSmith= |
+| =$summary= | Topic summary, just the plain text, all formatting and line breaks removed; up to 162 characters |
+| =$summary(50)= | Topic summary, up to 50 characters shown |
+| =$summary(showvarnames)= | Topic summary, with =%<nop>SOMEMACRO{...}%= macros shown as =SOMEMACRO{...}= |
+| =$summary(noheader)= | Topic summary, with leading =---+ headers= removed%BR% *Note:* The tokens can be combined, for example =$summary(100, showvarnames, noheader)= |
+| =$summary(searchcontext)= | Creates a topic summary with the search terms highlighted |
+| =$summary(searchcontext, 50)= | Creates a topic summary with the search terms highlighted, up to 50 characters |
+| =$changes= | Summary of changes between latest rev and previous rev |
+| =$changes(n)= | Summary of changes between latest rev and rev n |
+| =$formname= | The name of the form attached to the topic; empty if none |
+| =$formfield(name)= | The field value of a form field; for example, if FAQWhatIsWikiWiki was a search hit, =$formfield(<nop>TopicClassification)= would get expanded to =%QUERY{"'WhatIsWikiWiki'/TopicClassification"}%=. This applies only to topics that have a [[DataForms][DataForm]]. For multi-line textfields new lines are replaced by the value of the =newline= parameter if it is defined, otherwise by an HTML &lt;br /&gt; |
+| =$formfield(name, 10)= | Form field value, "<tt>- </tt>" hyphenated every 10 characters |
+| =$formfield(name, 20, -&lt;br /&gt;)= | Form field value, hyphenated every 20 characters with separator "<tt>-&lt;br /&gt;</tt>" |
+| =$formfield(name,30,...)= | Form field value, shortened to 30 characters with trailing ellipsis. |
+| =$formfield(name, display)= | Form field value _after_ mapping the stored value to the display value (use with =+values= form fields). You can still use the hyphenation controls described above by placing them *after* =display= e.g. =$formfield(name, display, 10)= |
+| =$extract(reg-exp)= | A regular expression pattern to extract some text from a topic (does not search meta data; use =$formfield= instead). Escapes some characters to their standard FormatTokens in the discovered text to make embedding in other macros easier. See [[#Using_36extract_and_36pattern][Using $extract and $pattern]] below for more information. |
+| =$pattern(reg-exp)= | As =$extract=, with the difference that =$pattern= does *not* escape quotes or precent signs in the result. |
+| =$count(reg-exp)= | Count of number of times a regular expression pattern appears in the text of a topic (does not search meta data). Follows guidelines for use and limitations outlined above under =$pattern(reg-exp)=. Example: =$count(.*?(---[+][+][+][+]) .*)= counts the number of &lt;H4&gt; headers in a page. |
+| =$ntopics= | Number of topics found in current web. This is the current topic count, not the total number of topics |
+| =$nhits= | Number of hits if =multiple="on"=. Cumulative across all topics in current web. Identical to =$ntopics= unless =multiple="on"= |
+| =$pager= | pager control - can be optionally customised using the =pagerformat= below |
+%INCLUDE{"FormatTokens"}%
+
+---++ Using $extract and $pattern
+
+=$extract= and =$pattern= are subtle. These tokens specify a RegularExpression that covers the whole text (of each line found by the search if =multiple="on"=, of the entire topic text otherwise). The regular expression typically starts with =.*=, and must end in =.*=
+
+The leading =.*= matches all the content up to the start of the string you want to find. It will try to match the longest string of characters it can, so if your pattern occurs several times in the content it will always match the _last_ occurence. If you always want to match the first occurrence, use =.*?= instead.
+
+You _must* end the pattern with =.*=
+
+Put the section of the pattern that matches the text you want to keep in parenthesis, like this =$extract(.*?(from here.*?to here).*)=
+   * Example: =$extract(.*?\*.*?Email\:\s*([^\n\r]+).*)= extracts the e-mail address from =* Email: ...=
+
+Do not use =.*= _inside_ the parentheses, e.g. =$extract(.*foo(.*)bar.*)= does not work. You can however use =.*?= thus =$extract(.*foo(.*?)bar.*)=
+
+Make sure that the integrity of a web page is not compromised; for example, if you include an HTML table make sure to include everything including the table end tag. =$extract= will automatically escape ="&lt;&gt;&amp;%$= characters so that the string matched by the pattern doesn't break any macros that are wrapped around it. =$pattern= does not do this, and should be used with care. =$extract= is only available in Foswiki 2.0 and later.
+
+---++ Examples
+
+Here are some samples of formatted searches. The SearchPatternCookbook has other examples, such as [[SearchPatternCookbook#SearchUsernames][creating a picklist of usernames]], [[SearchPatternCookbook#SearchTopicChildren][searching for topic children]] and more.
+
+#SearchTable
+---+++ Search showing topic name and summary
+
+<verbatim class="tml">
+%STARTSECTION{"example1"}%
+%SEARCH{
+   "VarREMOTE"
+   scope="topic"
+   nonoise="on"
+   header="| *Topic*        | *Summary*  |"
+   format="| [[$topic]]     | $summary   |"
+   footer="| *Topics found* | *$ntopics* |"
+}%
+%ENDSECTION{"example1"}%
+</verbatim>
+
+%INCLUDE{"SearchPatternCookbook" section="click2exec" id="example1"}%
+
+---+++ Table showing form field values of topics with a form
+
+In a web where there is a form that contains a =Topic<nop>Classification= field, an =Operating<nop>System= field and an =Os<nop>Version= field we could write:
+
+<verbatim class="tml">
+%STARTSECTION{"example2"}%
+%SEARCH{
+   "TopicClassification~'FrequentlyAskedQuestion'"
+   type="query"
+   nonoise="on"
+   header="| *Topic:* | *Summary:* | *Related Topics:* |"
+   format="| [[$topic]] | $formfield(TopicSummary) | $formfield(RelatedTopics) |"
+}%
+%ENDSECTION{"example2"}%
+</verbatim>
+
+%INCLUDE{"SearchPatternCookbook" section="click2exec" id="example2"}%
+
+---+++ Extract some text from a topic using regular expression
+The following example makes use of the =$pattern()= token to extract the first level-1 heading for each topic:
+
+%INCLUDE{"SearchPatternCookbook" section="Headings"}%
+
+#NestedSearch
+---+++ Nested Search
+[[VarSEARCH][SEARCH]] is one of many [[Macros][macros]] that produce output which may be controlled with =format=, =header= and =footer= parameters, among others. To make use of _additional_ macros in the output, familiarity with [[#InsideOutLeftToRight][inside-out, left-to-right]] order of expansion rules is required. There are two forms:
+   1 Standard: Use =%<nop>INNERMACRO%= to build the parameter string *before* =%<nop>OUTERMACRO%= is expanded
+   <verbatim class="tml"> %OUTERMACRO{
+   format="%INNERMACRO%"
+ }%</verbatim>
+   1 Delayed: Use the parameter string to incorporate =%<nop>INNERMACRO%= into the output of =%<nop>OUTERMACRO%=
+   <verbatim class="tml"> %OUTERMACRO{
+   format="$percentINNERMACRO$percent"
+ }%</verbatim>
+%INCLUDE{"Macros" section="tokensupport"}%
+
+%INCLUDE{"Macros"
+  section="insideoutlefttoright"
+  THETOPIC="%SYSTEMWEB%.FAQWhatIsWikiWiki"
+  THEFIELD="TopicClassification"
+  PARENT="UserDocumentationCategory"
+}%
+
+---++++ Worked example
+*Problem:* search for some topics in an initial (outer) search, and for each of them apply a second (inner) search. The idea is to use the outer search to build a series of inner seraches.
+
+#NestedSearchExample
+Consider the following example. Let's search for all topics that contain the word "culture" (outer search), and find out where each topic found is linked from (inner search).
+
+*Initial (outer) search:*
+<verbatim class="tml">
+%SEARCH{
+   "culture"
+   nonoise="on"
+   format="   * $topic is referenced by: (list all references)"
+}%</verbatim>
+
+*Second (inner) search:*
+
+For each hit, we want this search:
+<verbatim class="tml">
+%SEARCH{
+   "(topic found in outer search)"
+   nonoise="on"
+   format="$topic"
+   separator=", "
+}%</verbatim>
+
+Now let's nest the two.
+#NestingWithEscapes
+---+++++ Method 1 (nesting with escapes)
+The inner search cannot be placed directly into the format string of the outer, because of the "inside-out, left-to-right" macro expansion behaviour [[#InsideOutLeftToRight][discussed earlier]]. It must be delayed so that the outer search is evaluated first. To do this, we need to escape the inner search, i.e. let the outer search build a series of inner searches, which are executed only when the outer list is complete..
+   * Use =$percent= to escape (delay) the inner search's [[VarSEARCH][SEARCH]] macro
+   * Use =\"= to escape the double quotes
+   * Use =$dollar= to escape the =$= of =$topic=
+
+<verbatim class="tml">
+%STARTSECTION{"example3"}%
+%SEARCH{
+   "culture"
+   nonoise="on"
+   limit="5"
+   format="\
+   * [[$topic]] is referenced by:
+      * $percentSEARCH{
+         \"$topic\"
+         nonoise=\"on\"
+         format=\"[[$dollartopic]]\"
+         separator=\", \"
+      }$percent"
+}%
+%ENDSECTION{"example3"}%
+</verbatim>
+
+%INCLUDE{"SearchPatternCookbook" section="click2exec" id="example3"}%
+
+<div class="foswikiHelp">
+%X% When nesting with escapes, each new nesting level must "escape the escapes", e.g. write =$dollarpercentSEARCH{= for level three, =$dollardollarpercentSEARCH{= for level four, etc.
+</div>
+
+#NestedSectionalInclude
+---+++++ Method 2 (nesting with sectional includes)
+Nested expressions with delayed macros can be difficult to write: care must be taken to escape all the quotes of the inner delayed macro, and it may become confusing whether to use =$topic=, =$dollartopic= or =$dollardollartopic=.
+
+If you find yourself using escaped tokens like =$dollartopic=, another approach is to use the [[VarSTARTSECTION][STARTSECTION]]/[[VarENDSECTION][ENDSECTION]] feature of [[VarINCLUDE][INCLUDE]]. Instead of nesting the inner search expression directly inside the format string of the outer, the inner search is written as a separate stand-alone section of a topic which is INCLUDEd into the format string of the outer.
+
+<verbatim class="tml">
+%STARTSECTION{"example4"}%
+%SEARCH{
+   "culture"
+   nonoise="on"
+   limit="5"
+   format="\
+   * $topic is referenced by:
+      * $percentINCLUDE{\"%TOPIC%\" section=\"mysearch\" thetopic=\"$topic\"}$percent"
+}%
+
+<verbatim class="foswikiHidden">
+%STARTSECTION{"mysearch"}%%SEARCH{
+   "%thetopic%"
+   nonoise="on"
+   format="$topic"
+   separator=", "
+}%%ENDSECTION{"mysearch"}%
+</verbatim>
+%ENDSECTION{"example4"}%
+</verbatim>
+
+%INCLUDE{"SearchPatternCookbook" section="click2exec" id="example4"}%
+
+---+++ Most recently changed pages
+
+<verbatim class="tml">
+%STARTSECTION{"example5"}%
+%SEARCH{
+   "1"
+   type="query"
+   nonoise="on"
+   order="modified"
+   reverse="on"
+   limit="7"
+   header="| *Topic* | *Changed* | *By* |"
+   format="| [[$topic]] | $date  | $wikiusername |"
+}%
+%ENDSECTION{"example5"}%
+</verbatim>
+
+%INCLUDE{"SearchPatternCookbook" section="click2exec" id="example5"}%
+
+#ConditionalOutputExample
+---+++ Search with conditional output
+
+Sometimes it may be desirable for each hit to be displayed differently depending on some criteria. For example, maybe you want to list 20 topics modified in 2009, but decorate the hits which are children of UserDocumentationCategory with an %ICON{"info"}% icon.
+   1. Specify a search which returns the hits you need
+   1. For each search hit, test the condition that will influence the output using a nested [[VarIF][IF]] [[IfStatements][statement]]
+
+<verbatim class="tml">
+%STARTSECTION{"example6"}%
+%SEARCH{
+   "info.date >= d2n('2009-01-01') AND info.date <= d2n('2009-12-31')"
+   type="query"
+   limit="20"
+   format="   * $percentICON{
+      \"$percentIF{
+         \"'$topic'/parent.name='UserDocumentationCategory'\"
+         then=\"info\"
+         else=\"gear\"
+      }$percent\"
+   }$percent [[$topic]]"
+}%
+%ENDSECTION{"example6"}%
+</verbatim>
+
+%INCLUDE{"SearchPatternCookbook" section="click2exec" id="example6"}%
+
+<div class="foswikiHelp">
+%ICON{"info"}% *Details:*
+   * The SEARCH has a delayed [[VarICON][ICON]]. The =$percent= ensures that ICON is evaluated once for each search hit
+   * The [[VarICON][ICON]] contains an [[VarIF][IF]], which again is delayed with the =$percent= token and will also be evaluated for each SEARCH hit. Additionally, the [[#InsideOutLeftToRight][inside-out, left-to-right]] rule discussed earlier means that this IF expression will be evaluated before [[VarICON][ICON]].
+   * If =$topic= is a child of UserDocumentationCategory, the =info= icon is used; otherwise, =gear=.
+</div>
+
+---+++ Embedding search forms to return a formatted result
+
+Use an HTML form and an embedded formatted search on the same topic. You can link them together with an [[VarURLPARAM][URLPARAM]] macro. Example:
+
+<verbatim class="tml">
+%STARTSECTION{"example7"}%
+<input type="text" id="search_field" size="32" />
+%BUTTON{"Search" icon="find" id="search_button"}%
+
+<verbatim class="jqLoader {section:'example7_results', mode:'manual'}" id="result_loader">
+%STARTSECTION{"example7_results"}%
+<div class="search_results">
+%SEARCH{
+   "%URLPARAM{"q" encode="entity, quote"}%"
+   decode="entity"
+   type="keyword"
+   nosearch="on"
+   format="<div class='search_hit'> [[$web.$topic]]
+      <div class='search_summary'>$summary(searchcontext)<!-- --></div> 
+      <div class='search_info'>$date, $wikiusername</div>
+    </div>"
+}%
+</div>
+%ENDSECTION{"example7_results"}%
+</verbatim>
+
+<literal>
+<script>
+jQuery(function($) {
+  function doSearch() {
+    $("#result_loader").trigger("refresh", {
+      params: {
+        q: $("#search_field").val()
+      }
+    });
+    return false;
+  };
+  $("#search_button").on("click", doSearch);
+  $("#search_field").on("keydown", function(ev) {
+    if (ev.keyCode == 13) {
+      doSearch();
+    }
+  });
+});
+</script>
+<style>
+.search_results em {
+  color:red;
+}
+.search_hit {
+  margin-bottom:1em;
+}
+.search_info a,
+.search_info {
+  color:#64B000;
+}
+</style>
+</literal>
+%ENDSECTION{"example7"}%
+</verbatim>
+
+%INCLUDE{"%WEB%.%TOPIC%" section="example7"}%
+
+---
+*%MAKETEXT{"Related topics:"}%* UserDocumentationCategory, SearchHelp, [[%SYSTEMWEB%.Macros#VarSEARCH][Macros#VarSEARCH]], SearchPatternCookbook, RegularExpression
+<!-- %JQREQUIRE{"chili"}% -->

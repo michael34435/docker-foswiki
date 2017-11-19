@@ -1,0 +1,40 @@
+%META:TOPICINFO{author="ProjectContributor" date="1456220586" format="1.1" version="1"}%
+%META:TOPICPARENT{name="JQueryPlugin"}%
+---+ %TOPIC%
+%JQPLUGINS{"validate"
+  format="
+    Homepage: $homepage <br />
+    Author(s): $author <br />
+    Version: $version
+  "
+}%
+
+%STARTSECTION{"summary"}%
+Very powerful client-side form validation framework
+([[http://bassistance.de/2007/07/04/about-client-side-form-validation-and-frameworks/][article]]).
+%ENDSECTION{"summary"}%
+
+---++ Examples
+
+%JQREQUIRE{"validate, maskedinput"}%
+
+<form id="validateForm" class="jqValidate">
+<div class="foswikiFormSteps">
+  <div class="foswikiFormStep">
+    <h3>First name:</h3>
+    <input type="text" size="30" class="foswikiInputField required" name="firstname" value="%URLPARAM{"firstname"}%" />
+
+    <h3>Last name:</h3>
+    <input type="text" size="30" class="foswikiInputField required" name="lastname"  value="%URLPARAM{"lastname"}%" />
+
+    <h3>Date of birth:</h3>
+    <input type="text" size="10" class="required date foswikiInputField" mask="99/99/9999" name="dateofbirth" value="%URLPARAM{"dateofbirth"}%" />
+  </div>
+  <div class="foswikiFormStep foswikiFormButtons foswikiFormLast">
+    %BUTTON{"%MAKETEXT{"Submit"}%" type="submit" icon="application"}%
+    %CLEAR%
+  </div>
+</div>
+</form>
+
+%IF{"'%URLPARAM{"dateofbirth"}%'!=''" then="<div class='foswikiSuccessMessage'>Thanks.</div>"}%

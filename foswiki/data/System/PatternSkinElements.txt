@@ -1,0 +1,823 @@
+%META:TOPICINFO{author="ProjectContributor" date="1488399691" format="1.1" version="1"}%
+%META:TOPICPARENT{name="PatternSkin"}%
+---+!! Pattern Skin Elements
+Some intro text.
+
+Text.
+
+%TOC{title="On this page:"}%
+
+---+!! Heading 1
+
+text
+
+---++ Heading 2
+
+text
+
+---+++ Heading 3
+
+text
+
+---++++ Heading 4
+
+text
+
+---+++++ Heading 5
+
+text
+
+---++++++ Heading 6
+
+text
+
+<h2 id='paragraph'>A very very very very very very very very very very very very very very very very very very very very very very very very long header</h2> 
+
+Regular text lorem ipsum dolor sit amet, <a href='#' title='test link'>test link</a> adipiscing elit. *Bold text nullam dignissim* convallis est. _Italic text quisque aliquam._ Donec faucibus. __Bold italic nunc iaculis suscipit dui.__ Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.
+
+Lorem ipsum dolor sit amet, <em>emphasis</em> consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.
+
+paragraphs:
+
+<p>Lorem ipsum dolor sit amet, <a href='#' title='test link'>test link</a> adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.</p>
+<p>Lorem ipsum dolor sit amet, <em>emphasis</em> consectetuer adipiscing elit. Nullam dignissim convallis est. Quisque aliquam. Donec faucibus. Nunc iaculis suscipit dui. Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.</p>
+
+<h2 id='list_types'>List Types</h2> 
+
+<h3>Definition List</h3> 
+<DL>
+<DT><STRONG>Lower cost</STRONG></DT>
+<DD>The new version of this product costs significantly less than the
+previous one!</DD>
+<DT><STRONG>Easier to use</STRONG></DT>
+<DD>We've changed the product so that it's much easier to use!</DD>
+<DT><STRONG>Safe for kids</STRONG></DT>
+<DD>You can leave your kids alone in a room with this product and
+they won't get hurt (not a guarantee).</DD>
+</DL>
+
+
+<h3>Ordered List</h3> 
+<ol> 
+<li>List Item 1</li> 
+<li>List Item 2</li> 
+<li>List Item 3</li> 
+</ol> 
+<h3>Unordered List</h3> 
+<ul> 
+<li>List Item 1</li> 
+<li>List Item 2</li> 
+<li>List Item 3</li> 
+</ul>
+
+---+++ TML markup unordered list
+   * level 1
+      * level 2
+         * level 3
+   * level 1
+---+++ TML markup ordered list
+   1 level 1
+      1 level 2
+         1 level 3
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   1 level 1
+   
+---+++ TML markup numbered lists
+   A. item 1
+   A. item 2
+   A. item 3
+
+   i. item 1
+   i. item 2
+   i. item 3
+
+   I. item 1
+   I. item 2
+   I. item 3
+---+++ TML markup definition list
+   $ Sushi: Japan 
+   $ Dim Sum: S.F. 
+      
+---+++ TML mixed lists
+   1 level 1
+      * level 2
+         * level 3
+   1 level 1
+      1 level 2
+         1 level 3
+
+
+
+---+ H1 header [[%TOPIC%][with link]]
+*Intro text.* Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+---++ H2 header [[%TOPIC%][with link]]
+*Intro text.* Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+---++ H2 header [[%TOPIC%][with link]]
+
+Empty line before *Intro text.* Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+---+++ H3 header [[%TOPIC%][with link]]
+*Intro text.* Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+---++++ H4 header [[%TOPIC%][with link]]
+*Intro text.* Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+---+++++ H5 header [[%TOPIC%][with link]]
+*Intro text.* Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+---++++++ H6 header  [[%TOPIC%][with link]]
+*Intro text.* Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+[[%TOPIC%][link]]
+
+<div class='foswikiNotification'>
+---+ h1 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+
+<div class='foswikiNotification'>
+---++ h2 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+
+<div class='foswikiNotification'>
+---+++ h3 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+
+<div class='foswikiNotification'>
+---++++ h4 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+
+<div class='foswikiNotification'>
+---+++++ h5 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+
+<div class='foswikiNotification'>
+---++++++ h6 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+
+---++ Text sizes
+
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal 
+<span class='foswikiSmallish'>Smallish text. Smallish text. Smallish text. Smallish text. Smallish text. Smallish text. Smallish text. Smallish text. Smallish text. </span>
+<span class='foswikiSmall'>Small text. Small text. Small text. Small text. Small text. Small text. Small text. Small text. Small text. </span>
+
+---++ Text colors
+
+<span class='foswikiGrayText'>Grayed out text.</span>
+
+<span class='foswikiAlert'>Alert text.</span>
+
+
+---++ Blockquote
+<blockquote>
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+</blockquote>
+
+---++ Rules
+---
+---
+---
+text
+---
+---+++ header
+text
+---
+text
+
+
+---++ Table
+
+| *Numbers* | *Texts* |
+| 456  | uvw |
+| 123  | xyz |
+| 789  | rst |
+
+and text below the table
+
+%TABLE{initsort="1"}%
+| *Numbers* | *Texts* |
+| 456  | uvw |
+| 123  | xyz |
+| 789  | rst |
+| def  | rst |
+| kqo  | rst |
+
+---++ Code texts
+---+++ Inline code
+lasdkj asldjas ldja sld =adasdsadasdas= aldjasldksaldkjas =ads<a href='#'>link</a>aidas=.
+---+++ verbatim
+<verbatim>
+verbatim text
+A lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text 
+<a href='#'>link</a>
+</verbatim>
+
+---+++ pre
+<pre>
+verbatim text
+<span class='foswikiAlert'>A lot more of verbatim text</span> lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text 
+<a href='#'>link</a>
+</pre>
+
+---++ Lists
+
+Bullet list:
+   * Item A
+   * Item B a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text
+      * Item B.1
+      * Item B.2
+   * Item C
+
+Numbered list:
+   1 Item 1
+   1 Item 2 a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text a very long list text
+      1 Item 2.1
+      1 Item 2.2
+   1 Item 3
+
+
+---++ Comment
+
+%COMMENT{}%
+
+---++ Links
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. [[%SYSTEMWEB%.%HOMETOPIC%]] Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum DoesNotExist Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+
+
+---+ Header
+<div class='foswikiNotification'>
+---++ h2 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+<div class='foswikiHelp'>
+Available help:
+   * <strong>Help:</strong> Please see %POPUPWINDOW{"%SYSTEMWEB%.FileAttachment" label="%SYSTEMWEB%.FileAttachment"}% for more information about attaching files.
+   * <strong>Bug:</strong> Internet Explorer 4.0 or earlier: If you get an "Internal Server Error" message when you upload a file, you need to try again. It should work the second time.
+</div>
+
+---++ h2 header
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+<verbatim>
+verbatim text
+A lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text 
+</verbatim>
+
+<button class='foswikiButton'>foswikiButton</button> <button class='foswikiButtonDisabled'>foswikiButtonDisabled</button> <input type='submit' class='foswikiSubmit' value='foswikiSubmit' />
+
+---+ Header
+<div class='foswikiNotification'>
+---++ h2 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+<div class='foswikiHelp'>
+Available help:
+   * <strong>Help:</strong> Please see %POPUPWINDOW{"%SYSTEMWEB%.FileAttachment" label="%SYSTEMWEB%.FileAttachment"}% for more information about attaching files.
+   * <strong>Bug:</strong> Internet Explorer 4.0 or earlier: If you get an "Internal Server Error" message when you upload a file, you need to try again. It should work the second time.
+</div>
+
+---++ h2 header
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+<verbatim>
+verbatim text
+A lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text 
+</verbatim>
+
+<button class='foswikiButton'>foswikiButton</button> <button class='foswikiButtonDisabled'>foswikiButtonDisabled</button> <input type='submit' class='foswikiSubmit' value='foswikiSubmit' />
+
+---+ Header
+<div class='foswikiNotification'>
+---++ h2 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+<div class='foswikiHelp'>
+Available help:
+   * <strong>Help:</strong> Please see %POPUPWINDOW{"%SYSTEMWEB%.FileAttachment" label="%SYSTEMWEB%.FileAttachment"}% for more information about attaching files.
+   * <strong>Bug:</strong> Internet Explorer 4.0 or earlier: If you get an "Internal Server Error" message when you upload a file, you need to try again. It should work the second time.
+</div>
+
+---++ h2 header
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+<verbatim>
+verbatim text
+A lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text 
+</verbatim>
+
+<button class='foswikiButton'>foswikiButton</button> <button class='foswikiButtonDisabled'>foswikiButtonDisabled</button> <input type='submit' class='foswikiSubmit' value='foswikiSubmit' />
+
+---+ Header
+<div class='foswikiNotification'>
+---++ h2 header in a block
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+<div class='foswikiHelp'>
+Available help:
+   * <strong>Help:</strong> Please see %POPUPWINDOW{"%SYSTEMWEB%.FileAttachment" label="%SYSTEMWEB%.FileAttachment"}% for more information about attaching files.
+   * <strong>Bug:</strong> Internet Explorer 4.0 or earlier: If you get an "Internal Server Error" message when you upload a file, you need to try again. It should work the second time.
+</div>
+
+---++ h2 header
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+<verbatim>
+verbatim text
+A lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text lot more of verbatim text 
+</verbatim>
+
+<button class='foswikiButton'>foswikiButton</button> <button class='foswikiButtonDisabled'>foswikiButtonDisabled</button> <input type='submit' class='foswikiSubmit' value='foswikiSubmit' />
+
+---++ Buttons
+---+++ input type="submit"
+<input type='submit' class='foswikiButton' value='foswikiButton' /> disabled: <input type='submit' class='foswikiButtonDisabled' value='foswikiButtonDisabled' /> or <input type='submit' class='foswikiButton foswikiButtonDisabled' value='foswikiButton foswikiButtonDisabled' />
+
+<input type='submit' class='foswikiSubmit' value='foswikiSubmit' /> or <input type='submit' class='foswikiButton foswikiSubmit' value='foswikiButton foswikiSubmit' /> disabled: <input type='submit' class='foswikiSubmitDisabled' value='foswikiSubmitDisabled' /> or <input type='submit' class='foswikiSubmit foswikiButtonDisabled' value='foswikiSubmit foswikiButtonDisabled' />
+
+<input type='submit' class='foswikiButtonCancel' value='foswikiButtonCancel' /> or <input type='submit' class='foswikiButton foswikiButtonCancel' value='foswikiButton foswikiButtonCancel' /> disabled: 
+<input type='submit' class='foswikiButtonCancel foswikiButtonDisabled' value='foswikiButtonCancel foswikiButtonDisabled' />
+
+<input type='submit' class='foswikiButton foswikiButtonSmall' value='foswikiButton foswikiButtonSmall' /> disabled: <input type='submit' class='foswikiButtonDisabled foswikiButtonSmall' value='foswikiButtonDisabled foswikiButtonSmall' />
+
+<input type='submit' class='foswikiButton foswikiButtonMini' value='foswikiButton foswikiButtonMini' /> disabled: <input type='submit' class='foswikiButtonDisabled foswikiButtonMini' value='foswikiButtonDisabled foswikiButtonMini' />
+
+<input type='submit' class='foswikiButton foswikiButtonLarge' value='foswikiButton foswikiButtonLarge' /> disabled: <input type='submit' class='foswikiButtonDisabled foswikiButtonLarge' value='foswikiButtonDisabled foswikiButtonLarge' />
+
+---+++ links
+<a href='#' class='foswikiButton'>foswikiButton</a> disabled: <a href='#' class='foswikiButtonDisabled'>foswikiButtonDisabled</a> or <a href='#' class='foswikiButton foswikiButtonDisabled'>foswikiButton foswikiButtonDisabled</a>
+
+<a href='#' class='foswikiSubmit'>foswikiSubmit</a> or <a href='#' class='foswikiButton foswikiSubmit'>foswikiButton foswikiSubmit</a> disabled: <a href='#' class='foswikiSubmitDisabled'>foswikiSubmitDisabled</a> or <a href='#' class='foswikiSubmit foswikiButtonDisabled'>foswikiSubmit foswikiButtonDisabled</a>
+
+<a href='#' class='foswikiButtonCancel'>foswikiButtonCancel</a> or <a href='#' class='foswikiButton foswikiButtonCancel'>foswikiButton foswikiButtonCancel</a>
+disabled: <a href='#' class='foswikiButtonCancel foswikiButtonDisabled'>foswikiButtonCancel foswikiButtonDisabled</a>
+
+<a href='#' class='foswikiButtonSmall'>foswikiButtonSmall</a> or <a href='#' class='foswikiButton foswikiButtonSmall'>foswikiButton foswikiButtonSmall</a> disabled: <a href='#' class='foswikiButtonSmall foswikiButtonDisabled'>foswikiButtonSmall foswikiButtonDisabled</a>
+
+<a href='#' class='foswikiButtonMini'>foswikiButtonMini</a> or <a href='#' class='foswikiButton foswikiButtonMini'>foswikiButton foswikiButtonMini</a> disabled: <a href='#' class='foswikiButtonMini foswikiButtonDisabled'>foswikiButtonMini foswikiButtonDisabled</a>
+
+<a href='#' class='foswikiButtonLarge'>foswikiButtonLarge</a> or <a href='#' class='foswikiButton foswikiButtonLarge'>foswikiButton foswikiButtonLarge</a> disabled: <a href='#' class='foswikiButtonLarge foswikiButtonDisabled'>foswikiButtonLarge foswikiButtonDisabled</a>
+ 
+---+++ buttons
+<button class='foswikiButton'>foswikiButton</button> disabled: 
+<button class='foswikiButtonDisabled'>foswikiButtonDisabled</button> or <button class='foswikiButton foswikiButtonDisabled'>foswikiButton foswikiButtonDisabled</button>
+
+<button class='foswikiSubmit'>foswikiSubmit</button> or <button class='foswikiButton foswikiSubmit'>foswikiButton foswikiSubmit</button> 
+disabled: <button class='foswikiSubmitDisabled'>foswikiSubmitDisabled</button> or <button class='foswikiSubmit foswikiButtonDisabled'>foswikiSubmit foswikiButtonDisabled</button>
+
+<button class='foswikiButtonCancel'>foswikiButtonCancel</button> or <button class='foswikiButton foswikiButtonCancel'>foswikiButton foswikiButtonCancel</button>
+disabled: <button class='foswikiButtonCancel foswikiButtonDisabled'>foswikiButtonCancel foswikiButtonDisabled</button>
+
+<button class='foswikiButtonSmall'>foswikiButtonSmall</button> or <button class='foswikiButton foswikiButtonSmall'>foswikiButton foswikiButtonSmall</button> disabled: 
+<button class='foswikiButtonSmall foswikiButtonDisabled'>foswikiButtonSmall foswikiButtonDisabled</button>
+
+<button class='foswikiButtonMini'>foswikiButtonMini</button> or <button class='foswikiButton foswikiButtonMini'>foswikiButton foswikiButtonMini</button> disabled: 
+<button class='foswikiButtonMini foswikiButtonDisabled'>foswikiButtonMini foswikiButtonDisabled</button>
+
+<button class='foswikiButtonLarge'>foswikiButtonLarge</button>
+ or <button class='foswikiButton foswikiButtonLarge'>foswikiButton foswikiButtonLarge</button> disabled: 
+<button class='foswikiButtonLarge foswikiButtonDisabled'>foswikiButtonLarge foswikiButtonDisabled</button>
+            
+            
+---+++ Input fields 
+=.foswikiInputField=
+
+<input type='text' size='30' class='foswikiInputField' value='value' /><button class='foswikiSubmit'>Submit</button>
+
+<input type='text' size='30' class='foswikiInputField' value='value'/><input type='submit' class='foswikiButton' value='Submit' />
+
+<textarea class='foswikiInputField' cols='20' rows='4'>value</textarea><input type='submit' class='foswikiButton' value='Submit' />
+
+---++++ Readonly
+<input type='text' size='30' readonly='readonly' class='foswikiInputField foswikiInputFieldReadOnly' value='readonly value' />
+
+---++++ Disabled
+<input type='text' size='30' disabled='disabled' class='foswikiInputField foswikiInputFieldDisabled' value='disabled value' />
+
+---++ JQuery buttons
+Using =%<nop>BUTTON{}%=
+
+   * Example: <verbatim class="tml">%BUTTON{
+    "%MAKETEXT{"Submit"}%"
+    click="confirm('Are your sure?')"
+  }%
+  %BUTTON{
+    "%MAKETEXT{"Cancel"}%"
+    icon="cross"
+    target="%WEB%.%TOPIC%"
+  }% %CLEAR%</verbatim>
+   * Expands as: <div>%BUTTON{
+    "%MAKETEXT{"Submit"}%"
+    click="confirm('Are your sure?')"
+  }%
+  %BUTTON{
+    "%MAKETEXT{"Cancel"}%"
+    icon="cross"
+    target="%WEB%.%TOPIC%"
+  }% %CLEAR%</div>
+
+=%<nop>BUTTON{class="simple"}%= %BR%
+%BUTTON{"Simple button" class="simple"}%%BUTTON{"Simple button" class="simple"}%
+
+=%<nop>BUTTON{class="cyan"}%= %BR%
+%BUTTON{"Cyan button" class="cyan"}%
+
+=%<nop>BUTTON{class="red"}%= %BR%
+%BUTTON{"Red button" class="red"}%
+
+=%<nop>BUTTON{class="green"}%= %BR%
+%BUTTON{"Green button" class="green"}%
+
+%BUTTON{
+    "%MAKETEXT{"OK"}%" icon="tick" onclick="alert($(this).text());"
+}%%BUTTON{
+    "%MAKETEXT{"Cancel"}%" icon="cross" onclick="alert($(this).text());"
+}%%BUTTON{
+    "%MAKETEXT{"Info"}%" icon="information" onclick="alert($(this).text());"
+}%%BUTTON{
+    "%MAKETEXT{"Add"}%" icon="add" onclick="alert($(this).text());"
+}%%BUTTON{
+    "%MAKETEXT{"Delete"}%" icon="delete" onclick="alert($(this).text());"
+}%%BUTTON{
+    "%MAKETEXT{"Globe"}%" icon="world_key" onclick="alert('foo')"
+}%
+
+---++ Re-created jQuery buttons
+=.jqButton=
+
+<a class='jqButton jqButtonDefault' href='#'><span> <span class='jqButtonIcon' style='background-image:url(%ICONURLPATH{"choice-yes"}%)'>OK</span> </span></a>
+
+=.foswikiButton=
+
+<a class='foswikiButton' href='#'><span> <span class='foswikiButtonIcon' style='background-image:url(%ICONURLPATH{"choice-yes"}%)'>OK</span> </span></a>
+
+---++ Nat Edit buttons
+
+<noautolink>
+<div class="natEditBottomBar">
+<ul><li class="natEditSaveButton"><a id="save" class="jqButton jqButtonDefault jqInitedButton" href="#" accesskey="s" title="Save and exit"><span> <span class="jqButtonIcon" style="background-image:url(/pub/%SYSTEMWEB%/FamFamFamSilkIcons/tick.png)">Save</span> </span></a></li><li class="natEditCheckpointButton"><a id="checkpoint" class="jqButton jqButtonDefault jqInitedButton" href="#" accesskey="w" title="Save and continue editing"><span> <span class="jqButtonIcon" style="background-image:url(/pub/%SYSTEMWEB%/FamFamFamSilkIcons/disk.png)">Save and Continue</span> </span></a></li><li class="natEditPreviewButton"><a id="preview" class="jqButton jqButtonDefault jqInitedButton" href="#" accesskey="p" title="Preview your changes"><span> <span class="jqButtonIcon" style="background-image:url(/pub/%SYSTEMWEB%/FamFamFamSilkIcons/eye.png)">Preview</span> </span></a></li><li class="natEditFormButton"><a id="replaceform" class="jqButton jqButtonDefault jqInitedButton" href="#" accesskey="f" title="Change the current form of %SANDBOXWEB%.FoswikiFormStepsTest"><span> <span class="jqButtonIcon" style="background-image:url(/pub/%SYSTEMWEB%/FamFamFamSilkIcons/application_form.png)">Change form</span> </span></a></li><li class="natEditCancelButton"><a id="cancel" class="jqButton jqButtonDefault jqInitedButton" href="/%SANDBOXWEB%/FoswikiFormStepsTest?release_lock=1" accesskey="c" title="Abandon changes and exit"><span> <span class="jqButtonIcon" style="background-image:url(/pub/%SYSTEMWEB%/FamFamFamSilkIcons/cross.png)">Cancel</span> </span></a> </li></ul>
+</div>
+</noautolink>
+
+---++ Form steps
+=.foswikiFormSteps= and =.foswikiFormStep=
+
+<div class='foswikiFormSteps'>
+<div class='foswikiFormStep'>
+---++ What to expect
+<p>Some explanation</p>
+<input type='text' class='foswikiInputField' value='Some entry' />
+<div class='foswikiHelp'>
+Help text
+</div>
+<hr />
+<input type='submit' class='foswikiSubmit' value='Send it' />
+</div>
+</div>
+
+---++ Help text
+=.foswikiHelp=
+
+<div class='foswikiHelp'>
+<strong>Help:</strong> Please see %POPUPWINDOW{"%SYSTEMWEB%.FileAttachment" label="%SYSTEMWEB%.FileAttachment"}% for more information about attaching files.
+</div>
+
+<div class='foswikiHelp'>
+Available help:
+   * <strong>Help:</strong> Please see %POPUPWINDOW{"%SYSTEMWEB%.FileAttachment" label="%SYSTEMWEB%.FileAttachment"}% for more information about attaching files.
+   * <strong>Bug:</strong> Internet Explorer 4.0 or earlier: If you get an "Internal Server Error" message when you upload a file, you need to try again. It should work the second time.
+</div>
+
+<div class='foswikiHelp'>
+---++ Help
+Please see %POPUPWINDOW{"%SYSTEMWEB%.FileAttachment" label="%SYSTEMWEB%.FileAttachment"}% for more information about attaching files.
+</div>
+
+---++ Images
+=img=
+
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+<img src='%PUBURLPATH%/%SYSTEMWEB%/BeginnersStartHere/Motorola_logo.gif' height='65' alt='' />
+
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+
+---+++ foswikiImage
+=.foswikiImage=
+
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+<div class='foswikiImage'><img src='%PUBURLPATH%/%SYSTEMWEB%/BeginnersStartHere/Motorola_logo.gif' height='65' alt='' /></div>
+
+
+---+++ Icons
+=img= and =.foswikiIcon=
+
+Normal text. Normal text. Normal text. Normal text.
+Text with :-) smilies and %ICON{info}% icons.
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text.
+
+
+---++ Foswiki styles
+---+++ Broadcast Message
+=.foswikiBroadcastMessage=
+
+<div class='foswikiBroadcastMessage'> <strong>NOTE:</strong> Edit and Attach will be disabled today between 05:00 PM and 06:00 PM PDT (00:00 to 01:00 GMT) for a scheduled Foswiki maintenance.</div>
+
+---++ Notification
+=.foswikiNotification=
+
+<div class='foswikiNotification'>
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. N
+</div>
+
+text before 
+<div class='foswikiNotification'>
+Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. Normal text. 
+</div>
+text after
+
+=.foswikiMessage=
+
+Text before <span class='foswikiMessage'>This is important</span> text after.
+
+
+---++ Horizontal list
+=.foswikiHorizontalList=
+
+<div class='foswikiHorizontalList clear'>
+   1 ordered item 1
+   1 ordered item 2
+   1 ordered item 3
+</div>
+
+<div class='foswikiHorizontalList clear'>
+   * unordered item 1
+   * unordered item 2
+   * unordered item 3
+</div>
+
+<div class='foswikiHorizontalList clear'>
+	<ul>
+		<li>unordered item 1</li>
+		<li>unordered item 2</li>
+		<li class='foswikiLast'>unordered item 3</li>
+	</ul>
+</div>
+
+---++ Tabs
+
+---+++ Foswiki tabs
+<div class='foswikiTabs clear'>
+	<ul>
+		<li class='foswikiActive'><a href='#tab1'>Tab 1</a></li>
+		<li><a href='#tab2'>Tab 2</a></li>
+		<li><a href='#tab3'>Tab 3</a></li>
+    </ul>
+</div>
+<div id='tab1' class='foswikiTabContent'>
+---++!! Tab 1
+Regular text lorem ipsum dolor sit amet, <a href='#' title='test link'>test link</a> adipiscing elit. *Bold text nullam dignissim* convallis est. _Italic text quisque aliquam._ Donec faucibus. __Bold italic nunc iaculis suscipit dui.__ Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.
+</div>
+<div id='tab2' class='foswikiTabContent'>
+---++!! Tab 2
+Regular text lorem ipsum dolor sit amet, <a href='#' title='test link'>test link</a> adipiscing elit. *Bold text nullam dignissim* convallis est. _Italic text quisque aliquam._ Donec faucibus. __Bold italic nunc iaculis suscipit dui.__ Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.
+</div>
+<div id='tab3' class='foswikiTabContent'>
+---++!! Tab 3
+Regular text lorem ipsum dolor sit amet, <a href='#' title='test link'>test link</a> adipiscing elit. *Bold text nullam dignissim* convallis est. _Italic text quisque aliquam._ Donec faucibus. __Bold italic nunc iaculis suscipit dui.__ Nam sit amet sem. Aliquam libero nisi, imperdiet at, tincidunt nec, gravida vehicula, nisl. Praesent mattis, massa quis luctus fermentum, turpis mi volutpat justo, eu volutpat enim diam eget metus. Maecenas ornare tortor. Donec sed tellus eget sapien fringilla nonummy. Mauris a ante. Suspendisse quam sem, consequat at, commodo vitae, feugiat in, nunc. Morbi imperdiet augue quis tellus.
+</div>
+
+---+++ Foswiki tabs without tab pane
+<div class='foswikiTabs clear'>
+	<ul>
+		<li class='foswikiActive'><a href='#tab1'>Tab 1</a></li>
+		<li><a href='#tab2'>Tab 2</a></li>
+		<li><a href='#tab3'>Tab 3</a></li>
+    </ul>
+</div>
+<div class='foswikiFormSteps'>
+<div class='foswikiFormStep'>
+---++ What to expect
+<p>Some explanation</p>
+<input type='text' class='foswikiInputField' value='Some entry' />
+<hr />
+<input type='submit' class='foswikiSubmit' value='Send it' />
+</div>
+</div>
+
+---+++ jQuery tabs
+%TABPANE{}%
+%TAB{
+	"Tab 1"
+	id="tab1"
+}%This is in the first tab.
+%ENDTAB%
+%TAB{
+	"<img src='%PUBURLPATH%/%SYSTEMWEB%/DocumentGraphics/help.png' class='foswikiIcon' height='16' alt='' /> %MAKETEXT{"Help"}%"
+	id="help"
+}%This is in the second tab.
+%ENDTAB%
+%ENDTABPANE%
+
+---+++ Simple
+%TABPANE{class="simple"}%
+%TAB{
+	"Tab 1"
+	id="tab1"
+}%This is in the first tab.
+%ENDTAB%
+%TAB{
+	"<img src='%PUBURLPATH%/%SYSTEMWEB%/DocumentGraphics/help.png' class='foswikiIcon' height='16' alt='' /> %MAKETEXT{"Help"}%"
+	id="help"
+}%This is in the second tab.
+%ENDTAB%
+%ENDTABPANE%
+
+---+++ Links
+%TABPANE{class="links"}%
+%TAB{
+	"Tab 1"
+	id="tab1"
+}%This is in the first tab.
+%ENDTAB%
+%TAB{
+	"%MAKETEXT{"Help"}%"
+	id="help"
+}%This is in the second tab.
+%ENDTAB%
+%ENDTABPANE%
+
+
+---++ Grid
+%ADDTOZONE{
+"head"
+text="<style>
+.test {
+    background: #eee;
+}
+.test .test {
+    background: #ddd;
+}
+.row-fluid .item.span3 {
+    margin-left: 0;
+    margin-right: 1em;
+}
+.row-fluid .item.span12 {
+    margin-left: 0;
+    padding-right: 0;
+}
+</style>"
+}%
+<div class="row-fluid" id="att">
+    <div class="item span3 test">Level 2</div>
+    <div class="item span3 test">Level 2</div>
+    <div class="item span3 test">Level 2</div>
+    <div class="item span3 test">Level 2</div>
+    <div class="item span3 test">Level 2</div>
+    <div class="item span3 test">Level 2</div>
+    <div class="item span3 test">Level 2</div>
+    <div class="item span3 test">Level 2</div>
+</div>
+
+%STARTSECTION{"test"}%
+%TABPANE{class="simple"}%
+%TAB{
+	"Tab 1"
+	id="tab1"
+}%This is in the first tab.
+%ENDTAB%
+%TAB{
+	"<img src='%PUBURLPATH%/%SYSTEMWEB%/DocumentGraphics/help.png' class='foswikiIcon' height='16' alt='' /> %MAKETEXT{"Help"}%"
+	id="help"
+}%This is in the second tab.
+%ENDTAB%
+%ENDTABPANE%
+%ENDSECTION{"test"}%
+
+---++ Data form
+
+<noautolink>
+<div class="foswikiForm">
+<table class='foswikiFormTable' border='1'><tr><th class='foswikiFormTableHRow foswikiFirstCol' colspan='2'>
+<a href="%SCRIPTURL{"view"}%/%USERSWEB%/UserForm">%USERSWEB%.UserForm</a>
+</th></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> Title </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> FirstName </td><td> Arthur </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> LastName </td><td> Clemens </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> OrganisationName </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> OrganisationURL </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> Profession </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> Country </td><td> Netherlands </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> State </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> Address </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> Location </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> Telephone </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> VoIP </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> InstantMessaging (IM) </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> HomePage </td><td>  </td></tr><tr valign='top'><td class='foswikiFormTableRow foswikiFirstCol' align='right'> Comment </td><td>  </td></tr></table>
+</div><!-- /foswikiForm -->
+</noautolink>
+
+---++ Search results and search form
+
+<noautolink>
+<h2 id="Search_results"> Search results </h2>
+<div><span class='foswikiIcon'><img src='/pub/%SYSTEMWEB%/DocumentGraphics/rss-small.png' width='16' height='16' alt='rss-small' /></span>
+ <a href='%SCRIPTURL{"view"}%/%SYSTEMWEB%/WebRss?search=caching;type=word;excludetopic=WebSearch,%HOMETOPIC%,WebStatistics;web=System;recurse=;limit=all;scope=all;casesensitive=off'>Get notified on changes on this search</a></div>
+<div class="foswikiSearchResultsHeader"><span>Searched: <b>caching</b></span>
+<span id="foswikiNumberOfResultsContainer"></span></div>
+<h4 class="foswikiSearchResultsHeader" style="border-color:#FFD8AA"><b>Results from System web</b> retrieved at 01:55 (GMT)</h4>
+<div class="foswikiSearchResult"><div class="foswikiTopRow">
+<a href="/%SYSTEMWEB%/AdminDocumentationCategory"><b>AdminDocumentationCategory</b></a>
+<div class="foswikiSummary"><b>&hellip;</b>  of the Foswiki Page <em>Caching</em> features. Page caching is the <b>&hellip;</b>  process of storing (<em>caching</em>) this HTML on the server, as  <b>&hellip;</b>
+</div></div>
+<div class="foswikiBottomRow"><span class="foswikiSRRev"><span class="foswikiNew">NEW</span> - <a href="/bin/rdiff/%SYSTEMWEB%/AdminDocumentationCategory" rel='nofollow'>13 Mar 2014 - 13:42</a></span> 
+<span class="foswikiSRAuthor">by <a href="/Usersweb/ProjectContributor">ProjectContributor</a> </span></div> </div>
+
+<div class="foswikiSearchResult"><div class="foswikiTopRow">
+<a href="/%SYSTEMWEB%/InstallationGuide"><b>InstallationGuide</b></a>
+<div class="foswikiSummary"><b>&hellip;</b> . However, as your browser is <em>caching</em> your login, you must restart  <b>&hellip;</b> </div></div>
+<div class="foswikiBottomRow"><span class="foswikiSRRev"><span class="foswikiNew">NEW</span> - <a href="/bin/rdiff/%SYSTEMWEB%/InstallationGuide" rel='nofollow'>24 Apr 2014 - 21:52</a></span> <span class="foswikiSRAuthor">by <a href="/Usersweb/ProjectContributor">ProjectContributor</a> </span></div> </div>
+
+<div class="foswikiSearchResult"><div class="foswikiTopRow">
+<a href="/%SYSTEMWEB%/PageCaching"><b>PageCaching</b></a>
+<div class="foswikiSummary">Page <em>Caching</em> By default, Foswiki pages are <b>&hellip;</b>  the page is requested. Page <em>caching</em> is the process of storing ( <b>&hellip;</b> <em>caching</em>) this HTML on the server, as  <b>&hellip;</b>  rendered from scratch. Page <em>caching</em> can significantly improve the <b>&hellip;</b> </div></div>
+<div class="foswikiBottomRow"><span class="foswikiSRRev"><span class="foswikiNew">NEW</span> - <a href="/bin/rdiff/%SYSTEMWEB%/PageCaching" rel='nofollow'>30 May 2014 - 00:47</a></span> <span class="foswikiSRAuthor">by <a href="/Usersweb/ProjectContributor">ProjectContributor</a> </span></div> </div>
+
+<div class="foswikiSearchResult"><div class="foswikiTopRow">
+<a href="/%SYSTEMWEB%/PatternSkinElements"><b>PatternSkinElements</b></a> <div class="foswikiSummary"><b>&hellip;</b>  form Web Search Searched: <em>caching</em> Results from Foswiki web <b>&hellip;</b> </div></div>
+<div class="foswikiBottomRow"><span class="foswikiSRRev"><span class="foswikiNew">NEW</span> - <a href="/bin/rdiff/%SYSTEMWEB%/PatternSkinElements" rel='nofollow'>27 Oct 2012 - 15:34</a></span> <span class="foswikiSRAuthor">by <a href="/Usersweb/ProjectContributor">ProjectContributor</a> </span></div> </div>
+
+<div class="foswikiSearchResultCount">Number of topics: <span>4</span></div>
+
+<a name="foswikiSearchForm"></a>
+<div class="foswikiPageForm">
+<form action="%SCRIPTURL{"view"}%/%SYSTEMWEB%/WebSearch">
+<table id="foswikiSearchTable" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td colspan="2" class="first">
+  <input type="text" class="foswikiInputField" name="search" value="caching" size="40" /> 
+  <input type="submit" class="foswikiSubmit" value='Search' /><span class="foswikiSmall">&nbsp;&nbsp;<a href="%SCRIPTURL{"view"}%/%SYSTEMWEB%/WebSearchAdvanced">Advanced search</a> | <a href="%SCRIPTURL{"view"}%/%SYSTEMWEB%/SearchHelp">Help</a></span>
+<div class="foswikiSmall" style="padding:1em 0 0 0;">TIP: to search for all topics that contain <code>"SOAP"</code>, <code>"WSDL"</code>, a literal <code>"web service"</code>, but not <code>"shampoo"</code>, write: <code>soap wsdl "web service" -shampoo</code></div>
+</td>
+</tr>
+<tr>
+<th class="last">Search where:</th>
+<td class="last">
+<input type="radio" class="foswikiRadioButton" id="textbody" name="scope" value="text" checked="checked" /><label for="textbody"> Text body</label>&nbsp;&nbsp;&nbsp;<input type="radio" class="foswikiRadioButton" id="topictitle" name="scope" value="topic"  /><label for="topictitle"> Topic title</label>&nbsp;&nbsp;&nbsp;<input type="radio" class="foswikiRadioButton" id="both" name="scope" value="all"  /><label for="both"> Both body and title</label>
+<hr />
+<input type="checkbox" class="foswikiCheckbox" id="web" name="web"  /><label for="web"> All public webs</label> <span class="foswikiSmall">(otherwise search System Web only)</span>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</noautolink>
+
+---++ Upload Form
+
+<div class="foswikiFormSteps">
+    <div class="foswikiFormStep">
+        <h3><a name="Attach_new_file"></a>  Attach new file </h3>
+        Upload up to 10000 KB.
+        <input type="hidden" name="filename" value="" /> 
+        <input class="foswikiInputField" type="file" name="filepath" size="70" />
+    </div>
+    <div class="foswikiFormStep">
+        <h3><a name="Comment"></a>  Comment </h3>
+        <p>
+        Describe the file so other people know what it is.
+        </p>
+        <input class="foswikiInputField" type="text" name="filecomment" value="" size="70" />
+    </div>
+    <div class="foswikiFormStep">
+        <h3><a name="Properties"></a>  Properties </h3>
+        <input type="checkbox" class="foswikiCheckbox" id="createlink" name="createlink" /><label for="createlink">Create a link to the attached file</label> <span class="foswikiGrayText">Images will be displayed, for other attachments a link will be created.</span>
+        <input type="checkbox" class="foswikiCheckbox" id="hidefile" name="hidefile" /><label for="hidefile">Do not show attachment in table</label> <span class="foswikiGrayText">Attachments will not be shown in topic view page.</span>
+    </div>
+    <div class="patternTopicActions foswikiFormStep">
+        <span class="patternActionButtons"><input type="submit" class="foswikiSubmit" value="Upload file" /> <span><a href="/bin/view/%SYSTEMWEB%/PatternSkinElements" title="Back to topic" accesskey="c" rel="nofollow"><span class="foswikiAccessKey">C</span>ancel</a></span>
+        </span>
+    </div>
+</div>
+
+
+---++ Comment form/table
+
+(rendered html)
+
+<table style="border-width:0px;" cellspacing="0" cellpadding="0" class="foswikiTable" border="0"><tr class="foswikiTableEven"><td bgcolor="#ffffff" align="right" valign="top" style="vertical-align:top;border-width:0px;" class="foswikiFirstCol"> <label for="comment_url">Url</label> </td><td bgcolor="#ffffff" valign="top" style="vertical-align:top;border-width:0px;"> <input class="foswikiInputField"  type="text" size="40" name="comment_url" id="comment_url" value="http://" /> </td></tr>
+<tr class="foswikiTableOdd"><td bgcolor="#ffffff" valign="top" style="vertical-align:top;border-width:0px;" class="foswikiFirstCol"> <label for="comment_link">Link label</label> </td><td bgcolor="#ffffff" valign="top" style="vertical-align:top;border-width:0px;"> <input class="foswikiInputField"  type="text" size="40" name="comment_link" id="comment_link" /> </td></tr>
+<tr class="foswikiTableEven"><td bgcolor="#ffffff" align="right" valign="top" style="vertical-align:top;border-width:0px;" class="foswikiFirstCol"> <label for="bookmark_comment_text">Comment</label> </td><td bgcolor="#ffffff" valign="top" style="vertical-align:top;border-width:0px;"> <input class="foswikiInputField"  type="text" size="40" name="bookmark_comment_text" id="bookmark_comment_text" value="" /> </td></tr>
+<tr class="foswikiTableOdd"><td bgcolor="#ffffff" valign="top" style="vertical-align:top;border-width:0px;" class="foswikiFirstCol foswikiLast">  </td><td bgcolor="#ffffff" valign="top" style="vertical-align:top;border-width:0px;" class="foswikiLast"> <input  type="submit" value="Add bookmark" class="foswikiButton" /> </td></tr>
+</table>
+<input type="hidden" name="comment_action" value="save" /><input type="hidden" name="comment_type" value="bookmark" /><input type="hidden" name="comment_index" value="14" /><div></div>
+
+---++ Comment
+
+%COMMENT{}%
+
+---++ Links
+
+[[%HOMETOPIC%]] DoesNotExist

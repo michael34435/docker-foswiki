@@ -1,0 +1,59 @@
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1449441984" format="1.1"  version="1"}%
+%META:TOPICPARENT{name="AdminToolsCategory"}%
+<noautolink>
+<!--
+   Read general customisation instructions in %SYSTEMWEB%.UserAuthentication (System.UserRegistration)
+
+   DO NOT EDIT THIS TOPIC DIRECTLY!
+   To create a custom UserRegistration page, copy this topic to %USERSWEB%.UserRegistration. (Main.UserRegistration)
+
+   Override the template used for new user topics here:
+      * !%SET{"NEWUSERTEMPLATE" value="NewUserTemplate"}%
+
+    The registration page is composed of sections included from System.UserRegistrationParts.
+    For major changes, copy System.UserRegistrationParts  and change this to point to the edited topic:
+      * %SET{"REGPARTS" value="%WEB%.%TOPIC%,%SYSTEMWEB%.UserRegistrationParts"}%
+
+    The CSS and javascript is included from %SYSTEMWEB%.UserRegistrationParts by default. To change the CSS or
+    js files, attach them to an alternate topic and set the location here:
+      * %SET{"CSSJSTOPIC" value="%SYSTEMWEB%.UserRegistrationParts"}%
+
+   Optional form fields.    Possible field names:
+      extraField_groups     (Also enable REGISTRATION* settings below:)
+      extraField_organisationName
+      extraField_organisationUrl
+      extraField_country
+
+    Enable optional fields by adding / removing to the comma-separated list and remove the ! in the next statement:.
+      !%SET{"FIELDS" value="extraField_organisationName,extraField_country"}%
+
+   The following setting apply if extraField_groups is enabled:
+   * Group type settings during registration:
+      * =automatic=: users will be automatically added to eligible groups
+      * =one=: users can select one of the groups
+      * =multiple=: users can select from multiple groups to join
+      * =none=: user cannot be added to groups while registering
+
+   * !%SET{"REGISTRATIONGROUPTYPE" value="one"}%
+
+   * If REGISTRATIONGROUPS is set to a comma separated list of groups, only those listed groups will be shown in the UserRegistration form.
+   If it is unset, then group change permissions will be used to create the list of groups eligible for selection during registration. (When using "self-registration" by guest users, the !RegistrationAgent's permissions are used. If the registration is entered by another logged in user, that user's permissions are used).
+      * !%SET{"REGISTRATIONGROUPS" value=""}%
+
+   * Implementation Notes:
+      * If the RegistrationAgent or logged in user does not have permission to change one of the listed groups,  then that group will be silently skipped.  The user will not be added to the group.
+      * Group permissions are stored in Topic Settings, *not* inline in the group topic.  Edit the Group Topic Settings to change permissions.
+
+   %SET{"REGISTRATION_DISABLED" value="%IF{"context registration_supported" then="%IF{"context registration_enabled" then="" else="DISABLED"}%" else="DISABLED"}%"}%
+-->
+
+%INCLUDE{"%REGPARTS%" section="title"}%
+%INCLUDE{"%REGPARTS%" section="notes"}% <!-- Required: conditional notes & warnings -->
+%INCLUDE{"%REGPARTS%" section="privacyInformation"}% <!-- Optional -->
+%INCLUDE{"%REGPARTS%" section="resources"}% <!-- Required: JavaScript and CSS components -->
+%INCLUDE{"%REGPARTS%" section="form"}% <!-- Required: The actual registration form -->
+%INCLUDE{"%REGPARTS%" section="help"}% <!-- Optional: Help text -->
+
+</noautolink>
+
+%META:PREFERENCE{name="ALLOWTOPICVIEW" title="ALLOWTOPICVIEW" type="Set" value="*"}%

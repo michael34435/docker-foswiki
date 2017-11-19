@@ -1,0 +1,15 @@
+%META:TOPICINFO{author="ProjectContributor" date="1394718135" format="1.1" version="1"}%
+%META:TOPICPARENT{name="FAQForm"}%
+%{ Include the default edit templates from your current SKIN and COVER paths
+
+}%%TMPL:INCLUDE{"edit"}%%{
+
+    Define the formtop container to display the form
+
+}%%TMPL:DEF{"formtop"}%%TMPL:P{"form"}%%TMPL:END%%{
+
+    Define the formbottom container to be empty
+
+}%%TMPL:DEF{"formbottom"}%%TMPL:END%
+
+%META:PREFERENCE{name="VIEW_TEMPLATE" title="VIEW_TEMPLATE" type="Set" value="SkinTemplateView"}%

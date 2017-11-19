@@ -1,0 +1,10 @@
+%META:TOPICINFO{author="ProjectContributor" date="1252413407" format="1.1" version="1"}%
+%META:TOPICPARENT{name="WikiUsers"}%
+---+ The <nop>WikiGuest User
+
+A guest of this web, not unlike yourself. You can leave your trace behind you, just add your name in [[%SYSTEMWEB%.UserRegistration][UserRegistration]] and create your own page.
+
+---
+*Related topics:* [[%WIKIUSERSTOPIC%]], [[%SYSTEMWEB%.UserRegistration][UserRegistration]]
+
+%META:PREFERENCE{name="ALLOWTOPICCHANGE" title="ALLOWTOPICCHANGE" type="Set" value="AdminGroup"}%

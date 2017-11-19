@@ -1,0 +1,34 @@
+%META:TOPICINFO{author="ProjectContributor" date="1394718135" format="1.1" version="1"}%
+%META:TOPICPARENT{name="FAQForm"}%
+%{<verbatim class="tml">
+===================================================
+	FAQ topic templates	
+===================================================
+}%%{
+---------------------------------------------------
+	Include the default view templates from your current SKIN and COVER paths
+---------------------------------------------------
+}%%TMPL:INCLUDE{"view"}%%{
+---------------------------------------------------
+    Override the content template DEFinition. This normally just contains %TEXT%,
+    but we add some more here to help decorate all the [[FAQForm]] topics in the
+    same way
+---------------------------------------------------
+}%%TMPL:DEF{"content"}%
+---+ Question: %FORMFIELD{"TopicSummary"}%
+---++ Answer
+%TEXT%
+
+*Back to:* [[%SYSTEMWEB%.%FORMFIELD{"TopicClassification"}%][%FORMFIELD{"TopicClassification"}%]]
+----
+*Related Topics:* %FORMFIELD{"RelatedTopics"}%%TMPL:END%%{
+---------------------------------------------------
+    Re-define the form DEFinition to be empty; the contents of the from data
+    have already been displayed above so it wouldn't make much sense to show all
+    that again at the bottom of each [[FAQForm]] topic
+---------------------------------------------------
+}%%TMPL:DEF{"form"}%%TMPL:END%%{
+===================================================
+</verbatim>}%
+
+%META:PREFERENCE{name="VIEW_TEMPLATE" title="VIEW_TEMPLATE" type="Set" value="SkinTemplateView"}%

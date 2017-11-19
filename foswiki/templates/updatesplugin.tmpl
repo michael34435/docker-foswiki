@@ -1,0 +1,27 @@
+%TMPL:DEF{"messagetmpl"}%<script id="foswikiUpdatesTmpl" type="text/x-jsrender"> 
+<div class="foswikiBroadcastMessage foswikiUpdatesMessage">
+%JQICON{"error"}%
+%TMPL:P{"messagetmpl::text"}%
+<a href="%SCRIPTURL{configure}%">%JQICON{"tick"}% %MAKETEXT{"Upgrade"}%</a>
+<a href="#" id="foswikiUpdatesIgnore">%JQICON{"cross"}% %MAKETEXT{"Ignore for 7 days"}%</a><br/>
+%TMPL:P{"messagetmpl::list"}%
+%CLEAR%
+</div>
+</script>%TMPL:END%
+
+%TMPL:DEF{"messagetmpl::text"}%%MAKETEXT{"Warning: Updates found for [_1] extension(s)." args="{{:nrPlugins}}"}%%TMPL:END%
+%TMPL:DEF{"messagetmpl::list"}%({{:pluginList}})%TMPL:END%
+
+%TMPL:DEF{"css"}%<style type="text/css">
+.foswikiBroadcastMessage.foswikiUpdatesMessage {
+  display:none;
+  z-index:10000;
+  margin-bottom:0;
+  border-top:0;
+  border-left:0;
+  border-right:0;
+}
+.foswikiUpdatesMessage a {
+  margin-left: 1em;
+}
+</style>%TMPL:END%

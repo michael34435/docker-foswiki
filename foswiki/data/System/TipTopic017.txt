@@ -1,0 +1,12 @@
+%META:TOPICINFO{author="ProjectContributor" date="1282144126" format="1.1" version="1"}%
+%META:TOPICPARENT{name="TipsOfTheDay"}%
+---+ Revision control
+
+In Foswiki, assuming appropriate AccessControls, anyone can change anything but those changes are logged.  There is a complete audit trail with record of:
+   * Version
+   * Date of last revision
+   * Person who made change
+The default PatternSkin offers access to previous versions using the *History* link in the footer of any viewed topic. Differences between revisions can also be reviewed by clicking on the ==&gt;== symbols located between the revision numbers depicting the versions available.
+
+
+[[TipsOfTheDay][See More Tips...]]

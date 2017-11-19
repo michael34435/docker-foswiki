@@ -1,0 +1,12 @@
+FROM alpine:3.6
+
+ENV PERL_MM_USE_DEFAULT 1
+
+RUN apk add --update && \
+    apk add wget unzip make zip perl perl-cgi perl-fcgi perl-cgi-session perl-error perl-json perl-file-copy-recursive
+
+RUN perl -MCPAN -e 'install Crypt::PasswdMD5'
+
+COPY docker-server-entrypoint.sh docker-server-entrypoint.sh
+
+CMD ["sh", "docker-server-entrypoint.sh"]

@@ -1,0 +1,11 @@
+%META:TOPICINFO{author="ProjectContributor" date="1282144126" format="1.1" version="1"}%
+%META:TOPICPARENT{name="TipsOfTheDay"}%
+---+ !SlideShowPlugin for presentations
+
+Use SlideShowPlugin to convert a topic with headings and bullets into a slideshow presentation.
+
+This plugin is useful when content is already available in Foswiki - it allows easy creation of web-based presentations which may contain links to related content and live data from Foswiki applications. SlideShowPlugin does not try to compete with the bells and whistles of purpose-built presentation software, however some extra features can be enabled by plugins such as [[Foswiki:Extensions.ChartPlugin][ChartPlugin]], [[Foswiki:Extensions.GaugePlugin][GaugePlugin]], [[SpreadSheetPlugin]], [[Foswiki:Extensions.JHotDrawPlugin][JHotDrawPlugin]] etc.
+
+[[SlideShowPlugin][More Information...]]
+
+[[TipsOfTheDay][See More Tips...]]

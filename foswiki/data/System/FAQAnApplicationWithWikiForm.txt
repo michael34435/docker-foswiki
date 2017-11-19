@@ -1,0 +1,86 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434713255" format="1.1" version="1"}%
+%META:TOPICPARENT{name="FrequentlyAskedQuestions"}%
+This answer assumes you have basic knowledge about [[DataForms][Data Forms]].
+
+Using the steps below, you will create:
+   1 A form definition
+   1 A topic creation (HTML) form to automatically attach a data form to a topic
+   1 A query search to find topics based on the data fields
+   
+Step by step:
+<div class="foswikiFormSteps">
+<div class="foswikiFormStep">
+---+++!! Create a data form definition
+See [[DataForms][Data Form]], specifically the section [[DataForms#FormTable][The form table]].
+
+As an example we will create the topic "ReadingForm" with these contents:
+<verbatim class="tml">
+| *Name*   | *Type* | *Size* | *Values* | *Tooltip message* | *Attributes* |
+| Title    | text   | 80     |          | Book or article title | |
+| Category | select | 1      | ,Interesting,Remarkable,So-so | How you rate this reading material | |
+| Author   | text   | 50     |          | Author's last name | |
+</verbatim>
+
+</div>
+<div class="foswikiFormStep">
+---+++!! Enable the form
+Add the form in the list of Web forms. This is done by setting the preference =WEBFORMS= in the Web's WebPreferences (a comma separated list).
+
+If you create a topic, you can always add a form to the topic by choosing "Add form" in the edit screen.
+
+Now we will create an HTML form that does this automatically.
+</div>
+<div class="foswikiFormStep">
+---+++!! Create an HTML form for easy topic creation
+HTML forms have nothing to do with data forms, except that they are a way to create topics with pre-defined values.
+
+Example HTML form:
+<verbatim class="tml">
+<form action="%SCRIPTURLPATH{edit}%/%WEB%/" method="post">
+Name of the new topic: %BR%
+<input type="text" name="topic" class="foswikiInputField" size="32" />
+
+Title of article or book: %BR%
+<input type="text" name="Title" class="foswikiInputField" size="32" />
+
+<input type="submit" class="foswikiSubmit" value="Create topic" />
+<input type="hidden" name="onlywikiname" value="on" />
+<input type="hidden" name="formtemplate" value="ReadingForm" />
+<input type="hidden" name="topicparent" value="%TOPIC%" />
+</form>
+</verbatim>
+Now create a bunch of topics with this form.
+</div>
+<div class="foswikiFormStep">
+---+++!! Create a query search   
+To list all topics that have a form named !ReadingForm:
+<verbatim class="tml">
+%SEARCH{
+ type="query"
+ "form.name = 'ReadingForm'"
+ nonoise="on"
+ format="   * [[$web.$topic][$formfield(Title)]]"
+}%
+</verbatim>
+
+To list all topics where the author name ends in "Auden":
+<verbatim class="tml">
+%SEARCH{
+ type="query"
+ "form.name = 'ReadingForm' AND Author ~ '*Auden'"
+ nonoise="on"
+ format="   * [[$web.$topic][$formfield(Title)]]"
+}%
+</verbatim>
+</div>
+</div>
+
+[[VarSEARCH][SEARCH]] has more information on using =%<nop>SEARCH=.
+<!-- %JQREQUIRE{"chili"}% -->
+
+%META:FORM{name="FAQForm"}%
+%META:FIELD{name="TopicTitle" attributes="H" title="<nop>TopicTitle" value="Creating applications with DataForms"}%
+%META:FIELD{name="TopicClassification" attributes="" title="TopicClassification" value="FrequentlyAskedQuestion"}%
+%META:FIELD{name="TopicSummary" attributes="" title="Topic Summary" value="How can I create a simple data form based application?"}%
+%META:FIELD{name="InterestedParties" attributes="" title="Interested Parties" value=""}%
+%META:FIELD{name="RelatedTopics" attributes="" title="Related Topics" value="UserDocumentationCategory"}%

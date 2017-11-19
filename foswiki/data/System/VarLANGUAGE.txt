@@ -1,0 +1,15 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434650530" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Macros"}%
+---+ LANGUAGE -- language code for the current user
+Returns the language code for the current user. This is the language used by Foswiki to generate the user interface.
+The language is detected from the user's browser, unless some site/web/user/session-defined preference setting overrides it.
+
+If a =LANGUAGE= preference is explicitly set, this will be used as the user language instead of any language detected from the browser.
+<div class="foswikiHelp">%X% Avoid defining =LANGUAGE= in a non- per-user way, otherwise users will not be able to choose their preferred language.</div>
+
+---++ Examples
+   * =%<nop>LANGUAGE%= expands to =%LANGUAGE%=
+%STOPINCLUDE%
+---++ Related
+ [[VarLANGUAGES][LANGUAGES]]
+

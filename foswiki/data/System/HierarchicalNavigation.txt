@@ -1,0 +1,52 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434484983" format="1.1" version="1"}%
+%META:TOPICPARENT{name="AdminToolsCategory"}%
+---+!! Hierarchical Navigation
+
+Navigation block that displays the current topic, its parent and children (if any).
+This is intended to be included in other topics, for example in a side navigation bar (!WebLeftBar).
+
+<div class="foswikiHelp">
+%X% WARNING: The lookup for parent and children will increase the loading time of your pages.
+</div>
+
+---++ Displaying parent, current and child topics
+
+<verbatim class="tml">
+%INCLUDE{"%SYSTEMWEB%.HierarchicalNavigation" section="all"}%
+</verbatim>
+
+---++ Displaying child topics
+
+<verbatim class="tml">
+*Child topics:*
+%INCLUDE{"%SYSTEMWEB%.HierarchicalNavigation" section="children"}%
+</verbatim>
+
+<verbatim class="foswikiHidden">
+%STARTSECTION{"all"}%<div class="foswikiHierarchicalNavigation">
+<ul>
+%SEARCH{
+   "parent"
+   type="query"
+   topic="%BASETOPIC%"
+   web="%BASEWEB%"
+   nonoise="on"
+   format="<li class='foswikiParentTopic'>$percentICON{parent_gray}$percent [[$web.$parent][$parent]]</li>"
+}%
+<li class='foswikiCurrentTopic' style='font-weight:bold;'><nop>%BASETOPIC%</li>%INCLUDE{"%TOPIC%" section="childlist"}%
+</ul>
+</div><!--/foswikiHierarchicalNavigation-->%ENDSECTION{"all"}%
+
+%STARTSECTION{"children"}%<div class="foswikiHierarchicalNavigation">
+<ul>%INCLUDE{"%TOPIC%" section="childlist"}%</ul>
+</div><!--/foswikiHierarchicalNavigation-->%ENDSECTION{"children"}%
+
+%STARTSECTION{"childlist"}%%SEARCH{
+   "parent.name='%BASETOPIC%'"
+   web="%BASEWEB%"
+   type="query"
+   nonoise="on"
+   format="<li class='childTopic'>$percentICON{line_ur_gray}$percent [[$web.$topic][$topic]]</li>"
+}%%ENDSECTION{"childlist"}%
+</verbatim>
+<!-- %JQREQUIRE{"chili"}% -->

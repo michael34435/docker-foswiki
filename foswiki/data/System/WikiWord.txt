@@ -1,0 +1,92 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434484983" format="1.1" version="1"}%
+%META:TOPICPARENT{name="UserDocumentationCategory"}%
+---+!! What is a !WikiWord?
+A !WikiWord consists of two or more words with initial capitals, run together. WikiWords are used to refer to topics.
+
+*WikiWords refer to topics, and topic names are WikiWords*. When you type a !WikiWord, you create a link to that topic, or a link to create that topic if it doesn't exist yet. You type =%HOMETOPIC%= and on saving the page this becomes %HOMETOPIC%. It's as easy as that.
+
+!WikiWord linking is easy to use:
+   * You don't have to know the full path to where the topic is stored - you just type the name
+   * You don't need to write HTML
+   * Easy linking leads to interesting texts with links placed in context
+
+!WikiWords are styled like this because:
+   * It makes Wiki hyperlinks instantly recognizable
+   * It leads to interesting Wiki topics
+   * It avoids over-general topics because at least two words are required
+
+<div class="foswikiHelp">%T% Note that [[%SYSTEMWEB%.ACRONYM][acronyms]] are also auto-linked, but _only_ if the topic already exists.</div>
+
+---++ Syntax of a !WikiWord
+
+   * Uppercase letter(s)
+   * Lowercase letter(s) or numbers(s)
+   * Uppercase letter(s)
+   * Optional lowercase or uppercase letter(s) or number(s)
+
+!WikiWord syntax in [[Wikipedia:Extended_Backus_Naur_Form][Extended Backus.Naur form]] (EBNF):
+
+<verbatim class="tml">
+    wikiWord        = upperLetters , lowerNumLetters , upperLetters , { alphaNum } ;
+    upperLetters    = upperCase , { upperCase } ;
+    lowerNumLetters = lowerNum , { lowerNum } ;
+    alphaNum        = upperCase | lowerCase | digit ;
+    lowerNum        = lowerCase | digit ;
+    lowerCase       = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i"
+                    | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r"
+                    | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+    upperCase       = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I"
+                    | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R"
+                    | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" ;
+    digit           = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+</verbatim>
+
+---++ Preventing automatic linking
+Sometimes you want to be able to enter a !WikiWord without the automatic
+linking. When editing in TML, simply put an exclamation mark (!) before the word. =!<nop>WikiWord !WikiWord= will be displayed as !WikiWord WikiWord.
+
+---++ Good examples of !WikiWords
+
+   * WikiWord
+   * GoodStyle
+   * VersionFiveDotThree
+   * ReleaseVersion5dot3
+   * AVeryLongWikiTopicNameIsAlsoPossible: wherever an uppercase or lowercase letter is allowed, a group of letters of the same case is allowed
+   * YearTwoThousand
+   * Nine2Five: Note that numbers are considered to be lowercase letters in !WikiWords
+
+---++ Bad examples of !WikiWords:
+
+   * Web: Name without the uppercase letter(s), lowercase letter(s), uppercase letter(s) sequence
+   * 5Alive: Name beginning with a number
+   * Know-How: Name with dashes in between
+
+---++ Variations in linking
+
+When you write a !WikiWord, it becomes a link. There are more ways
+
+   * To write a custom *link label*, use bracket notation: =[<nop>[AccessControl][access control]]= - this becomes: [[AccessControl][access control]]
+   * To link to a topic in *another web*, write: =%SANDBOXWEB%.WebSearch= - this becomes: %SANDBOXWEB%.WebSearch
+   * To link to a topic in *another subweb* write: =%SANDBOXWEB%.Subweb.WebSearch=.
+   * To show the web name in the link use bracket notation: =[<nop>[%SANDBOXWEB%.%HOMETOPIC%]]= - this becomes: [[%SANDBOXWEB%.%HOMETOPIC%]]
+   * To link to a topic on *another Wiki site*, use: =Foswiki:Main/WebHome= - this becomes: Foswiki:Main/WebHome (sites are defined in the InterwikiPlugin)
+   * To link to a part on the *same page*, write a "#" followed by the name of an anchor. The anchor is a "#" followed by a name which must be a !WikiName. Example =#MyAnchor=. You can also link to an anchor on another page: =%SYSTEMWEB%.%HOMETOPIC%#MyAnchor=.
+   * To link to a header on the *same page*, write a "#" followed by the header text, with spaces replaced by underscores (and =!= removed): =[<nop>[#Good_examples_of_WikiWords]]= becomes: [[#Good_examples_of_WikiWords]]. You can also link to a header on another page: =%SYSTEMWEB%.%HOMETOPIC%#Disclaimer= becomes: %SYSTEMWEB%.%HOMETOPIC%#Disclaimer.
+
+---++ Hints
+   * Insert !WikiWords wherever you can. Rich linking helps to make a Wiki successful.
+   * Be specific. All topics in a web share one name space. For example, instead of =FunctionalSpec= write =BreadSlicerFunctionalSpec= because other projects might also have a functional spec topic.
+   * Create topics with singular names. Plural <nop>WikiWords are automatically linked to the singular topic, i.e. the link WikiWords links to the topic WikiWord (works only in English).
+   * Sometimes you have to be creative to find a good <nop>WikiName. Examples:
+      * To create a topic about the the *Bread Slicer 1.2* product, use =BreadSlicer1dot2= or =BreadSlicer1pt2=, but not =BreadSlicer1.2=.
+      * Numbers are considered lowercase which makes =Year2K= and =Y2K= !WikiWords but not =Y2000= and =Y2k=.
+   * Turn [[%SYSTEMWEB%.ACRONYM][acronyms]] into !WikiWords, i.e. take =FaqIndex= for a "FAQ index" topic.
+   * It is possible to turn off the auto-linking of !WikiWords and to rely only on the bracket notation using the NOAUTOLINK [[%SYSTEMWEB%.PreferenceSettings][preference setting]].
+   <div class="foswikiHelp">%X% When linking to a <nop>%HOMETOPIC% topic _in another web_, the link will be rendered as the name of the web, e.g. =%SANDBOXWEB%.%HOMETOPIC%= becomes %SANDBOXWEB%.%HOMETOPIC%.
+   <p></p>
+   %X% Dots (.) are used as seperators between webs, subwebs, and topics. It is not possible to use dots in topic names. Foswiki does not attempt to guess if a dot could be part of a topic name.</div>
+
+---
+*Related Topics:* TopicMarkupLanguage
+<!--%JQREQUIRE{"chili"}%-->
+%STOPINCLUDE%

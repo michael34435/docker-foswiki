@@ -1,0 +1,1 @@
+function checkAll(inForm,inState){if(inForm==undefined)return;var i,j=0;for(i=0;i<inForm.length;++i){if(inForm.elements[i].name.match("referring_topics")){inForm.elements[i].checked=inState}}}

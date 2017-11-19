@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  server:
+    container_name: foswiki_server
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    networks:
+      - local
+    volumes:
+      - ./foswiki:/var/www/foswiki
+  nginx:
+    container_name: foswiki_nginx
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    networks:
+      - local
+    depends_on:
+      - server
+    ports:
+      - 80:80
+    volumes:
+      - ./foswiki:/var/www/foswiki
+
+networks:
+  local:

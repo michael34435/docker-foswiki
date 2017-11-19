@@ -1,0 +1,8 @@
+%META:TOPICINFO{author="ProjectContributor" date="1434650530" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Macros"}%
+---+ REMOTE_PORT -- environment variable
+---++ Examples
+   * =%<nop>REMOTE_PORT%= expands to <code>%REMOTE_PORT%</code>
+%STOPINCLUDE%
+---++ Related
+ [[VarENV][ENV]], [[VarHTTPHOST][HTTP_HOST]], [[VarREMOTEADDR][REMOTE_ADDR]], [[VarREMOTEUSER][REMOTE_USER]]

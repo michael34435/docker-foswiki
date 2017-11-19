@@ -1,0 +1,128 @@
+%META:TOPICINFO{author="ProjectContributor" date="1493947845" format="1.1" version="1"}%
+%META:TOPICPARENT{name="Plugins"}%
+---+!! Configure Plugin
+%FORMFIELD{"Description"}%
+
+This plugin provides access to all %WIKITOOLNAME% configuration data through
+the webserver, supports running server-side checkers and wizards, and
+allows you to save modifications.
+
+You do not have to have this plugin installed to run %WIKITOOLNAME%. Checkers
+and wizards can be run from the command-line using the =tools/configure_test=
+script, and !LocalSite.cfg can be manually edited to add your required settings.
+However this UI provides a simple way to access the configuration without
+requiring login access to the server.
+
+If your system has an existing !LocalSite.cfg, then you *must* be
+logged in to %WIKITOOLNAME% as an administrator, or as a user identified by the 
+={FeatureAccess}{Configure}= parameter before attempting to use
+this interface. If no !LocalSite.cfg exists, then you will automatically
+logged in as an admin.  Do not log out of Foswiki until you have done one or
+more of the following:
+   * Registered a user and added them to the %USERSWEB%.AdminGroup
+   * Registered a user and added them to the ={FeatureAccess}{Configure}= list of users
+   * Set an _internal admin_ user password in the expert setting ={Password}=
+
+Users of the =configure= interface access it through the CGI script in
+=bin/configure=. The UI is self-explanatory and needs no further introduction
+here.
+
+Of interest to developers may be the JSON RPC interface provided by the
+plugin, which gives access to the Foswiki configuration to web clients
+(who must, of course, meet the above criteria to make RPC calls).
+
+
+---++ Remote Procedure Call (RPC) interface
+
+RPC calls are handled via the =JsonRpcContrib=. Callers must authenticate
+as admins, or the request will be rejected with a 403 status.
+
+Note: If Foswiki is running in 'bootstrap' mode (without a !LocalSite.cfg)
+then *all* calls are automatically assumed to be from an admin. As soon
+as a !LocalSite.cfg is put in place, then the authentication set up
+therein will apply, and users are required to logged in as admins.
+
+Entry points for each of the static methods published by the
+Foswiki::Configure::Query class are supported. See that class for
+descriptions.
+
+
+---++ Invocation examples
+
+Call using a URL of the format:
+
+=%SCRIPTURL{"jsonrpc"}%/configure=
+
+while POSTing a request encoded according to the JSON-RPC 2.0 specification:
+
+<verbatim>
+{
+  jsonrpc: "2.0", 
+  method: "getspec", 
+  params: {
+     get : { keys: "{DataDir}" },
+     depth : 0
+  }, 
+  id: "caller's id"
+}
+</verbatim>
+
+---++ .spec format
+The format of .spec files is documented in detail in
+There are two node types in the .spec tree:
+
+SECTIONs have:
+   * =headline= (default =UNKNOWN=, the root is usually '')
+   * =typename= (always =SECTION=)
+   * =children= - array of child nodes (sections and keys)
+ 
+Key entries (such as ={DataDir}=) have:
+   * =keys= e.g. ={Store}{Cupboard}=
+   * =typename= (from the .spec)
+   * Other keys from the .spec e.g. =SIZE=, =FEEDBACK=, =CHECK=
+
+
+
+---++ Installation
+You do not need to install anything in the browser to use this extension. The following instructions are for the administrator who installs the extension on the server.
+
+Open configure, and open the "Extensions" section. "Extensions Operation and Maintenance" Tab -&gt; "Install, Update or Remove extensions" Tab.  Click the "Search for Extensions" button.  
+Enter part of the extension name or description and press search.   Select the desired extension(s) and click install. If an extension is already installed, it will *not* show up in the
+search results.
+
+You can also install from the shell by running the extension installer as the web server user: (Be sure to run as the webserver user, not as root!)
+<verbatim>
+cd /path/to/foswiki
+perl tools/extension_installer <NameOfExtension> install
+</verbatim>
+
+If you have any problems, or if the extension isn't available in =configure=, then you can still install manually from the command-line. See https://foswiki.org/Support/ManuallyInstallingExtensions for more help.
+
+The plugin uses the =JsonRpcContrib=, which must be installed.
+
+---++ Dependencies
+<table border="1" class="foswikiTable"><tr><th>Name</th><th>Version</th><th>Description</th></tr><tr><td align="left">Foswiki::Plugins::JQueryPlugin</td><td align="left">&gt;=6.00</td><td align="left">Required JQuery</td></tr><tr><td align="left">Foswiki::Contrib::JsonRpcContrib</td><td align="left">&gt;=0</td><td align="left">Required JSON interface</td></tr></table>
+
+---++ Change History
+
+|  04 Apr 2017: | (1.08) Foswikitask:Item13883: Updated base template to suggest solutions when configure shows base login page.<br/>\
+                         Foswikitask:Item13339: Warning or errors icons in configure get stuck unless page is reloaded.<br/>\ 
+                         Foswikitask:Item14366: Reorder initialization to allow local CGI::Carp |
+|  23 Jan 2017: | (1.07) Foswikitask:Item14287: Configure needs to encode reported configuration values. |
+|  28 Nov 2016: | (1.06) Foswikitask:Item13206: Upgrade to latest jquery-ui |
+|  11 Apr 2016: | (1.05) Foswikitask:Item14049: fixed jsonrpc endpoint |
+|  03 Feb 2016: | (1.04) Foswikitask:Item13917: Regex type doesn't correctly compare default value |
+|  14 Oct 2015: | (1.03) fixed base use of =console= not supported by all browsers |
+|  08 Sep 2015: | (1.02) Foswikitask:Item13560: Configure does not set initial values for extensions. |
+|  18 Dec 2014: | (1.01) Initial version |
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="CrawfordCurrie"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2013-2017, CrawfordCurrie http://c-dot.co.uk, All Rights Reserved"}%
+%META:FIELD{name="Description" title="Description" value="=configure= interface using json-rpc"}%
+%META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/ConfigurePlugin"}%
+%META:FIELD{name="License" title="License" value="GPL ([[https://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
+%META:FIELD{name="Release" title="Release" value="04 Apr 2017"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/distro"}%
+%META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/ConfigurePlugin"}%
+%META:FIELD{name="Version" title="Version" value="1.08"}%

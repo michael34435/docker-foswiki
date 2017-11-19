@@ -1,0 +1,117 @@
+%META:TOPICINFO{author="ProjectContributor" date="1480385562" format="1.1" version="1"}%
+%META:TOPICPARENT{name="PatternSkin"}%
+---+!! %SYSTEMWEB%.PatternSkin CSS Cookbook
+
+*Questions and answers on how to customize the default look of Foswiki for your own needs, using style sheets.* For configuring page elements, see PatternSkinCustomization.
+
+%TOC%
+
+---++ First Read: How to modify !PatternSkin styles
+
+!PatternSkin uses 3 style sheets (attached to %SYSTEMWEB%.PatternSkinTheme):
+   * [[%PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/layout.css][layout.css]] - the positioning of main page elements (blocks), widths and heights
+   * [[%PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/style.css][style.css]] - fonts, sizes, margins and paddings
+   * [[%PUBURLPATH%/%SYSTEMWEB%/PatternSkinTheme/colors.css][colors.css]] - border colors, text colors and background colors
+
+When customizing your Foswiki installation, you can either choose to completely rewrite all css styles, or to selectively override some styles. The latter option is by far less time consuming, but all depends on your graphical wishes.
+
+---+++ When you need lots of graphic changes: Rewriting CSS
+   * Create a new topic that will contain your new CSS files
+   * Attach 3 new style sheets to the topic
+   * Point the CSS [[%SYSTEMWEB%.PreferenceSettings][preference settings]] in [[%SYSTEMWEB%.%WIKIPREFSTOPIC%]] or [[%LOCALSITEPREFS%]] to your new files:
+<sticky>
+<pre class="tml">
+   * <nop>Set FOSWIKI_LAYOUT_URL = %<nop>PUBURLPATH%/%<nop>SYSTEMWEB%/YourNewTopic/layout.css
+   * <nop>Set FOSWIKI_STYLE_URL = %<nop>PUBURLPATH%/%<nop>SYSTEMWEB%/YourNewTopic/style.css
+   * <nop>Set FOSWIKI_COLORS_URL = %<nop>PUBURLPATH%/%<nop>SYSTEMWEB%/YourNewTopic/colors.css
+</pre></sticky>
+
+---+++ When you need to make small adjustments: Adding to existing CSS
+
+With CSS you cannot remove already defined classes, you can only add to it, or override existing styles. <br />
+Overriding default CSS is done with 3 [[%SYSTEMWEB%.PreferenceSettings][preference settings]]: =USERLAYOUTURL=, =USERSTYLEURL=, =USERCOLORSURL=.
+   * Create a new topic that will contain your new CSS files
+   * Attach 1, 2 or 3 new style sheets to the topic, dependent on your CSS setup (if you don't change much, you might as well put everything in one CSS file, layout, margins and colors)
+   * Point the CSS [[%SYSTEMWEB%.PreferenceSettings][preference settings]] in [[%SYSTEMWEB%.%WIKIPREFSTOPIC%]] or [[%LOCALSITEPREFS%]] to your new files (below the =USERXXXURL= preferences):
+<sticky><pre class="tml">
+   * <nop>Set USERLAYOUTURL = %<nop>PUBURLPATH%/%<nop>SYSTEMWEB%/YourNewTopic/layout.css
+   * <nop>Set USERSTYLEURL = %<nop>PUBURLPATH%/%<nop>SYSTEMWEB%/YourNewTopic/style.css
+   * <nop>Set USERCOLORSURL = %<nop>PUBURLPATH%/%<nop>SYSTEMWEB%/YourNewTopic/colors.css
+</pre></sticky>
+   * If you use only little CSS and you've only attached one file, write:
+<sticky><pre class="tml">
+   * Set USERSTYLEURL = %<nop>PUBURLPATH%/%<nop>SYSTEMWEB%/YourNewTopic/style.css
+</pre></sticky>
+
+Instead of setting these preferences in [[%SYSTEMWEB%.%WIKIPREFSTOPIC%]] or [[%LOCALSITEPREFS%]], you can set these in your home topic, or in any other topic. Setting style URL preferences in:
+   * [[%SYSTEMWEB%.%WIKIPREFSTOPIC%]] or [[%LOCALSITEPREFS%]]: the style is visible for all users, site-wide
+   * %WEBPREFSTOPIC%: the style is visible for all users in one web
+   * Home topic: the style is visible for that one user when viewing the site
+   * Some other topic: the style is only visible in that one topic
+
+User styles are always loaded after Foswiki styles.
+
+The rest of this topic shows examples of small CSS changes.
+
+---++ Recipes
+
+---+++ Hide the left bar
+
+See example at: PatternSkinCssCookbookNoLeftBar
+
+---+++ Toggle the left bar on small screen
+
+See example at: PatternSkinCssCookbookSidebarToggle
+
+---+++ Use different fonts
+
+See example at: PatternSkinCssCookbookFonts
+
+#HeightTopBar
+---+++ I want to change the height of the top bar
+
+This is the complete style definition to set the height of the top bar:
+
+<verbatim class='css'>
+#patternTopBar,
+#patternTopBarContents {
+	height:75px; /* top bar height; make room for header columns */
+	overflow:hidden;
+}</verbatim>
+
+Change the number from 75px to your value.
+
+   1 Create a new stylesheet (preferably a 'theme variant' file (see for instance %PUBURL%/%SYSTEMWEB%/PatternSkinTheme/variant_foswiki_noframe.css with above definition in it)
+   1 Attach the file to a topic
+   1 Set the value of macro =PATTERNSKIN_THEME_VARIANT= to that topic attachment url using =%<nop>PUBURL%/<nop>YourWebName/<nop>YourTopicName/your_theme_variant_file.css=
+
+Note: If using %<nop>WEBHEADERART% to customize the top bar, some =#patternTopBarContents= CSS is expanded inline from =templates/css.pattern.tmpl=. Override of some attributes, such as background color and repeat are not possible from the CSS files.
+
+---+++ No top bar
+
+[[PatternSkinCssCookbookNoTopBar][See example]]
+
+---+++ Centered page
+
+[[PatternSkinCssCookbookCenterPage][See example]]
+
+---+++ Centered page (with a border around the page)
+
+[[PatternSkinCssCookbookCenterPageBorder][See example]]
+
+---+++ Sidebar background color
+
+[[PatternSkinCssCookbookSidebarBackground][See example]]
+
+---+++ Setting !EditTablePlugin styles
+
+[[PatternSkinCssCookbookEditTableStyle][See example]]
+
+---+++ Hide Edit action buttons for unauthorized and/or guest users
+
+[[PatternSkinCssCookbookHideActions][See example]]
+
+---++ Style sheet documentation
+   * See %SYSTEMWEB%.PatternSkinCss for documentation of !PatternSkin CSS classes
+   * See %SYSTEMWEB%.AppendixCascadingStyleSheets for documentation of Foswiki CSS classes
+<!-- %JQREQUIRE{"chili"}% -->

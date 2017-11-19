@@ -1,0 +1,1 @@
+jQuery(function($){"use strict";$(".jqUIButton").livequery(function(){var $this=$(this),opts=$.extend({},$this.data(),$this.metadata());$this.removeClass("jqUIButton").button(opts)});$(".jqUIButtonset").livequery(function(){var $this=$(this),opts=$.extend({},$this.data(),$this.metadata());$this.removeClass("jqUIButtonset").buttonset(opts)})});

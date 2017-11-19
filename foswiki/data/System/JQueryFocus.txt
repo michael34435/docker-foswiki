@@ -1,0 +1,43 @@
+%META:TOPICINFO{author="ProjectContributor" date="1456220586" format="1.1" version="1"}%
+%META:TOPICPARENT{name="JQueryPlugin"}%
+---+ %TOPIC%
+%JQPLUGINS{"focus"
+  format="
+    Homepage: $homepage <br />
+    Author(s): $author <br />
+    Version: $version
+  "
+}%
+
+%STARTSECTION{"summary"}%
+This plugin sets the focus on a form input field
+or textarea of a form when the page is loaded.
+%ENDSECTION{"summary"}%
+
+---++ Usage
+Add the css class ==jqFocus== (or ==foswikiFocus==) to the input field you'd like to focus.
+
+---++ Example
+<verbatim class="tml">
+%JQREQUIRE{"focus"}%
+<input type="text" class="foswikiInputField jqFocus" size="40" />
+
+<style type="text/css">
+input[type="text"]:focus {
+	background-color:#FFFFC0;
+	color:black;
+}
+</style>
+</verbatim>
+
+creates:
+
+%JQREQUIRE{"focus"}%
+<input type="text" class="foswikiInputField foswikiFocus" size="40" />
+
+<style type="text/css">
+input[type="text"]:focus {
+	background-color:#FFFFC0;
+	color:black;
+}
+</style>

@@ -1,0 +1,730 @@
+#! /usr/bin/env perl
+# Shell access to Foswiki.spec, Config.spec and LocalSite.cfg
+# See bottom of file for POD documentation.
+#
+# Author: Crawford Currie http://c-dot.co.uk
+#
+# Foswiki - The Free and Open Source Wiki, http://foswiki.org/
+#
+# Copyright (C) 2013-2016 Foswiki Contributors. Foswiki Contributors
+# are listed in the AUTHORS file in the root of this distribution.
+# NOTE: Please extend that file, not this notice.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version. For
+# more details read LICENSE in the root of this distribution.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# As per the GPL, removal of this notice is prohibited.
+
+use warnings;
+use strict;
+
+use Encode;
+use Getopt::Long;
+use Pod::Usage   ();
+use Data::Dumper ();
+
+# Assume we are in the tools dir, and we can find bin and lib from there
+use FindBin ();
+$FindBin::Bin =~ /^(.*)$/;
+my $bin = $1;
+
+use lib "$FindBin::Bin/../bin";
+require 'setlib.cfg';
+
+# SMELL: setlib does "require CGI" which sets STDIN to binmode.
+binmode( STDIN, ':crlf' );
+
+# require, not use.  The libpath is resolved by setlib.cfg,
+# so "use SomeModule;" will fail.
+
+require Assert;
+
+require Foswiki::Configure::Root;
+require Foswiki::Configure::LoadSpec;
+require Foswiki::Configure::Load;
+require Foswiki::Configure::Query;
+
+{
+
+    package Foswiki::Configure::ShellReporter;
+
+    require Foswiki::Configure::Reporter;
+    our @ISA = ('Foswiki::Configure::Reporter');
+
+    sub new {
+        return bless( {}, $_[0] );
+    }
+
+    sub NOTE {
+        my $this = shift;
+        my $text = join( "\n", @_ ) . "\n" if ( scalar @_ );
+        $this->{notes}++;
+
+        # Take out block formatting tags
+        $text =~ s/<\/?verbatim>//g;
+
+        # Take out active elements
+        $text =~ s/<(button|select|option|textarea).*?<\/\1>//g;
+        print Encode::encode_utf8($text);
+    }
+
+    sub WARN {
+        my $this = shift;
+        $this->{warnings}++;
+        print "WARNING: ";
+        $this->NOTE(@_);
+    }
+
+    sub ERROR {
+        my $this = shift;
+        $this->{errors}++;
+        print "#### ERROR: ";
+        $this->NOTE(@_);
+    }
+
+    sub CHANGED {
+        my ( $this, $k ) = @_;
+        $this->SUPER::CHANGED($k);
+
+        print Encode::encode_utf8(
+            "\$Foswiki::cfg$k = $this->{changes}->{$k};\n");
+    }
+
+    sub WIZARD {
+        return '';
+    }
+
+    sub has_level {
+        my ( $this, $level ) = @_;
+        return $this->{$level};
+    }
+};
+
+# Command-line parameter handling
+
+my $params = {
+    keys   => [],
+    method => 'check_current_value',
+    set    => {},
+};
+
+my %actions;
+
+sub _keys {
+    my ( $name, $val ) = @_;
+    push( @{ $params->{keys} }, $val ) if defined $val && length($val);
+    $actions{$name} = 1;
+}
+
+sub _scalar {
+    my ( $name, $val ) = @_;
+    $params->{$name} = $val;
+    $actions{$name} = 1;
+}
+
+my $result = Getopt::Long::GetOptions(
+    'check_current_value:s' => \&_keys,
+    'dependencies'          => sub {
+        $params->{check_dependencies} = 1;
+    },
+    'depth=i',
+    \&_scalar,
+    'getcfg:s'   => \&_keys,
+    'getspec:s%' => sub {
+        my ( $name, $key, $val ) = @_;
+        $actions{$name} = 1;
+        if ( defined $key ) {
+            $params->{get}->{keys} = $key;
+        }
+    },
+    'help' => sub {
+        Pod::Usage::pod2usage( -exitstatus => 0, -verbose => 2 );
+    },
+    'json'     => \&_scalar,
+    'method=s' => \&_scalar,
+    'noprompt' => \&_scalar,
+    'search=s' => \&_scalar,
+    'save'     => \&_scalar,
+    'set=s%'   => \%{ $params->{set} },
+
+    #SMELL: This would allow utf-8 for any config parameters, but can't
+    #        be assumed for all shells.  Running "perl -CA configure ... "
+    #        works instead.
+    #'set=s%'   => sub {
+    #    $params->{set}->{$_[1]} = Encode::decode_utf8($_[2]);
+    #    },
+    'trace'    => \&_scalar,
+    'verbose'  => \&_scalar,
+    'wizard=s' => \&_scalar,
+    'expert'   => \&_scalar,
+    'args=s%'  => sub {
+        my ( $name, $key, $val ) = @_;
+        $params->{args}->{$key} = $val;
+    },
+);
+
+# Check parameters
+
+my $action = '';
+my %uniq;
+my @methods =
+  grep { defined &{"Foswiki::Configure::Query::$_"} }
+  grep { $_ =~ /^[a-z]/ }
+  keys %Foswiki::Configure::Query::;
+
+foreach my $a (@methods) {
+    if ( $actions{$a} ) {
+        $action = $a;
+        $uniq{$a} = 1;
+    }
+}
+
+if ( scalar( keys %uniq ) > 1 ) {
+    print "Only one of "
+      . join( ' ', map { $_ =~ /(\w+)$/; "-$1" } keys %uniq )
+      . " allowed\n";
+    exit 1;
+}
+
+if ( !scalar( keys %uniq ) && !$actions{save} ) {
+    Pod::Usage::pod2usage( -exitstatus => 0, -verbose => 2 );
+}
+
+if ( $action =~ /^get/ && scalar( keys %{ $params->{set} } ) ) {
+    print "-set doesn't work with -$action\n";
+    exit 1;
+}
+
+# ---++ Prompt for config values
+#    * $root - Configuration root
+#    * $keys - ={Configuration}{Key}{Path}= to a single variable
+#    * $default - Default if any,  undef to require a response.
+#    * $prompts - Alternate prompt. If undef, the help text from the configuration spec is used.
+#    * $opt - Flag for optional values.   Optional values can have an "empty" reponse, Pressing enter will save a "null", and the keyword 'none' will omit setting the option.
+#
+
+sub _prompt {
+    my ( $root, $keys, $default, $prompt, $opt ) = @_;
+    print "\n";
+
+    unless ( $params->{expert} ) {
+        if ($prompt) {
+            print $prompt;
+        }
+        else {
+            my $vob = $root->getValueObject($keys);
+            if ( $vob && $vob->{desc} ) {
+                print "$vob->{desc}\n";
+            }
+        }
+    }
+
+    print "\n";
+    local $/ = "\n";
+    my $reply;
+    while ( !defined $reply ) {
+        print $keys;
+        print " ($default)" if defined $default;
+        print ': ';
+        $reply = <STDIN>;
+        chomp($reply);
+        $reply ||= $default;
+        last if $opt;
+    }
+
+    $reply = '' unless ( defined $reply );
+    return if ( $opt && $reply eq 'none' );
+
+    # Add keys to the params to be processed by the Save wizard.
+    # This invokes all needed handlers like ONSAVE vs. modifying the config directly
+    eval "\$params->{set}{'$keys'} = '$reply'";
+    if ($@) {
+        print "Failed to set $keys: "
+          . Foswiki::Configure::Reporter::stripStacktrace($@);
+    }
+}
+
+#$Foswiki::Configure::LoadSpec::RAW_VALS = 1;
+
+# Initialise
+if ( Foswiki::Configure::Load::readConfig( 0, 0, 0 ) ) {
+    $Foswiki::cfg{isVALID} = 1;
+}
+
+my $root     = Foswiki::Configure::Root->new();
+my $reporter = Foswiki::Configure::ShellReporter->new();
+
+Foswiki::Configure::LoadSpec::readSpec( $root, $reporter );
+if ( $reporter->has_level('errors') ) {
+    exit 1;
+}
+
+unless ( $Foswiki::cfg{isVALID} ) {
+    %Foswiki::cfg = ();
+    print "LocalSite.cfg load failed\n"
+      . Foswiki::Configure::Reporter::stripStacktrace($@);
+
+    # Run the bootstrap process. This guesses all the critical path settings.
+    require Foswiki::Configure::Bootstrap;
+    Foswiki::Configure::Bootstrap::bootstrapConfig();
+
+#SMELL: Another way to do this would be to loop through $Foswiki::cfg{BOOTSTRAP} array
+#       of config keys, But this allows customized prompts and defaults.  Anything prompted
+#       here should also be in the BOOTSTRAP array.   And anything guessed in Load::bootstrapConfig
+#       should probably be verified here unless very certain that we guess corrrectly.
+
+    unless ( $params->{expert} || $params->{noprompt} ) {
+
+        # Ask for missing parameters that cannot bootstrap in CLI
+        print "\n** Enter values for critical configuration items.\n";
+        print
+"** If any input will use utf-8 data (non-ASCII), run as 'perl -CAS tools/configure ...'\n";
+        print
+"** type a new value or hit return to accept the value in brackets.\n";
+    }
+
+    unless ( $params->{noprompt} ) {
+        _prompt( $root, '{DefaultUrlHost}', 'http://localhost' );
+        _prompt( $root, '{ScriptUrlPath}',  '/foswiki/bin' );
+        _prompt(
+            $root,
+            '{ScriptUrlPaths}{view}',
+            undef,
+'Enter optional short URL for view script, Press enter for shortest URLs,  Enter "none" to use full URLs.',
+            1
+        );
+        _prompt( $root, '{PubUrlPath}', '/foswiki/pub' );
+
+        eval 'use Crypt::PasswdMD5';
+        unless ($@) {
+            _prompt( $root, '{Password}', undef,
+                "Enter a password for the 'admin' sudo account.\n" );
+            push( @{ $Foswiki::cfg{BOOTSTRAP} }, '{Password}' );
+        }
+        else {
+            print
+"*** Unable to set password - Module Crypt::PasswdMD5 is not available\n";
+        }
+
+        # And confirm the rest of the guesses
+        print
+" The following directory settings have been guessed.  Press enter to confirm each setting:\n";
+
+# Note:  Bootstrap will decode the bytes read from the path into utf-8 characters
+# But the encoding needs to be reversed when passing it through the command prompt
+
+        _prompt( $root, '{ScriptDir}',
+            Encode::encode_utf8( $Foswiki::cfg{ScriptDir} ) );
+        _prompt( $root, '{ScriptSuffix}', $Foswiki::cfg{ScriptSuffix},
+            undef, 1 );
+        _prompt( $root, '{DataDir}',
+            Encode::encode_utf8( $Foswiki::cfg{DataDir} ) );
+        _prompt( $root, '{PubDir}',
+            Encode::encode_utf8( $Foswiki::cfg{PubDir} ) );
+        _prompt( $root, '{TemplateDir}',
+            Encode::encode_utf8( $Foswiki::cfg{TemplateDir} ) );
+        _prompt( $root, '{LocalesDir}',
+            Encode::encode_utf8( $Foswiki::cfg{LocalesDir} ) );
+        _prompt( $root, '{WorkingDir}',
+            Encode::encode_utf8( $Foswiki::cfg{WorkingDir} ) );
+        _prompt( $root, '{ToolsDir}',
+            Encode::encode_utf8( $Foswiki::cfg{ToolsDir} ) );
+        _prompt( $root, '{Store}{Implementation}',
+            $Foswiki::cfg{Store}{Implementation} );
+        _prompt( $root, '{Store}{Encoding}', $Foswiki::cfg{Store}{Encoding},
+            undef, 1 );
+        _prompt( $root, '{Store}{SearchAlgorithm}',
+            $Foswiki::cfg{Store}{SearchAlgorithm} );
+
+        print
+"You should now run tools/configure -check to validate your new configuration!\n";
+    }
+
+}
+else {
+       print "** Be sure to run as 'perl -CA tools/configure' if any settings will use utf-8 data\n";
+}
+
+if ( $reporter->has_level('errors') ) {
+    exit 1;
+}
+
+# Create a Logger instance and insert in to params hash
+# Note:  The configure should be bootstrapped before this step so that the
+# file system paths for the logger have been defined.
+
+_set_logger($params);
+
+# There are three possible action paths for Checkers and Wizards:
+#  - Query::check_current_value()
+#    * $params->{keys} is an array of configure keys
+#    * $params->{method} is also check_current_value
+#  - query::wizard() -   Wizards:: modules
+#    * $params->{wizard} - undefined
+#    * $params->{keys} is a scalar value - identifies the checker module
+#    * method is the checker routine to be called
+#  - query::wizard() -   Checker:: modules
+#    * $params->{wizard} - undefined
+#    * $params->{keys} is a scalar value - identifies the checker module
+#    * method is the checker method to be called
+
+if (   $params->{method} ne 'check_current_value'
+    && $action eq 'check_current_value' )
+{
+    $action = 'wizard';
+    $params->{keys} = $params->{keys}[0] if ref( $params->{keys} ) eq 'ARRAY';
+}
+
+if ($action) {
+    $action = "Foswiki::Configure::Query::$action";
+
+    no strict 'refs';
+    my $response = &$action( $params, $reporter );
+    use strict 'refs';
+
+    # Copy the changes into the "set" hash to be applied by save.
+    if ( ref($response) eq 'HASH' && keys %{ $response->{changes} } ) {
+        if ( $actions{save} ) {
+            $params->{set} = $response->{changes};
+        }
+        else {
+            print
+"Changes made by $params->{wizard} wizard, but -save option not requested.  Nothing saved.\n";
+            print
+"Rerun the $params->{wizard} with the -save option to update the configuration.\n";
+
+            #print  Data::Dumper::Dumper( \$response->{changes} );
+        }
+    }
+
+    if ( $action =~ /(?:::getcfg|::getspec|search)$/ ) {
+        my $out = Data::Dumper::Dumper( \$response );
+        $out =~ s/^\$VAR1 = \\/          /;
+        print $out;
+    }
+    elsif ( $action =~ /::check_current_value/ ) {
+        _printResponse( $response, $params->{verbose} );
+    }
+
+}
+
+if ( $actions{save} ) {
+
+    # -save is functionally equivalent to -wizard Save -method save
+    # (except of course you can have another wizard call)
+    if ( $reporter->has_level('errors') ) {
+        print "Save aborted due to errors\n";
+        exit 1;
+    }
+    $params->{wizard} = 'Save';
+    $params->{method} = 'save';
+    my $response = Foswiki::Configure::Query::wizard( $params, $reporter );
+}
+
+sub _printResponse {
+    my $reparray = shift;
+    my $verbose  = shift;
+    foreach my $entry (@$reparray) {
+        my $report = $entry->{reports};
+        my $keys   = $entry->{keys};
+        my $path   = $entry->{path};
+
+        my $header = 0;
+        foreach my $msg (@$report) {
+            next if ( $msg->{level} eq 'notes' && !$verbose );
+            if ( !$header ) {
+                print "\nChecking:" . join( ' -> ', @$path ) . ":  $keys\n";
+                $header = 1;
+            }
+            print 'WARNING: '    if $msg->{level} eq 'warnings';
+            print '#### ERROR: ' if $msg->{level} eq 'errors';
+            print '   ' . $msg->{text} . "\n";
+        }
+    }
+}
+
+# This code copied from Foswiki.pm, with changes.
+# It inserts the Logger into the params hash.
+
+sub _set_logger {
+    my $params = shift;
+
+    unless ( $params->{logger} ) {
+        if ( $Foswiki::cfg{Log}{Implementation} eq 'none' ) {
+            $params->{logger} = Foswiki::Logger->new();
+        }
+        else {
+            eval "require $Foswiki::cfg{Log}{Implementation}";
+            if ($@) {
+                print "Logger load failed: $@";
+                $params->{logger} = Foswiki::Logger->new();
+            }
+            else {
+                $params->{logger} = $Foswiki::cfg{Log}{Implementation}->new();
+            }
+        }
+    }
+
+    return;
+}
+
+1;
+__END__
+
+=pod
+
+=head1 tools/configure
+
+Shell interface for Foswiki.spec, Config.spec and LocalSite.cfg
+
+=head1 SYNOPSIS
+
+ tools/configure [options]
+
+Use -search, -getspec and -getcfg to explore the configuration.
+
+Use -check, -wizard and -method to perform actions.
+
+Use -save to save a new configuration.
+
+Use -json and -trace to control the output of this script.
+
+If any command line arguments are utf-8 characters, be sure to run configure using the B<perl -CA tools/configure ...> command.
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-json>
+
+If set then results will be output in JSON format rather than the
+default serialised perl format.
+
+=item B<-check> [key|section]
+
+Call checkers for the given key or section.
+No key|section means check all keys. You can have as many B<-check>
+options as you want when doing basic checking.
+
+=item B<-expert>
+
+Use minimal prompting.  Instead of displaying each item's help text
+only the item key is in the prompt.
+
+=item B<-getcfg> [key]
+
+Report the value of key. B<-getcfg> can be given
+as many times as you like to retrieve the values of several keys.
+Without a value, the option returns the value of all
+known keys.
+
+=item B<-getspec> [key|section]
+
+Get the Config.spec for a key or an entire section.
+No key|section will return the entire spec.
+Only the last B<-getspec> option will be processed.
+
+=item B<-method> name
+
+If B<-wizard> is given, this is the name of the
+wizard method to call (defaults to execute()). If B<-wizard> is not
+given then B<-method> is interpreted as the name of a checker
+method to call. The method will be called only on a single key.
+
+=item B<-noprompt>
+
+If B<-noprompt> is given, bootstrapped configuration keys
+are written to the LocalSite.cfg.  Other required settings that are
+not possible to bootstrap need to be set individually:
+B<tools/configure -save -set {key}=value>
+
+=item B<-save>
+
+Save a new configuration, with all items set using B<-set> (or set
+by a B<-wizard> call). Checkers are not run unless explicitly requested
+by B<-check>.
+
+=item B<-search> what
+
+Search headlines and keys for a fragment of text.
+Returns the path(s) to the item(s) matched.
+
+=item B<-set> key=value
+
+Set the value of a key for B<-check>, B<-wizard> and B<-save>. You
+can have as many B<-set> options as you want. B<-set> options are
+applied before any checkers or wizards are run, but will not
+persist unless B<-save> is specified. The value is expected to be
+a perl value - be careful about quotes, to pass a string value
+from the shell requires double quoting e.g.
+ -set {ScriptSuffix}='".pl"'
+
+The B<{Password}> setting is handled differently.  It will be encoded
+and stored as the hashed $apr1 value.
+
+=item B<-trace>
+
+Switch on limited tracing (mainly for debugging, traces are added to
+reports).  This is also useful when running a full -verbose -check
+of the configuration, as it lists each key checked.
+
+=item B<-wizard> name
+
+Wizard to call. You can only call a single wizard.
+
+=back
+
+=head1 EXAMPLES
+
+
+ $ configure  -save -set {Password}='mypass'
+
+will set the "sudo" admin password to mypass and save the
+hashed / encoded value into a new configuration. You can include multiple
+-set options.
+
+ $ configure -check {PubDir} -method validate_permissions
+
+will call validate_permissions() for the {PubDir} checker. You may
+only check a single key when a method is specified.
+
+ $ configure -check Extensions -verbose
+
+will call check_current_value() for all keys under the Extensions section.
+Verbose reporting will be used.
+
+ $ configure -wizard SendTestEmail -method send
+
+will send a test message to the {WebMasterEmail} address.  Email does not need to be enabled.
+
+ $ configure -set {ScriptSuffix}="" -set {UsersWebName}="Users" -save
+
+will set the values of {ScriptSuffix} and {UsersWebName} and save a new
+configuration.
+
+=head2 NOTES
+
+If you want to enter international characters into config variables, you will need to
+run the command with the perl -CA option.
+
+ $ perl -CA configure -save -set {Password}='passwordWithUTF8'
+
+will cause perl to treat the command line options as utf-8 strings and correctly
+encode international characters.
+
+=head1 WIZARDS
+
+The following wizards are shipped with the Foswiki distribution:
+
+=over 2
+
+=item B<AutoConfigureEmail>
+
+Implements method B<autoconfigure>.
+
+Probes the email servers to determine the protocols and methods implemented by the server and set the required configuration.
+Use with the B<-save> option to save changes discovered by AutoConfigure.
+
+ * {WebMasterEmail} must always be set.
+
+If direct connection to an email server using SMTP is required, the following settings are also needed.
+
+ * {SMTP}{MAILHOST} must be set to the server name.
+
+ * {SMPT}{Username} and {SMTP}{Password} are required if the server will require authentication.
+
+Example:  Configure a gmail connection, but don't save the changes:
+
+ $ configure -set {WebMasterEmail}='someuser@gmail.com' -set {SMTP}{MAILHOST}='smtp.gmail.com' -set {SMTP}{Username}='someuser@gmail.com' -set {SMTP}{Password}='mypassword' -wizard AutoConfigureEmail -method autoconfigure
+
+=item B<ExploreExtensions>
+Needs documentation
+
+=item B<InstallExtensions>
+
+Implements method B<add>, and method B<remove>
+
+Installs an extension into the system. Named arguments are used to pass parameters to the installer.
+
+=over 4
+
+=item -args B<ExtensionName>=RepositoryName
+
+Specifies the named extension that should be installed from the named repository (configured in {ExtensionsRepositories}
+Multiple extensions can be installed by repeating the -args option.
+
+=item -args B<USELOCAL>=0/1
+
+Set to 1 to use locally found extension archives, otherwise a fresh copy will be downloaded from the repository.
+
+=item -args B<SIMULATE>=0/1
+
+Set to 1 to simulate the installation. Nothing will be installed into the system.
+
+=item -args B<NODEPS>=0/1
+
+Set to 1 to bypass installing any other extensions that are listed of dependencies of the extension. (CPAN module dependencies are never installed).
+
+=item -args B<ENABLE>=0/1
+
+Set to 1 to enable the extension.
+
+=back
+
+Examples:
+
+ $ configure -wizard InstallExtensions -method add -args TreePlugin=Foswiki.org -args SIMULATE=1 -args ENABLE=1
+
+ $ configure -wizard InstallExtensions -method add -save -args TreePlugin=Foswiki.org -args USELOCAL=1 -args ENABLE=1
+
+=item B<Plugins>
+
+Implements method B<import>. (This is the default)
+
+Examines the Plugins and Extensions configuration.  Detects if a save is required to import new or changed .spec files.
+Sets any missing {Module} definitions.  Named arguments are used to pass parameters to the installer.
+
+=over 4
+
+=item -args B<ENABLE>=0/1
+
+Set to 1 to enable the extension.  Note that if the C<{Plugins}{someplugin}{Enabled}> is already defined, it will not be changed.
+Unless this argument is provided to specify a default, the C<{Enabled}> setting will be left undefined.
+
+=back
+
+Example:  Import new settings after installation of an extension using unzip. Enable any discovered plugins.
+
+ $ configure -save -wizard Plugins -args ENABLE=1
+
+=item B<SendTestEmail>
+
+Implements method B<send>.
+
+Sends a test email to the {WebMasterEmail} address.  Requires email be configured. Used to test the email configuration before enabling email.
+
+Example:
+
+ $ configure -wizard SendTestEmail -method send
+
+=item B<SMIMECertificate>
+
+Needs documentation.
+
+=item B<SSLCertificates>
+
+Needs documentation.
+
+=item B<StudyWebserver>
+
+Not currently operational
+
+=back
+

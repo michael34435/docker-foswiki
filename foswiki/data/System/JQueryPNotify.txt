@@ -1,0 +1,160 @@
+%META:TOPICINFO{author="ProjectContributor" date="1479806319" format="1.1"  version="1"}%
+%META:TOPICPARENT{name="JQueryPlugin"}%
+---+ %TOPIC%
+%JQPLUGINS{"pnotify"
+  format="
+    Homepage: $homepage <br />
+    Author(s): $author <br />
+    Version: $version 
+  "
+}%
+
+%STARTSECTION{"summary"}%
+Full featured plugin to show temporary floating messages for status updates, actions and errors.
+%ENDSECTION{"summary"}%
+
+---++ Usage
+
+Call =$.pnotify(options)= to show a notification.
+
+Most common options:
+
+   * =title=: the title
+   * =text=: the message text
+   * =delay=: milliseconds to show the message
+   * =opacity=: value from =0= (fully transparent) to =1= (opaque)
+   * =nonblock=: =true= if items below the message should be clickable
+   * =type=: ='error'= if an error message
+
+| *Option* | *Comment* | *Default value* |
+| =title= | The notice's title | =false= |
+| =title_escape= | Whether to escape the content of the title. (Not allow HTML.) | =false= |
+| =text= | The notice's text| =false= |
+| =text_escape= | Whether to escape the content of the text. (Not allow HTML.) | =false= |
+| =styling= | What styling classes to use. (Can be either jqueryui or bootstrap.) | =jqueryui= |
+| =addclass= | Additional classes to be added to the notice (for custom styling) | "" |
+| =cornerclass= | Class to be added to the notice for corner styling. | "" |
+| =nonblock= | Create a non-blocking notice; it lets the user click elements underneath it | =false= |
+| =nonblock_opacity= | The opacity of the notice (if it's non-blocking) when the mouse is over it | =0.2= |
+| =history= | Display a pull down menu to redisplay previous notices, and place the notice in the history | =false= |
+| =width= | Width of the notice | ="300px"= |
+| =min_height= | Minimum height of the notice; it will expand to fit content | ="16px"= |
+| =type= | Type of the notice. "notice", "info", "success", or "error" | ="notice"= |
+| =icon= | Set icon to true to use the default icon for the selected style/type, false for no icon, or a string for your own icon class. | =true= |
+| =animation= |The animation to use when displaying and hiding the notice. "none", "show", "fade", and "slide" are built in to jQuery. Others require jQuery UI. Use an object with effect_in and effect_out to use different effects. | ="fade"= |
+| =animate_speed= | Speed at which the notice animates in and out; ="slow"=, ="def"= or ="normal"=, ="fast"= or number of milliseconds | ="slow"= |
+| =opacity= | Opacity of the notice | =1= |
+| =shadow= | Display a drop shadow | =false= |
+| =closer= | Provide a button for the user to manually close the notice | =true= |
+| =closer_hover= | Only show the closer button on hover. | =true= |
+| =sticker= | Provide a button for the user to manually stick the notice. | =true= |
+| =sticker_hover= | Only show the sticker button on hover. | =true= |
+| =hide= | After a delay, remove the notice | =true= |
+| =delay= | Delay in milliseconds before the notice is removed | =8000= |
+| =mouse_reset= | Reset the hide timer if the mouse moves over the notice | =true= |
+| =remove= | Remove the notice's elements from the DOM after it is removed | =true= |
+| =insert_brs= | Change newlines to =br= tags | =true= |
+| =stack= | The stack on which the notices will be placed. Also controls the direction the notices stack. | ={"dir1": "down", "dir2": "left", "push": "bottom", "spacing1": 25, "spacing2": 25}= |
+| =before_init= | function called when the message is being initialized | |
+| =after_init= | function called when the message has been initialized | |
+| =before_open= | called when a message is about to be closed | |
+| =after_open= | called when the message has been displayed | |
+| =before_close= | called before a message is closed | |
+| =after_close= | called when a message has been closed | |
+
+		
+See for examples the [[http://pines.sourceforge.net/pnotify/][plugin example page]].
+
+The plugin uses the jQuery UI CSS library for styling, which means it is fully and easily themeable.
+
+---++ Examples
+%JQREQUIRE{"pnotify"}%
+
+   * <a href="#" class="pnotifyExample1">a simple notice</a>
+   * <a href="#" class="pnotifyExample2">a simple info</a>
+   * <a href="#" class="pnotifyExample3">a success message</a>
+   * <a href="#" class="pnotifyExample4">an error message</a>
+   * <a href="#" onclick="showMessage('Note', 'This is a notification. Click again to see more.');return false;">a customized one</a>
+   * <a href="#" class="pnotifyExample5">an animated info message</a>
+
+%ADDTOZONE{"script" id="%TOPIC%" requires="JQUERYPLUGIN::PNOTIFY" text="<script type='text/javascript'>
+var showMessage
+jQuery(function($) {
+
+  $('.pnotifyExample1').click(function() {
+    $.pnotify({
+       text: $(this).text(),
+       closer: false
+    });
+    return false;
+  });
+
+  $('.pnotifyExample2').click(function() {
+    $.pnotify({
+       text: $(this).text(),
+       closer: false,
+       type: 'info'
+    });
+    return false;
+  });
+
+  $('.pnotifyExample3').click(function() {
+    $.pnotify({
+       text: $(this).text(),
+       closer: false,
+       type: 'success'
+    });
+    return false;
+  });
+
+  $('.pnotifyExample4').click(function() {
+    $.pnotify({
+       text: $(this).text(),
+       closer: false,
+       type: 'error'
+    });
+    return false;
+  });
+
+  $('.pnotifyExample5').click(function() {
+    $.pnotify({
+       text: $(this).text(),
+       type: 'info',
+       animation: {
+         effect_in: 'drop',
+         options_in: {easing: 'easeOutBounce'},
+         effect_out: 'drop',
+         options_out: {easing: 'easeOutCubic'}
+       },
+       animation_speed: 700
+    });
+    return false;
+  });
+
+   // example with a message stack
+   var stack_topleft = {'dir1': 'down', 'dir2': 'right', 'push': 'top'};
+   showMessage = function(title, text, err) {
+     var err = Math.round(Math.random()),
+         opts = {
+           title: title,
+           text: text,
+           addclass: 'stack-topleft',
+           stack: stack_topleft,
+           closer: false,
+           delay: 4000,
+           nonblock: true,
+           opacity: 0.9
+         };
+     if (err) {
+       opts.pnotify_type = 'error';
+     }
+     $.pnotify(opts);
+   };
+});
+</script>"}%%ADDTOZONE{"head" id="%TOPIC%" text="<style type='text/css'>
+.ui-pnotify.stack-topleft {
+   top: 15px;
+   left: 15px;
+   right: auto;
+}
+</style>"}%
