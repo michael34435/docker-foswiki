@@ -6,7 +6,6 @@ And I minized the size of docker with alpinelinux, the total size for this image
 
 ## How to use
 ```bash
-docker build -t michael34435/foswiki .
 docker run -idt -p 80:80 michael34435/foswiki
 ```
 
