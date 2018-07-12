@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.7
 
 ENV PERL_MM_USE_DEFAULT 1
 
@@ -7,14 +7,14 @@ RUN apk add --update && \
 
 RUN perl -MCPAN -e 'install Crypt::PasswdMD5'
 
-RUN wget --no-check-certificate https://ncu.dl.sourceforge.net/project/foswiki/foswiki/2.1.4/Foswiki-2.1.4.zip
+RUN wget --no-check-certificate https://github.com/foswiki/distro/releases/download/FoswikiRelease02x01x06/Foswiki-2.1.6.zip
 
 RUN mkdir -p /var/www && \
-    mv Foswiki-2.1.4.zip /var/www && \
+    mv Foswiki-2.1.6.zip /var/www && \
     cd /var/www && \
-    unzip Foswiki-2.1.4.zip -d /var/www/ && \
-    mv Foswiki-2.1.4 foswiki && \
-    rm -rf Foswiki-2.1.4.zip && \
+    unzip Foswiki-2.1.6.zip -d /var/www/ && \
+    mv Foswiki-2.1.6 foswiki && \
+    rm -rf Foswiki-2.1.6.zip && \
     cd foswiki && \
     sh tools/fix_file_permissions.sh && \
     mkdir -p /run/nginx && \
