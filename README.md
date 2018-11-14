@@ -35,6 +35,12 @@ sudo docker stop docker-foswiki
 ```bash
 sudo docker rm docker-foswiki
 ``` 
+## How to publish image to Docker Hub
+```bash
+sudo docker login
+sudo docker tag docker-foswiki $DOCKER_ID_USER/docker-foswiki
+sudo docker push timlegge/docker-foswiki
+``` 
 
 ## License
 MIT
