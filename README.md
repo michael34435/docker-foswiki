@@ -11,7 +11,7 @@ docker run -idt -p 80:80 michael34435/docker-foswiki
 ## How to Build
 You can build the docker image yourself from the git clone.  Dimply do the following in the git directory:
 ```bash
-sudo docker build --no-cache --build-arg -t docker-foswiki .
+sudo docker build --no-cache -t docker-foswiki .
 ```
 Building the docker image requires parts of the build process to get access to the internet so if you have a proxy server you will need to follow the directions below to pass the proxy settings to the bulid prodess
 ```bash
