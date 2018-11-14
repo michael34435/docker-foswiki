@@ -7,7 +7,8 @@ ENV FOSWIKI_LATEST_URL https://github.com/foswiki/distro/releases/download/Foswi
 ENV FOSWIKI_LATEST Foswiki-2.1.6
 
 RUN apk add --update && \
-    apk add nginx wget unzip make zip perl perl-cgi perl-fcgi perl-cgi-session perl-error perl-json perl-file-copy-recursive ca-certificates perl-uri
+    apk add nginx wget unzip make zip perl perl-cgi perl-fcgi perl-cgi-session perl-error perl-json perl-file-copy-recursive ca-certificates 
+    apk add perl-uri perl-digest-perl-md5 perl-lwp-protocol-https
     
 RUN perl -MCPAN -e 'install Crypt::PasswdMD5'
 
