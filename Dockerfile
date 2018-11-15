@@ -24,7 +24,10 @@ RUN wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz
 RUN tar xvfz PerlMagick-6.89.tar.gz && \
     cd PerlMagick-6.89 && \
     perl Makefile.PL && \
-    make install
+    make install && \
+    cd / && \
+    rm -f PerlMagick-6.89.tar.gz && \
+    rm -fr PerlMagick-6.89
 
 RUN apk del gcc perl-dev musl-dev db-dev imagemagick6-dev
 
