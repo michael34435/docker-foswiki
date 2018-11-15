@@ -44,6 +44,9 @@ RUN mkdir -p /var/www && \
     mkdir -p /run/nginx && \
     mkdir -p /etc/nginx/conf.d
 
+RUN cd && \
+    rm -fr .cpan
+
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
 
