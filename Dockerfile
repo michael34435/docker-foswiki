@@ -11,25 +11,20 @@ RUN apk add --update && \
     apk add perl-uri perl-digest-perl-md5 perl-lwp-protocol-https perl-html-tree perl-email-mime perl-algorithm-diff && \
     apk add perl-cache-cache  perl-file-which perl-module-pluggable perl-moo perl-json perl-dbi perl-dbd-sqlite && \
     apk add perl-archive-zip perl-time-modules mailcap && \
-    apk add perl-json-xs --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted
-
-
-
-RUN apk add gcc perl-dev musl-dev db-dev imagemagick6-dev
-
-RUN perl -MCPAN -e 'install Crypt::PasswdMD5, BerkeleyDB, Spreadsheet::XLSX ,XML::Easy, Time::ParseDate, Types::Standard'
-
-RUN wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz
-
-RUN tar xvfz PerlMagick-6.89.tar.gz && \
+    apk add perl-json-xs --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
+    apk add gcc perl-dev musl-dev db-dev imagemagick6-dev && \
+    perl -MCPAN -e 'install Crypt::PasswdMD5, BerkeleyDB, Spreadsheet::XLSX ,XML::Easy, Time::ParseDate, Types::Standardi, Algorithm::Diff::XS' && \
+    wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
+    tar xvfz PerlMagick-6.89.tar.gz && \
     cd PerlMagick-6.89 && \
     perl Makefile.PL && \
     make install && \
     cd / && \
     rm -f PerlMagick-6.89.tar.gz && \
-    rm -fr PerlMagick-6.89
-
-RUN apk del gcc perl-dev musl-dev db-dev imagemagick6-dev
+    rm -fr PerlMagick-6.89 && \
+    apk del gcc perl-dev musl-dev db-dev imagemagick6-dev && \
+    cd ~/ && \
+    rm -fr .cpan
 
 RUN wget ${FOSWIKI_LATEST_URL}
 
@@ -44,8 +39,6 @@ RUN mkdir -p /var/www && \
     mkdir -p /run/nginx && \
     mkdir -p /etc/nginx/conf.d
 
-RUN cd && \
-    rm -fr .cpan
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
