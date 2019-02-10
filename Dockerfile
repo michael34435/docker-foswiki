@@ -24,21 +24,71 @@ RUN apk add --update && \
     cd / && \
     rm -f PerlMagick-6.89.tar.gz && \
     rm -fr PerlMagick-6.89 && \
-    apk del gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev && \
-    cd ~/ && \
-    rm -fr .cpan
+    apk del gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
 
-RUN wget ${FOSWIKI_LATEST_URL}
-
-RUN mkdir -p /var/www && \
+RUN wget ${FOSWIKI_LATEST_URL} && \
+    mkdir -p /var/www && \
     mv ${FOSWIKI_LATEST}.zip /var/www && \
     cd /var/www && \
     unzip ${FOSWIKI_LATEST}.zip -d /var/www/ && \
     rm -rf ${FOSWIKI_LATEST}.zip && \
     mv ${FOSWIKI_LATEST} foswiki && \
     cd foswiki && \
-    sh tools/fix_file_permissions.sh && \
-    mkdir -p /run/nginx && \
+    sh tools/fix_file_permissions.sh
+
+RUN cd /var/www/foswiki && \
+    tools/configure -save -noprompt && \
+    tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
+    tools/configure -save -set {ScriptUrlPath}='/bin' && \
+    tools/configure -save -set {ScriptUrlPaths}{view}='' && \
+    tools/configure -save -set {PubUrlPath}='/pub' && \
+    tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
+    tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin' && \
+    tools/configure -save -set {SearchAlgorithm}='Foswiki::Store::SearchAlgorithms::PurePerl' && \
+    sh tools/fix_file_permissions.sh
+
+RUN cd /var/www/foswiki && \
+    tools/extension_installer ActionTrackerPlugin -r -enable install && \
+    tools/extension_installer ClassificationPlugin -r -enable install && \
+    tools/extension_installer CustomatoTheme -r -enable install && \
+    tools/extension_installer DiffPlugin -r -enable install && \
+    tools/extension_installer DocumentViewerPlugin -r -enable install && \
+    tools/extension_installer FAQWhyYouAreAskedToConfirm -r -enable install && \
+    tools/extension_installer FilterPlugin -r -enable install && \
+    tools/extension_installer GraphvizPlugin -r -enable install && \
+    tools/extension_installer GridLayoutPlugin -r -enable install && \
+    tools/extension_installer ImageGalleryPlugin -r -enable install && \
+    tools/extension_installer ImagePlugin -r -enable install && \
+    tools/extension_installer JQDataTablesPlugin -r -enable install && \
+    tools/extension_installer JQMomentContrib -r -enable install && \
+    tools/extension_installer JQPhotoSwipeContrib -r -enable install && \
+    tools/extension_installer JQSelect2Contrib -r -enable install && \
+    tools/extension_installer JQSerialPagerContrib -r -enable install && \
+    tools/extension_installer JQTwistyContrib -r -enable install && \
+    tools/extension_installer JSTreeContrib -r -enable install && \
+    tools/extension_installer JavascriptFiles -r -enable install && \
+    tools/extension_installer JazzyNoteTheme -r -enable install && \
+    tools/extension_installer LikePlugin -r -enable install && \
+    tools/extension_installer ListyPlugin -r -enable install && \
+    tools/extension_installer MaterialIcons -r -enable install && \
+    tools/extension_installer MediaElementPlugin -r -enable install && \
+    tools/extension_installer MetaCommentPlugin -r -enable install && \
+    tools/extension_installer MetaDataPlugin -r -enable install && \
+    tools/extension_installer MimeIconPlugin -r -enable install && \
+    tools/extension_installer MoreFormfieldsPlugin -r -enable install && \
+    tools/extension_installer MultiLingualPlugin -r -enable install && \
+    tools/extension_installer NatSkin -r -enable install && \
+    tools/extension_installer RedDotPlugin -r -enable install && \
+    tools/extension_installer RenderPlugin -r -enable install && \
+    tools/extension_installer Skins -r -enable install && \
+    tools/extension_installer SolrPlugin -r -enable install && \
+    tools/extension_installer TagCloudPlugin -r -enable install && \
+    tools/extension_installer TopicInteractionPlugin -r -enable install && \
+    tools/extension_installer WebFontsContrib -r -enable install && \
+    tools/extension_installer WikiWorkbenchContrib -r -enable install && \
+    tools/extension_installer WorkflowPlugin -r -enable install
+
+RUN mkdir -p /run/nginx && \
     mkdir -p /etc/nginx/conf.d
 
 
