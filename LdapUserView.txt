@@ -1,0 +1,58 @@
+%META:TOPICINFO{author="ProjectContributor" comment="reprev" date="1429789529" format="1.1" reprev="1" version="2"}%
+%{<verbatim class="tml">}%
+%TMPL:INCLUDE{"view"}%<!-- -->
+%TMPL:DEF{"form"}%%TMPL:END%
+%TMPL:DEF{"revinfo"}%%TMPL:END%
+%{</verbatim>}%
+
+%{<verbatim class="tml">}%
+%TMPL:DEF{"beforetext"}%<!-- -->
+<noautolink>
+<div class="foswikiProfileInfo">
+%LDAP{"(sAMAccountName=%USERINFO{"%BASETOPIC%" format="$username"}%)"
+  clear="$displayName,$givenName,$sn,$title,$mobile,$manager,$mail,$telephoneNumber,$o,$postalAddress"
+  limit="1"
+  format="$percntTMPL:P{context=\"ImagePluginEnabled\" then=\"ldapuserview::photo\"}$percnt<!-- -->
+    <h1>$displayName $sn</h1>
+    <table class='foswikiLayoutTable'>
+      <tr><th>%MAKETEXT{"E-mail"}%:</th>
+          <td> $mail </td></tr>
+      <tr><th>%MAKETEXT{"Telephone"}%:</th>
+          <td> $telephoneNumber </td></tr>
+      <tr><th>%MAKETEXT{"Mobile"}%:</th>
+          <td> $mobile </td></tr>
+      <tr><th>%MAKETEXT{"Manager"}%:</th>
+          <td> $manager </td></tr>
+      <tr><th>%MAKETEXT{"Profession"}%:</th>
+          <td> $title </td></tr>
+      <tr><th>%MAKETEXT{"Organization"}%:</th>
+          <td> $company </td></tr>
+      <tr><th>%MAKETEXT{"Address"}%:</th>
+          <td> $postalAddress </td></tr>
+    </table>
+    $percntCLEAR$percnt"
+}%
+</div>
+</noautolink>
+<!-- -->%TMPL:END%
+%{</verbatim>}%
+
+%{<verbatim class="tml">}%
+%TMPL:DEF{"ldapuserview::photo"}%<!-- -->
+<div class="foswikiImage foswikiLeft">
+%IMAGE{
+   "%IF{"'%BASEWEB%.%BASETOPIC%'/Photo"
+     then="$percntFORMFIELD{\"Photo\" topic=\"%BASEWEB%.%BASETOPIC%\"}$percnt"
+     else="%IF{"'%BASEWEB%.%BASETOPIC%'/attachments[name=~'\.(gif|png|jpe?g)$']"
+       then="%QUERY{"'%BASEWEB%.%BASETOPIC%'/attachments[name=~'\.(gif|png|jpe?g)'][0].name"}%"
+       else="%PUBURLPATH%/%SYSTEMWEB%/MetaCommentPlugin/nobody.gif"
+     }%"
+   }%"
+   topic="%BASEWEB%.%BASETOPIC%"
+   type="plain"
+   align="left"
+   width="100"
+}%
+</div>
+<!-- -->%TMPL:END%
+%{</verbatim>}%
