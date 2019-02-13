@@ -51,6 +51,7 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer DiffPlugin -r -enable install && \
     tools/extension_installer DocumentViewerPlugin -r -enable install && \
     tools/extension_installer FilterPlugin -r -enable install && \
+    tools/extension_installer GluePlugin -r -enable install && \
     tools/extension_installer GraphvizPlugin -r -enable install && \
     tools/extension_installer GridLayoutPlugin -r -enable install && \
     tools/extension_installer ImageGalleryPlugin -r -enable install && \
