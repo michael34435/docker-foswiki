@@ -11,7 +11,7 @@ RUN apk add --update && \
     apk add perl-uri perl-digest-perl-md5 perl-lwp-protocol-https perl-html-tree perl-email-mime perl-algorithm-diff && \
     apk add perl-cache-cache  perl-file-which perl-module-pluggable perl-moo perl-json perl-dbi perl-dbd-sqlite && \
     apk add perl-archive-zip perl-time-modules mailcap imagemagick6 perl-authen-sasl perl-db_file perl-net-ldap && \
-    apk add perl-io-socket-inet6 && \
+    apk add grep musl perl-text-soundex perl-io-socket-inet6 && \
     apk add perl-json-xs --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
     apk add gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev && \
     perl -MCPAN -e 'install Crypt::PasswdMD5, BerkeleyDB, Spreadsheet::XLSX ,XML::Easy, Time::ParseDate, Types::Standard, Algorithm::Diff::XS, GSSAPI' && \
@@ -43,17 +43,13 @@ RUN cd /var/www/foswiki && \
     tools/configure -save -set {ScriptUrlPaths}{view}='' && \
     tools/configure -save -set {PubUrlPath}='/pub' && \
     tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
-    tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin' && \
-    tools/configure -save -set {SearchAlgorithm}='Foswiki::Store::SearchAlgorithms::PurePerl' && \
-    sh tools/fix_file_permissions.sh
+    tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin'
 
 RUN cd /var/www/foswiki && \
     tools/extension_installer ActionTrackerPlugin -r -enable install && \
     tools/extension_installer ClassificationPlugin -r -enable install && \
-    tools/extension_installer CustomatoTheme -r -enable install && \
     tools/extension_installer DiffPlugin -r -enable install && \
     tools/extension_installer DocumentViewerPlugin -r -enable install && \
-    tools/extension_installer FAQWhyYouAreAskedToConfirm -r -enable install && \
     tools/extension_installer FilterPlugin -r -enable install && \
     tools/extension_installer GraphvizPlugin -r -enable install && \
     tools/extension_installer GridLayoutPlugin -r -enable install && \
@@ -66,11 +62,9 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer JQSerialPagerContrib -r -enable install && \
     tools/extension_installer JQTwistyContrib -r -enable install && \
     tools/extension_installer JSTreeContrib -r -enable install && \
-    tools/extension_installer JavascriptFiles -r -enable install && \
-    tools/extension_installer JazzyNoteTheme -r -enable install && \
     tools/extension_installer LikePlugin -r -enable install && \
     tools/extension_installer ListyPlugin -r -enable install && \
-    tools/extension_installer MaterialIcons -r -enable install && \
+    tools/extension_installer LdapNgPlugin -r -enable install && \
     tools/extension_installer MediaElementPlugin -r -enable install && \
     tools/extension_installer MetaCommentPlugin -r -enable install && \
     tools/extension_installer MetaDataPlugin -r -enable install && \
@@ -80,12 +74,9 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer NatSkin -r -enable install && \
     tools/extension_installer RedDotPlugin -r -enable install && \
     tools/extension_installer RenderPlugin -r -enable install && \
-    tools/extension_installer Skins -r -enable install && \
-    tools/extension_installer SolrPlugin -r -enable install && \
     tools/extension_installer TagCloudPlugin -r -enable install && \
     tools/extension_installer TopicInteractionPlugin -r -enable install && \
-    tools/extension_installer WebFontsContrib -r -enable install && \
-    tools/extension_installer WikiWorkbenchContrib -r -enable install && \
+    tools/extension_installer SolrPlugin -r -enable install && \
     tools/extension_installer WorkflowPlugin -r -enable install
 
 RUN mkdir -p /run/nginx && \
