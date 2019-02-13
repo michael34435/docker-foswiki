@@ -83,7 +83,7 @@ RUN cd /var/www/foswiki && \
 RUN mkdir -p /run/nginx && \
     mkdir -p /etc/nginx/conf.d
 
-
+COPY LdapUserView.txt /var/www/foswiki/data/System/LdapUserView.txt
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
 
