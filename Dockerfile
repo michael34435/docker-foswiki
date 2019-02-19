@@ -11,10 +11,13 @@ RUN apk add --update && \
     apk add perl-uri perl-digest-perl-md5 perl-lwp-protocol-https perl-html-tree perl-email-mime perl-algorithm-diff && \
     apk add perl-cache-cache  perl-file-which perl-module-pluggable perl-moo perl-json perl-dbi perl-dbd-sqlite && \
     apk add perl-archive-zip perl-time-modules mailcap imagemagick6 perl-authen-sasl perl-db_file perl-net-ldap && \
-    apk add grep musl perl-text-soundex perl-io-socket-inet6 && \
+    apk add perl-xml-parser perl-path-tiny grep musl perl-text-soundex perl-io-socket-inet6 tzdata && \
+    apk add openssl openssl-dev expat-dev libxml2-dev gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev libcrypto1.0 libssl1.0 && \
+    apk add perl-filesys-notify-simple perl-hash-multivalue perl-digest-sha1 perl-crypt-openssl-dsa perl-crypt-openssl-bignum perl-crypt-openssl-rsa perl-crypt-openssl-random perl-class-accessor && \
+    apk add perl-moox-types-mooselike perl-datetime perl-stream-buffered perl-apache-logformat-compiler perl-mime-base64 perl-libwww perl-file-slurp perl-crypt-x509 && \
+    apk add perl-hash-merge-simple perl-dancer perl-yaml perl-test-leaktrace && \
     apk add perl-json-xs --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
-    apk add gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev && \
-    perl -MCPAN -e 'install Crypt::PasswdMD5, BerkeleyDB, Spreadsheet::XLSX ,XML::Easy, Time::ParseDate, Types::Standard, Algorithm::Diff::XS, GSSAPI' && \
+    perl -MCPAN -e 'install Crypt::PasswdMD5, BerkeleyDB, Spreadsheet::XLSX ,XML::Easy, Time::ParseDate, Types::Standard, Algorithm::Diff::XS, GSSAPI, Net::SAML2' && \
     perl -MCPAN -e "CPAN::Shell->notest('install', 'DB_File::Lock')" && \
     wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
     tar xvfz PerlMagick-6.89.tar.gz && \
@@ -23,8 +26,9 @@ RUN apk add --update && \
     make install && \
     cd / && \
     rm -f PerlMagick-6.89.tar.gz && \
-    rm -fr PerlMagick-6.89 && \
-    apk del gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
+    rm -fr PerlMagick-6.89 
+    # && \
+    # apk del gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     mkdir -p /var/www && \
@@ -85,8 +89,11 @@ RUN mkdir -p /run/nginx && \
 
 COPY LdapUserView.txt /var/www/foswiki/data/System/LdapUserView.txt
 COPY HtmlTitle.pm.diff /HtmlTitle.pm.diff
+COPY LdapContrib.pm.diff /LdapContrib.pm.diff
 RUN cd /var/www/foswiki/lib/Foswiki/Plugins/NatSkinPlugin && \
-    patch -p4 < /HtmlTitle.pm.diff
+#    patch -p4 < /HtmlTitle.pm.diff && \
+    cd /var/www/foswiki/lib/Foswiki/Contrib && \
+    patch -p0 < /LdapContrib.pm.diff
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
