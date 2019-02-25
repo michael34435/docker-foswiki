@@ -28,7 +28,7 @@ RUN apk add --update && \
     rm -f PerlMagick-6.89.tar.gz && \
     rm -fr PerlMagick-6.89 
     # && \
-    # apk del gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
+    # apk del vim git gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     mkdir -p /var/www && \
@@ -40,6 +40,14 @@ RUN wget ${FOSWIKI_LATEST_URL} && \
     cd foswiki && \
     sh tools/fix_file_permissions.sh
 
+RUN cd /root && \
+    apk add git vim && \
+    git clone https://github.com/timlegge/perl-Net-SAML2.git && \
+    cd perl-Net-SAML2 && \
+    apk add vim git perl-module-install perl-yaml-tiny perl-xml-writer && \
+    perl Makefile.PL && \
+    make install 
+ 
 RUN cd /var/www/foswiki && \
     tools/configure -save -noprompt && \
     tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
@@ -93,7 +101,13 @@ COPY LdapContrib.pm.diff /LdapContrib.pm.diff
 RUN cd /var/www/foswiki/lib/Foswiki/Plugins/NatSkinPlugin && \
 #    patch -p4 < /HtmlTitle.pm.diff && \
     cd /var/www/foswiki/lib/Foswiki/Contrib && \
-    patch -p0 < /LdapContrib.pm.diff
+    patch -p0 < /LdapContrib.pm.diff && \
+    cd /root && \
+    git clone https://github.com/timlegge/SamlLoginContrib.git && \
+    cd SamlLoginContrib && \
+    tar cvf SamlLoginContrib.tar * && \
+    cd /var/www/foswiki && \
+    tar xvf /root/SamlLoginContrib/SamlLoginContrib.tar
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
