@@ -85,8 +85,8 @@ RUN mkdir -p /run/nginx && \
 
 COPY LdapUserView.txt /var/www/foswiki/data/System/LdapUserView.txt
 COPY HtmlTitle.pm.diff /HtmlTitle.pm.diff
-RUN cd /var/www/foswiki/lib/Foswiki/Plugins/NatSkinPlugin && \
-    patch -p4 < /HtmlTitle.pm.diff
+#RUN cd /var/www/foswiki/lib/Foswiki/Plugins/NatSkinPlugin && \
+#    patch -p4 < /HtmlTitle.pm.diff
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
