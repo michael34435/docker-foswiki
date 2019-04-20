@@ -7,28 +7,42 @@ ENV FOSWIKI_LATEST_URL https://github.com/foswiki/distro/releases/download/Foswi
 ENV FOSWIKI_LATEST Foswiki-2.1.6
 
 RUN apk add --update && \
-    apk add nginx wget unzip make zip perl perl-cgi perl-fcgi perl-cgi-session perl-error perl-json perl-file-copy-recursive ca-certificates && \
-    apk add perl-uri perl-digest-perl-md5 perl-lwp-protocol-https perl-html-tree perl-email-mime perl-algorithm-diff && \
-    apk add perl-cache-cache  perl-file-which perl-module-pluggable perl-moo perl-json perl-dbi perl-dbd-sqlite && \
-    apk add perl-archive-zip perl-time-modules mailcap imagemagick6 perl-authen-sasl perl-db_file perl-net-ldap && \
-    apk add perl-xml-parser perl-path-tiny grep musl perl-text-soundex perl-io-socket-inet6 tzdata && \
-    apk add openssl openssl-dev expat-dev libxml2-dev gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev libcrypto1.0 libssl1.0 && \
-    apk add perl-filesys-notify-simple perl-hash-multivalue perl-digest-sha1 perl-crypt-openssl-dsa perl-crypt-openssl-bignum perl-crypt-openssl-rsa perl-crypt-openssl-random perl-class-accessor && \
-    apk add perl-moox-types-mooselike perl-datetime perl-stream-buffered perl-apache-logformat-compiler perl-mime-base64 perl-libwww perl-file-slurp perl-crypt-x509 && \
-    apk add perl-hash-merge-simple perl-dancer perl-yaml perl-test-leaktrace && \
-    apk add perl-json-xs --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
-    perl -MCPAN -e 'install Crypt::PasswdMD5, BerkeleyDB, Spreadsheet::XLSX ,XML::Easy, Time::ParseDate, Types::Standard, Algorithm::Diff::XS, GSSAPI, Net::SAML2' && \
-    perl -MCPAN -e "CPAN::Shell->notest('install', 'DB_File::Lock')" && \
-    wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
-    tar xvfz PerlMagick-6.89.tar.gz && \
-    cd PerlMagick-6.89 && \
-    perl Makefile.PL && \
-    make install && \
-    cd / && \
-    rm -f PerlMagick-6.89.tar.gz && \
-    rm -fr PerlMagick-6.89 
-    # && \
-    # apk del vim git gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
+    apk add nginx wget unzip make zip perl perl-cgi perl-fcgi perl-cgi-session \
+        git perl-error perl-json perl-file-copy-recursive ca-certificates \
+        perl-uri perl-digest-perl-md5 perl-lwp-protocol-https perl-html-tree \
+        perl-email-mime perl-algorithm-diff perl-cache-cache  perl-file-which \
+        perl-module-pluggable perl-moo perl-json perl-dbi perl-dbd-sqlite \
+        perl-archive-zip mailcap imagemagick6 perl-authen-sasl perl-db_file \
+        perl-net-ldap perl-xml-parser perl-path-tiny grep musl \
+        perl-text-soundex perl-io-socket-inet6 tzdata openssl openssl-dev \
+        expat-dev libxml2-dev gcc perl-dev musl-dev db-dev imagemagick6-dev \
+        krb5-dev perl-filesys-notify-simple \
+        perl-hash-multivalue perl-digest-sha1 perl-crypt-openssl-dsa \
+        perl-crypt-openssl-bignum perl-crypt-openssl-rsa \
+        perl-crypt-openssl-random perl-class-accessor perl-moose \
+        perl-moox-types-mooselike perl-datetime perl-stream-buffered \
+        perl-apache-logformat-compiler perl-mime-base64 perl-libwww \
+        perl-file-slurp perl-crypt-x509 perl-hash-merge-simple perl-dancer \
+        perl-yaml perl-test-leaktrace perl-locale-maketext-lexicon \
+        perl-xml-xpath && \
+    apk add perl-crypt-passwdmd5 perl-berkeleydb perl-spreadsheet-xlsx \
+        perl-xml-easy perl-type-tiny perl-json-xs perl-algorithm-diff-xs \
+        perl-gssapi perl-time-parsedate perl-db_file-lock --update-cache \
+            --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+            --allow-untrusted
+ #apk add perl-types-standard 
+#RUN perl -MCPAN -e "install Crypt::Op"enSSL::VerifyX509, DB_File::Lock, Devel::OverloadInfo, MooseX::Types::Moose, MooseX::Types::URI, Net::SAML2" && \
+
+RUN perl -MCPAN -e "install Net::SAML2" && \
+         wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
+         tar xvfz PerlMagick-6.89.tar.gz && \
+         cd PerlMagick-6.89 && \
+         perl Makefile.PL && \
+         make install && \
+         cd / && \
+         rm -f PerlMagick-6.89.tar.gz && \
+         rm -fr PerlMagick-6.89 
+#apk del gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     mkdir -p /var/www && \
@@ -41,9 +55,10 @@ RUN wget ${FOSWIKI_LATEST_URL} && \
     sh tools/fix_file_permissions.sh
 
 RUN cd /root && \
-    apk add git vim && \
     git clone https://github.com/timlegge/perl-Net-SAML2.git && \
     cd perl-Net-SAML2 && \
+    git fetch && \
+    git rebase && \
     apk add vim git perl-module-install perl-yaml-tiny perl-xml-writer && \
     perl Makefile.PL && \
     make install 
@@ -59,6 +74,8 @@ RUN cd /var/www/foswiki && \
 
 RUN cd /var/www/foswiki && \
     tools/extension_installer ActionTrackerPlugin -r -enable install && \
+    tools/extension_installer NatSkin -r -enable install && \
+    tools/extension_installer JQPhotoSwipeContrib -r -enable install && \
     tools/extension_installer ClassificationPlugin -r -enable install && \
     tools/extension_installer DiffPlugin -r -enable install && \
     tools/extension_installer DocumentViewerPlugin -r -enable install && \
@@ -70,26 +87,25 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer ImagePlugin -r -enable install && \
     tools/extension_installer JQDataTablesPlugin -r -enable install && \
     tools/extension_installer JQMomentContrib -r -enable install && \
-    tools/extension_installer JQPhotoSwipeContrib -r -enable install && \
     tools/extension_installer JQSelect2Contrib -r -enable install && \
     tools/extension_installer JQSerialPagerContrib -r -enable install && \
     tools/extension_installer JQTwistyContrib -r -enable install && \
     tools/extension_installer JSTreeContrib -r -enable install && \
+    tools/extension_installer LdapNgPlugin -r -enable install && \
     tools/extension_installer LikePlugin -r -enable install && \
     tools/extension_installer ListyPlugin -r -enable install && \
-    tools/extension_installer LdapNgPlugin -r -enable install && \
     tools/extension_installer MediaElementPlugin -r -enable install && \
     tools/extension_installer MetaCommentPlugin -r -enable install && \
     tools/extension_installer MetaDataPlugin -r -enable install && \
     tools/extension_installer MimeIconPlugin -r -enable install && \
     tools/extension_installer MoreFormfieldsPlugin -r -enable install && \
     tools/extension_installer MultiLingualPlugin -r -enable install && \
-    tools/extension_installer NatSkin -r -enable install && \
+    tools/extension_installer NewUserPlugin -r -enable install && \
     tools/extension_installer RedDotPlugin -r -enable install && \
     tools/extension_installer RenderPlugin -r -enable install && \
+    tools/extension_installer SolrPlugin -r -enable install && \
     tools/extension_installer TagCloudPlugin -r -enable install && \
     tools/extension_installer TopicInteractionPlugin -r -enable install && \
-    tools/extension_installer SolrPlugin -r -enable install && \
     tools/extension_installer WorkflowPlugin -r -enable install
 
 RUN mkdir -p /run/nginx && \
@@ -98,16 +114,17 @@ RUN mkdir -p /run/nginx && \
 COPY LdapUserView.txt /var/www/foswiki/data/System/LdapUserView.txt
 COPY HtmlTitle.pm.diff /HtmlTitle.pm.diff
 COPY LdapContrib.pm.diff /LdapContrib.pm.diff
-RUN cd /var/www/foswiki/lib/Foswiki/Plugins/NatSkinPlugin && \
+#RUN cd /var/www/foswiki/lib/Foswiki/Plugins/NatSkinPlugin && \
 #    patch -p4 < /HtmlTitle.pm.diff && \
-    cd /var/www/foswiki/lib/Foswiki/Contrib && \
-    patch -p0 < /LdapContrib.pm.diff && \
-    cd /root && \
-    git clone https://github.com/timlegge/SamlLoginContrib.git && \
+#    cd /var/www/foswiki/lib/Foswiki/Contrib && \
+#    patch -p0 < /LdapContrib.pm.diff && \
+#    cd /root && \
+
+RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
     cd SamlLoginContrib && \
     tar cvf SamlLoginContrib.tar * && \
     cd /var/www/foswiki && \
-    tar xvf /root/SamlLoginContrib/SamlLoginContrib.tar
+    tar xvf /SamlLoginContrib/SamlLoginContrib.tar
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
