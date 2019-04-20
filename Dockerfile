@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:3.9
 
 ENV PERL_MM_USE_DEFAULT 1
 
@@ -32,8 +32,18 @@ RUN apk add --update && \
             --allow-untrusted
  #apk add perl-types-standard 
 #RUN perl -MCPAN -e "install Crypt::Op"enSSL::VerifyX509, DB_File::Lock, Devel::OverloadInfo, MooseX::Types::Moose, MooseX::Types::URI, Net::SAML2" && \
+COPY Crypt-OpenSSL-VerifyX509-0.10.bug121214-0.patch /Crypt-OpenSSL-VerifyX509-0.10.bug121214-0.patch
 
-RUN perl -MCPAN -e "install Net::SAML2" && \
+RUN cd /root && \
+        apk add perl-file-remove perl-test-pod-coverage && \
+        perl -MCPAN -e "install Module::Install::AuthorRequires, Module::Install::AuthorTests, Test::NoTabs" && \
+	git clone https://github.com/chrisa/perl-Crypt-OpenSSL-VerifyX509.git && \
+        cd perl-Crypt-OpenSSL-VerifyX509 && \
+	patch -p1 < /Crypt-OpenSSL-VerifyX509-0.10.bug121214-0.patch && \
+	perl Makefile.PL && \
+        make install
+
+RUN perl -MCPAN -e "install Devel::OverloadInfo, MooseX::Types, MooseX::Types::Moose, Net::SAML2" && \
          wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
          tar xvfz PerlMagick-6.89.tar.gz && \
          cd PerlMagick-6.89 && \
@@ -126,8 +136,7 @@ RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
     cd /var/www/foswiki && \
     tar xvf /SamlLoginContrib/SamlLoginContrib.tar
 
-RUN apk add perl-devel-stacktrace && \
-    perl -MCPAN -e "install Devel::OverloadInfo, MooseX::Types, MooseX::Types::Moose"
+    
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
