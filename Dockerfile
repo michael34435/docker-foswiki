@@ -126,6 +126,9 @@ RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
     cd /var/www/foswiki && \
     tar xvf /SamlLoginContrib/SamlLoginContrib.tar
 
+RUN apk add perl-devel-stacktrace && \
+    perl -MCPAN -e "install Devel::OverloadInfo, MooseX::Types, MooseX::Types::Moose"
+
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
 
