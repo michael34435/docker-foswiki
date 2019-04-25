@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:edge
 
 ENV PERL_MM_USE_DEFAULT 1
 
@@ -24,26 +24,23 @@ RUN apk add --update && \
         perl-apache-logformat-compiler perl-mime-base64 perl-libwww \
         perl-file-slurp perl-crypt-x509 perl-hash-merge-simple perl-dancer \
         perl-yaml perl-test-leaktrace perl-locale-maketext-lexicon \
-        perl-xml-xpath && \
+        perl-xml-xpath vim git perl-module-install perl-yaml-tiny \
+        perl-xml-writer perl-crypt-eksblowfish perl-dbd-mysql perl-dbd-pg && \
     apk add perl-crypt-passwdmd5 perl-berkeleydb perl-spreadsheet-xlsx \
         perl-xml-easy perl-type-tiny perl-json-xs perl-algorithm-diff-xs \
         perl-gssapi perl-time-parsedate perl-db_file-lock --update-cache \
+        perl-devel-overloadinfo perl-xml-generator perl-xml-canonicalizexml \
+        perl-crypt-openssl-x509 perl-moosex perl-sub-exporter-formethods \
+        perl-moosex-types perl-crypt-openssl-verifyx509 perl-xml-tidy \
+        vim git perl-module-install perl-yaml-tiny perl-xml-writer \
+        perl-moosex-types-common perl-moosex-types-datetime \
+        perl-moosex-types-uri perl-www-mechanize perl-datetime-format-xsd \
+        perl-crypt-smime perl-convert-pem \
+        # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
             --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
             --allow-untrusted
- #apk add perl-types-standard 
-#RUN perl -MCPAN -e "install Crypt::Op"enSSL::VerifyX509, DB_File::Lock, Devel::OverloadInfo, MooseX::Types::Moose, MooseX::Types::URI, Net::SAML2" && \
-COPY Crypt-OpenSSL-VerifyX509-0.10.bug121214-0.patch /Crypt-OpenSSL-VerifyX509-0.10.bug121214-0.patch
 
-RUN cd /root && \
-        apk add perl-file-remove perl-test-pod-coverage && \
-        perl -MCPAN -e "install Module::Install::AuthorRequires, Module::Install::AuthorTests, Test::NoTabs" && \
-	git clone https://github.com/chrisa/perl-Crypt-OpenSSL-VerifyX509.git && \
-        cd perl-Crypt-OpenSSL-VerifyX509 && \
-	patch -p1 < /Crypt-OpenSSL-VerifyX509-0.10.bug121214-0.patch && \
-	perl Makefile.PL && \
-        make install
-
-RUN perl -MCPAN -e "install Devel::OverloadInfo, MooseX::Types, MooseX::Types::Moose, Net::SAML2" && \
+RUN perl -MCPAN -e "install Net::SAML2" && \
          wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
          tar xvfz PerlMagick-6.89.tar.gz && \
          cd PerlMagick-6.89 && \
@@ -52,7 +49,6 @@ RUN perl -MCPAN -e "install Devel::OverloadInfo, MooseX::Types, MooseX::Types::M
          cd / && \
          rm -f PerlMagick-6.89.tar.gz && \
          rm -fr PerlMagick-6.89 
-#apk del gcc perl-dev musl-dev db-dev imagemagick6-dev krb5-dev
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     mkdir -p /var/www && \
@@ -124,9 +120,7 @@ RUN mkdir -p /run/nginx && \
 COPY LdapUserView.txt /var/www/foswiki/data/System/LdapUserView.txt
 COPY HtmlTitle.pm.diff /HtmlTitle.pm.diff
 COPY LdapContrib.pm.diff /LdapContrib.pm.diff
-#RUN cd /var/www/foswiki/lib/Foswiki/Plugins/NatSkinPlugin && \
-#    patch -p4 < /HtmlTitle.pm.diff && \
-#    cd /var/www/foswiki/lib/Foswiki/Contrib && \
+#RUN cd /var/www/foswiki/lib/Foswiki/Contrib && \
 #    patch -p0 < /LdapContrib.pm.diff && \
 #    cd /root && \
 
@@ -135,8 +129,6 @@ RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
     tar cvf SamlLoginContrib.tar * && \
     cd /var/www/foswiki && \
     tar xvf /SamlLoginContrib/SamlLoginContrib.tar
-
-    
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
