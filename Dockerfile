@@ -11,9 +11,9 @@ RUN apk add --update && \
         git perl-error perl-json perl-file-copy-recursive ca-certificates \
         perl-uri perl-digest-perl-md5 perl-lwp-protocol-https perl-html-tree \
         perl-email-mime perl-algorithm-diff perl-cache-cache  perl-file-which \
-        perl-module-pluggable perl-moo perl-json perl-dbi perl-dbd-sqlite \
+        perl-module-pluggable perl-moo perl-dbi perl-dbd-sqlite \
         perl-archive-zip mailcap imagemagick6 perl-authen-sasl perl-db_file \
-        perl-net-ldap perl-xml-parser perl-path-tiny grep musl \
+        perl-ldap perl-xml-parser perl-path-tiny grep musl \
         perl-text-soundex perl-io-socket-inet6 tzdata openssl openssl-dev \
         expat-dev libxml2-dev gcc perl-dev musl-dev db-dev imagemagick6-dev \
         krb5-dev perl-filesys-notify-simple \
@@ -24,7 +24,7 @@ RUN apk add --update && \
         perl-apache-logformat-compiler perl-mime-base64 perl-libwww \
         perl-file-slurp perl-crypt-x509 perl-hash-merge-simple perl-dancer \
         perl-yaml perl-test-leaktrace perl-locale-maketext-lexicon \
-        perl-xml-xpath vim git perl-module-install perl-yaml-tiny \
+        perl-xml-xpath vim perl-module-install perl-yaml-tiny \
         perl-xml-writer perl-crypt-eksblowfish perl-dbd-mysql perl-dbd-pg && \
     apk add perl-crypt-passwdmd5 perl-berkeleydb perl-spreadsheet-xlsx \
         perl-xml-easy perl-type-tiny perl-json-xs perl-algorithm-diff-xs \
@@ -32,7 +32,6 @@ RUN apk add --update && \
         perl-devel-overloadinfo perl-xml-generator perl-xml-canonicalizexml \
         perl-crypt-openssl-x509 perl-moosex perl-sub-exporter-formethods \
         perl-moosex-types perl-crypt-openssl-verifyx509 perl-xml-tidy \
-        vim git perl-module-install perl-yaml-tiny perl-xml-writer \
         perl-moosex-types-common perl-moosex-types-datetime \
         perl-moosex-types-uri perl-www-mechanize perl-datetime-format-xsd \
         perl-crypt-smime perl-convert-pem \
@@ -65,7 +64,6 @@ RUN cd /root && \
     cd perl-Net-SAML2 && \
     git fetch && \
     git rebase && \
-    apk add vim git perl-module-install perl-yaml-tiny perl-xml-writer && \
     perl Makefile.PL && \
     make install 
  
