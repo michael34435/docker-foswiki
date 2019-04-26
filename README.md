@@ -27,6 +27,94 @@ docker run --rm --name docker-foswiki -idt -p 80:80 -v foswiki_www:/var/www/fosw
 
 The volume is located on the host at /var/lib/docker/volumes/foswili_www and will keep any change you make when configuring the container
 
+### Included Alpine Packages
+A lot of perl modules required by Foswiki and many of its expensions are included in this Docker file as native alpine packages:
+
+Repo | Perl Module | Alpine Package
+-----|-------------|---------------
+main | Apache-LogFormat-Compiler | perl-apache-logformat-compiler
+main | Archive-Zip | perl-archive-zip
+main | Authen-SASL | perl-authen-sasl
+main | CGI | perl-cgi
+main | Cache-Cache | perl-cache-cache
+main | Crypt-Eksblowfish | perl-crypt-eksblowfish
+main | Crypt-OpenSSL-RSA | perl-crypt-openssl-rsa
+main | Crypt-OpenSSL-Random | perl-crypt-openssl-random
+main | Crypt-X509 | perl-crypt-x509
+main | DBD-Pg | perl-dbd-pg
+main | DBD-SQLite | perl-dbd-sqlite
+main | DBD-mysql | perl-dbd-mysql
+main | DBI | perl-dbi
+main | DB_File | perl-db_file
+main | DateTime | perl-datetime
+main | Digest-SHA1 | perl-digest-sha1
+main | Error | perl-error
+main | FCGI | perl-fcgi
+main | File-Copy-Recursive-$pkgver | perl-file-copy-recursive
+main | File-Slurp | perl-file-slurp
+main | File-Which | perl-file-which
+main | HTML-Tree | perl-html-tree
+main | IO-Socket-INET6 | perl-io-socket-inet6
+main | JSON | perl-json
+main | MIME-Base64 | perl-mime-base64
+main | Module-Install | perl-module-install
+main | Module-Pluggable | perl-module-pluggable
+main | Path-Tiny | perl-path-tiny
+main | Stream-Buffered | perl-stream-buffered
+main | Test-LeakTrace | perl-test-leaktrace
+main | Text-Soundex | perl-text-soundex
+main | Type-Tiny | perl-type-tiny
+main | XML-Parser | perl-xml-parser
+main | YAML-Tiny | perl-yaml-tiny
+main | libwww-perl | perl-libwww
+main | Filesys-Notify-Simple | perl-filesys-notify-simple
+main | Hash-MultiValue | perl-hash-multivalue
+main | Locale-Maketext-Lexicon | perl-locale-maketext-lexicon
+main | URI | perl-uri
+main | perl-ldap | perl-ldap
+main | CGI-Session | perl-cgi-session
+main | Class-Accessor | perl-class-accessor
+community | Algorithm-Diff | perl-algorithm-diff
+community | Crypt-OpenSSL-Bignum | perl-crypt-openssl-bignum
+community | Crypt-OpenSSL-DSA | perl-crypt-openssl-dsa
+community | Dancer | perl-dancer
+community | Digest-Perl-MD5 | perl-digest-perl-md5
+community | Email-MIME | perl-email-mime
+community | Hash-Merge-Simple | perl-hash-merge-simple
+community | LWP-Protocol-https | perl-lwp-protocol-https
+community | Moo | perl-moo
+community | MooX-Types-MooseLike | perl-moox-types-mooselike
+community | Moose | perl-moose
+community | XML-Writer | perl-xml-writer
+community | XML-XPath | perl-xml-xpath
+community | YAML | perl-yaml
+testing | Algorithm-Diff-XS | perl-algorithm-diff-xs
+testing | BerkeleyDB | perl-berkeleydb
+testing | Crypt-OpenSSL-VerifyX509 | perl-crypt-openssl-verifyx509
+testing | Crypt-OpenSSL-X509 | perl-crypt-openssl-x509
+testing | Crypt-PasswdMD5 | perl-crypt-passwdmd5
+testing | Crypt-SMIME | perl-crypt-smime
+testing | Convert-PEM | perl-convert-pem
+testing | DB_File-Lock | perl-db_file-lock
+testing | DateTime-Format-XSD | perl-datetime-format-xsd
+testing | Devel-OverloadInfo | perl-devel-overloadinfo
+testing | GSSAPI | perl-gssapi
+testing | JSON-XS | perl-json-xs
+testing | MooseX | perl-moosex
+testing | MooseX-Types | perl-moosex-types
+testing | MooseX-Types-Common | perl-moosex-types-common
+testing | MooseX-Types-DateTime | perl-moosex-types-datetime
+testing | MooseX-Types-URI | perl-moosex-types-uri
+testing | Spreadsheet-XLSX | perl-spreadsheet-xlsx
+testing | Sub-Exporter-ForMethods | perl-sub-exporter-formethods
+testing | Time-ParseDate | perl-time-parsedate
+testing | WWW-Mechanize | perl-www-mechanize
+testing | XML-CanonicalizeXML | perl-xml-canonicalizexml
+testing | XML-Easy | perl-xml-easy
+testing | XML-Generator | perl-xml-generator
+testing | XML-Tidy | perl-xml-tidy
+testing | libapreq2 | perl-libapreq2
+
 ## How to Build
 You can build the docker image yourself from the git clone.  Dimply do the following in the git directory:
 ```bash
