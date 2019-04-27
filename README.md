@@ -50,6 +50,7 @@ main | DateTime | perl-datetime
 main | Digest-SHA1 | perl-digest-sha1
 main | Error | perl-error
 main | FCGI | perl-fcgi
+main | FCGI-ProcManager | perl-fcgi-procmanager
 main | File-Copy-Recursive-$pkgver | perl-file-copy-recursive
 main | File-Slurp | perl-file-slurp
 main | File-Which | perl-file-which
