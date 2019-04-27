@@ -18,7 +18,7 @@ RUN apk add --update && \
         expat-dev libxml2-dev gcc perl-dev musl-dev db-dev imagemagick6-dev \
         krb5-dev perl-file-remove perl-filesys-notify-simple \
         perl-hash-multivalue perl-digest-sha1 perl-crypt-openssl-dsa \
-        perl-crypt-openssl-bignum perl-crypt-openssl-rsa \
+        perl-crypt-openssl-bignum perl-crypt-openssl-rsa perl-fcgi-procmanager \
         perl-crypt-openssl-random perl-class-accessor perl-moose \
         perl-moox-types-mooselike perl-datetime perl-stream-buffered \
         perl-apache-logformat-compiler perl-mime-base64 perl-libwww \
@@ -39,7 +39,6 @@ RUN apk add --update && \
             --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
             --allow-untrusted
 
-#RUN perl -MCPAN -e "install Net::SAML2" && \
 Run wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
          tar xvfz PerlMagick-6.89.tar.gz && \
          cd PerlMagick-6.89 && \
