@@ -16,7 +16,7 @@ RUN apk add --update && \
         perl-ldap perl-xml-parser perl-path-tiny grep musl \
         perl-text-soundex perl-io-socket-inet6 tzdata openssl openssl-dev \
         expat-dev libxml2-dev gcc perl-dev musl-dev db-dev imagemagick6-dev \
-        krb5-dev perl-filesys-notify-simple \
+        krb5-dev perl-file-remove perl-filesys-notify-simple \
         perl-hash-multivalue perl-digest-sha1 perl-crypt-openssl-dsa \
         perl-crypt-openssl-bignum perl-crypt-openssl-rsa \
         perl-crypt-openssl-random perl-class-accessor perl-moose \
@@ -24,7 +24,7 @@ RUN apk add --update && \
         perl-apache-logformat-compiler perl-mime-base64 perl-libwww \
         perl-file-slurp perl-crypt-x509 perl-hash-merge-simple perl-dancer \
         perl-yaml perl-test-leaktrace perl-locale-maketext-lexicon \
-        perl-xml-xpath vim perl-module-install perl-yaml-tiny \
+        perl-xml-xpath vim perl-module-install perl-yaml-tiny perl-gd \
         perl-xml-writer perl-crypt-eksblowfish perl-dbd-mysql perl-dbd-pg && \
     apk add perl-crypt-passwdmd5 perl-berkeleydb perl-spreadsheet-xlsx \
         perl-xml-easy perl-type-tiny perl-json-xs perl-algorithm-diff-xs \
@@ -34,13 +34,13 @@ RUN apk add --update && \
         perl-moosex-types perl-crypt-openssl-verifyx509 perl-xml-tidy \
         perl-moosex-types-common perl-moosex-types-datetime \
         perl-moosex-types-uri perl-www-mechanize perl-datetime-format-xsd \
-        perl-crypt-smime perl-convert-pem \
+        perl-crypt-smime perl-convert-pem perl-locale-msgfmt \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
             --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
             --allow-untrusted
 
-RUN perl -MCPAN -e "install Net::SAML2" && \
-         wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
+#RUN perl -MCPAN -e "install Net::SAML2" && \
+Run wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
          tar xvfz PerlMagick-6.89.tar.gz && \
          cd PerlMagick-6.89 && \
          perl Makefile.PL && \
