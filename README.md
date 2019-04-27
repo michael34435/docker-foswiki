@@ -53,6 +53,7 @@ main | FCGI | perl-fcgi
 main | File-Copy-Recursive-$pkgver | perl-file-copy-recursive
 main | File-Slurp | perl-file-slurp
 main | File-Which | perl-file-which
+main | GD | perl-gd
 main | HTML-Tree | perl-html-tree
 main | IO-Socket-INET6 | perl-io-socket-inet6
 main | JSON | perl-json
@@ -105,6 +106,7 @@ testing | MooseX-Types | perl-moosex-types
 testing | MooseX-Types-Common | perl-moosex-types-common
 testing | MooseX-Types-DateTime | perl-moosex-types-datetime
 testing | MooseX-Types-URI | perl-moosex-types-uri
+testing | Locale-Msgfmt | perl-locale-msgfmt
 testing | Spreadsheet-XLSX | perl-spreadsheet-xlsx
 testing | Sub-Exporter-ForMethods | perl-sub-exporter-formethods
 testing | Time-ParseDate | perl-time-parsedate
