@@ -2,69 +2,72 @@ FROM alpine:edge
 
 ENV PERL_MM_USE_DEFAULT 1
 
-ENV FOSWIKI_LATEST_URL https://github.com/foswiki/distro/releases/download/FoswikiRelease02x01x06/Foswiki-2.1.6.zip
+ENV FOSWIKI_LATEST_URL https://github.com/foswiki/distro/releases/download/FoswikiRelease02x01x06/Foswiki-2.1.6.tgz
 
 ENV FOSWIKI_LATEST Foswiki-2.1.6
 
-RUN apk add --update && \
-    apk add nginx wget unzip make zip perl perl-cgi perl-fcgi perl-cgi-session \
-        git perl-error perl-json perl-file-copy-recursive ca-certificates \
-        perl-uri perl-digest-perl-md5 perl-lwp-protocol-https perl-html-tree \
-        perl-email-mime perl-algorithm-diff perl-cache-cache  perl-file-which \
-        perl-module-pluggable perl-moo perl-dbi perl-dbd-sqlite \
-        perl-archive-zip mailcap imagemagick6 perl-authen-sasl perl-db_file \
-        perl-ldap perl-xml-parser perl-path-tiny grep musl \
-        perl-text-soundex perl-io-socket-inet6 tzdata openssl openssl-dev \
-        expat-dev libxml2-dev gcc perl-dev musl-dev db-dev imagemagick6-dev \
-        krb5-dev perl-file-remove perl-filesys-notify-simple \
-        perl-hash-multivalue perl-digest-sha1 perl-crypt-openssl-dsa \
-        perl-crypt-openssl-bignum perl-crypt-openssl-rsa perl-fcgi-procmanager \
-        perl-crypt-openssl-random perl-class-accessor perl-moose \
-        perl-moox-types-mooselike perl-datetime perl-stream-buffered \
-        perl-apache-logformat-compiler perl-mime-base64 perl-libwww \
-        perl-file-slurp perl-crypt-x509 perl-hash-merge-simple perl-dancer \
-        perl-yaml perl-test-leaktrace perl-locale-maketext-lexicon \
-        perl-xml-xpath vim perl-module-install perl-yaml-tiny perl-gd \
-        perl-xml-writer perl-crypt-eksblowfish perl-dbd-mysql perl-dbd-pg && \
-    apk add perl-crypt-passwdmd5 perl-berkeleydb perl-spreadsheet-xlsx \
-        perl-xml-easy perl-type-tiny perl-json-xs perl-algorithm-diff-xs \
-        perl-gssapi perl-time-parsedate perl-db_file-lock --update-cache \
-        perl-devel-overloadinfo perl-xml-generator perl-xml-canonicalizexml \
-        perl-crypt-openssl-x509 perl-moosex perl-sub-exporter-formethods \
-        perl-moosex-types perl-crypt-openssl-verifyx509 perl-xml-tidy \
-        perl-moosex-types-common perl-moosex-types-datetime \
-        perl-moosex-types-uri perl-www-mechanize perl-datetime-format-xsd \
-        perl-crypt-smime perl-convert-pem perl-locale-msgfmt \
+RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
+    apk add --update && \
+    apk add ca-certificates imagemagick6 mailcap musl nginx openssl tzdata \
+        unzip wget zip perl perl-algorithm-diff perl-algorithm-diff-xs \
+        perl-apache-logformat-compiler perl-archive-zip perl-authen-sasl \
+        perl-berkeleydb perl-cache-cache perl-cgi perl-cgi-session \
+        perl-class-accessor perl-convert-pem perl-crypt-eksblowfish \
+        perl-crypt-openssl-bignum perl-crypt-openssl-dsa \
+        perl-crypt-openssl-random perl-crypt-openssl-rsa \
+        perl-crypt-openssl-verifyx509 perl-crypt-openssl-x509 \
+        perl-crypt-passwdmd5 perl-crypt-smime perl-crypt-x509 perl-dancer \
+        perl-datetime perl-datetime-format-xsd perl-dbd-mysql perl-dbd-pg \
+        perl-dbd-sqlite perl-db_file perl-db_file-lock perl-dbi \
+        perl-devel-overloadinfo perl-digest-perl-md5 perl-digest-sha1 \
+        perl-email-mime perl-error perl-fcgi perl-fcgi-procmanager \
+        perl-file-copy-recursive perl-file-remove perl-file-slurp \
+        perl-filesys-notify-simple perl-file-which perl-gd perl-gssapi \
+        perl-hash-merge-simple perl-hash-multivalue perl-html-tree \
+        perl-io-socket-inet6 perl-json perl-json-xs perl-ldap perl-libwww \
+        perl-locale-maketext-lexicon perl-locale-msgfmt \
+        perl-lwp-protocol-https perl-mime-base64 perl-module-install \
+        perl-module-pluggable perl-moo perl-moose perl-moosex \
+        perl-moosex-types perl-moosex-types-common \
+        perl-moosex-types-datetime perl-moosex-types-uri \
+        perl-moox-types-mooselike perl-path-tiny perl-spreadsheet-xlsx \
+        perl-stream-buffered perl-sub-exporter-formethods \
+        perl-test-leaktrace perl-text-soundex perl-time-parsedate \
+        perl-type-tiny perl-uri perl-www-mechanize perl-xml-canonicalizexml \
+        perl-xml-easy perl-xml-generator perl-xml-parser perl-xml-tidy \
+        perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
+        make musl-dev db-dev expat-dev openssl-dev imagemagick6-dev krb5-dev \
+        libxml2-dev gcc git perl-dev --update-cache && \
+        rm -fr /var/cache/apk/APKINDEX.*
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
-            --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
-            --allow-untrusted
 
-Run wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
+RUN wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
          tar xvfz PerlMagick-6.89.tar.gz && \
          cd PerlMagick-6.89 && \
          perl Makefile.PL && \
          make install && \
          cd / && \
          rm -f PerlMagick-6.89.tar.gz && \
-         rm -fr PerlMagick-6.89
+         rm -fr PerlMagick-6.89 && \
+         cd /root && \
+         git clone https://github.com/timlegge/perl-Net-SAML2.git && \
+         cd perl-Net-SAML2 && \
+         git fetch && \
+         git rebase && \
+         perl Makefile.PL && \
+         make install && \
+         cd .. && \
+         rm -fr perl-Net-SAML2
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     mkdir -p /var/www && \
-    mv ${FOSWIKI_LATEST}.zip /var/www && \
+    mv ${FOSWIKI_LATEST}.tgz /var/www && \
     cd /var/www && \
-    unzip ${FOSWIKI_LATEST}.zip -d /var/www/ && \
-    rm -rf ${FOSWIKI_LATEST}.zip && \
+    tar xvfz ${FOSWIKI_LATEST}.tgz && \
+    rm -rf ${FOSWIKI_LATEST}.tgz && \
     mv ${FOSWIKI_LATEST} foswiki && \
     cd foswiki && \
     sh tools/fix_file_permissions.sh
-
-RUN cd /root && \
-    git clone https://github.com/timlegge/perl-Net-SAML2.git && \
-    cd perl-Net-SAML2 && \
-    git fetch && \
-    git rebase && \
-    perl Makefile.PL && \
-    make install
 
 RUN cd /var/www/foswiki && \
     tools/configure -save -noprompt && \
@@ -73,9 +76,7 @@ RUN cd /var/www/foswiki && \
     tools/configure -save -set {ScriptUrlPaths}{view}='' && \
     tools/configure -save -set {PubUrlPath}='/pub' && \
     tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
-    tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin'
-
-RUN cd /var/www/foswiki && \
+    tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin' && \
     tools/extension_installer ActionTrackerPlugin -r -enable install && \
     tools/extension_installer NatSkin -r -enable install && \
     tools/extension_installer JQPhotoSwipeContrib -r -enable install && \
@@ -109,23 +110,21 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer SolrPlugin -r -enable install && \
     tools/extension_installer TagCloudPlugin -r -enable install && \
     tools/extension_installer TopicInteractionPlugin -r -enable install && \
-    tools/extension_installer WorkflowPlugin -r -enable install
-
-RUN mkdir -p /run/nginx && \
-    mkdir -p /etc/nginx/conf.d
-
-COPY LdapUserView.txt /var/www/foswiki/data/System/LdapUserView.txt
-COPY HtmlTitle.pm.diff /HtmlTitle.pm.diff
-COPY LdapContrib.pm.diff /LdapContrib.pm.diff
-#RUN cd /var/www/foswiki/lib/Foswiki/Contrib && \
-#    patch -p0 < /LdapContrib.pm.diff && \
-#    cd /root && \
+    tools/extension_installer WorkflowPlugin -r -enable install && \
+    rm -fr /var/www/foswiki/working/configure/download/* && \
+    rm -fr /var/www/foswiki/working/configure/backup/*
 
 RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
     cd SamlLoginContrib && \
     tar cvf SamlLoginContrib.tar * && \
     cd /var/www/foswiki && \
-    tar xvf /SamlLoginContrib/SamlLoginContrib.tar
+    tar xvf /SamlLoginContrib/SamlLoginContrib.tar && \
+    rm -fr /SamlLoginContrib && \
+    apk del --purge make musl-dev db-dev expat-dev openssl-dev \
+        imagemagick6-dev krb5-dev libxml2-dev gcc git perl-dev
+
+RUN mkdir -p /run/nginx && \
+    mkdir -p /etc/nginx/conf.d
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
