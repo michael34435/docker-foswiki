@@ -1,0 +1,15 @@
+Version 1.0
+
+Changes Since michael34435/docker-foswiki 167010650cf755db23eadb6a2bceb9dcd3292992
+
+1. Upgrade to edge from appine:3.7
+2. Add MD5SUM check of Foswiki Download
+3. Enable the testing repository
+4. Add a lot of perl modules from Alpine Packages
+5. Download and install PerlMagick
+6. Download and install timlegge/perl-Net-SAML2.git
+7. Install and enable a bunch of Foswiki extensions
+8. Install SamlLoginContrib
+
+This version supports a lot of the Foswiki extensions out of the box and 
+has the dependencies installed
