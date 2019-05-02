@@ -4,6 +4,8 @@ ENV PERL_MM_USE_DEFAULT 1
 
 ENV FOSWIKI_LATEST_URL https://github.com/foswiki/distro/releases/download/FoswikiRelease02x01x06/Foswiki-2.1.6.tgz
 
+ENV FOSWIKI_LATEST_MD5 706fc6bf1fa6df6bfbe8a079c5007aa3
+
 ENV FOSWIKI_LATEST Foswiki-2.1.6
 
 RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
@@ -60,6 +62,8 @@ RUN wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
          rm -fr perl-Net-SAML2
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
+    echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \
+    md5sum -cs ${FOSWIKI_LATEST}.tgz.md5 && \
     mkdir -p /var/www && \
     mv ${FOSWIKI_LATEST}.tgz /var/www && \
     cd /var/www && \
