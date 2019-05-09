@@ -11,7 +11,7 @@ ENV FOSWIKI_LATEST Foswiki-2.1.6
 RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
     apk add --update && \
     apk add ca-certificates imagemagick6 mailcap musl nginx openssl tzdata \
-        unzip wget zip perl perl-algorithm-diff perl-algorithm-diff-xs \
+        grep unzip wget zip perl perl-algorithm-diff perl-algorithm-diff-xs \
         perl-apache-logformat-compiler perl-archive-zip perl-authen-sasl \
         perl-berkeleydb perl-cache-cache perl-cgi perl-cgi-session \
         perl-class-accessor perl-convert-pem perl-crypt-eksblowfish \
