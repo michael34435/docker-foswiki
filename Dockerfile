@@ -38,7 +38,7 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-type-tiny perl-uri perl-www-mechanize perl-xml-canonicalizexml \
         perl-xml-easy perl-xml-generator perl-xml-parser perl-xml-tidy \
         perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
-        make musl-dev db-dev expat-dev openssl-dev imagemagick6-dev krb5-dev \
+        make musl-dev openssl-dev imagemagick6-dev \
         libxml2-dev gcc git perl-dev --update-cache && \
         rm -fr /var/cache/apk/APKINDEX.*
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
@@ -124,6 +124,7 @@ RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
     cd /var/www/foswiki && \
     tar xvf /SamlLoginContrib/SamlLoginContrib.tar && \
     rm -fr /SamlLoginContrib && \
+    apk update && \
     apk del --purge make musl-dev db-dev expat-dev openssl-dev \
         imagemagick6-dev krb5-dev libxml2-dev gcc git perl-dev
 
