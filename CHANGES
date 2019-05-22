@@ -1,3 +1,10 @@
+Version 1.0.1
+
+Changes since 1.0 
+
+1. Added grep
+2. removed unecessary db-dev expat-dev krb5-dev
+
 Version 1.0
 
 Changes Since michael34435/docker-foswiki 167010650cf755db23eadb6a2bceb9dcd3292992
