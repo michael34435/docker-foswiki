@@ -30,7 +30,7 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-locale-maketext-lexicon perl-locale-msgfmt \
         perl-lwp-protocol-https perl-mime-base64 perl-module-install \
         perl-module-pluggable perl-moo perl-moose perl-moosex \
-        perl-moosex-types perl-moosex-types-common \
+        perl-moosex-types perl-moosex-types-common perl-locale-codes \
         perl-moosex-types-datetime perl-moosex-types-uri \
         perl-moox-types-mooselike perl-path-tiny perl-spreadsheet-xlsx \
         perl-stream-buffered perl-sub-exporter-formethods \
