@@ -33,12 +33,12 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-moosex-types perl-moosex-types-common perl-locale-codes \
         perl-moosex-types-datetime perl-moosex-types-uri \
         perl-moox-types-mooselike perl-path-tiny perl-spreadsheet-xlsx \
-        perl-stream-buffered perl-sub-exporter-formethods \
+        perl-stream-buffered perl-sub-exporter-formethods perl-sereal \
         perl-test-leaktrace perl-text-soundex perl-time-parsedate \
         perl-type-tiny perl-uri perl-www-mechanize perl-xml-canonicalizexml \
         perl-xml-easy perl-xml-generator perl-xml-parser perl-xml-tidy \
         perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
-        make musl-dev openssl-dev imagemagick6-dev \
+        make musl-dev openssl-dev imagemagick6-dev graphviz \
         libxml2-dev gcc git perl-dev --update-cache && \
         rm -fr /var/cache/apk/APKINDEX.*
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
