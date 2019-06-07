@@ -112,6 +112,7 @@ testing | Locale-Msgfmt | perl-locale-msgfmt
 testing | Sereal | perl-sereal
 testing | Spreadsheet-XLSX | perl-spreadsheet-xlsx
 testing | Sub-Exporter-ForMethods | perl-sub-exporter-formethods
+testing | Text-Unidecode | perl-text-unidecode
 testing | Time-ParseDate | perl-time-parsedate
 testing | WWW-Mechanize | perl-www-mechanize
 testing | XML-CanonicalizeXML | perl-xml-canonicalizexml
