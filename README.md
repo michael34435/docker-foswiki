@@ -91,6 +91,7 @@ community | XML-Writer | perl-xml-writer
 community | XML-XPath | perl-xml-xpath
 community | YAML | perl-yaml
 testing | Algorithm-Diff-XS | perl-algorithm-diff-xs
+testing | AuthCAS | perl-authcas
 testing | BerkeleyDB | perl-berkeleydb
 testing | Crypt-OpenSSL-VerifyX509 | perl-crypt-openssl-verifyx509
 testing | Crypt-OpenSSL-X509 | perl-crypt-openssl-x509
