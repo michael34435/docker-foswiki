@@ -102,12 +102,14 @@ testing | DateTime-Format-XSD | perl-datetime-format-xsd
 testing | Devel-OverloadInfo | perl-devel-overloadinfo
 testing | GSSAPI | perl-gssapi
 testing | JSON-XS | perl-json-xs
+testing | Locale-Codes | perl-locale-codes
 testing | MooseX | perl-moosex
 testing | MooseX-Types | perl-moosex-types
 testing | MooseX-Types-Common | perl-moosex-types-common
 testing | MooseX-Types-DateTime | perl-moosex-types-datetime
 testing | MooseX-Types-URI | perl-moosex-types-uri
 testing | Locale-Msgfmt | perl-locale-msgfmt
+testing | Sereal | perl-sereal
 testing | Spreadsheet-XLSX | perl-spreadsheet-xlsx
 testing | Sub-Exporter-ForMethods | perl-sub-exporter-formethods
 testing | Time-ParseDate | perl-time-parsedate
