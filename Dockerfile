@@ -10,7 +10,7 @@ ENV FOSWIKI_LATEST Foswiki-2.1.6
 
 RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
     apk add --update && \
-    apk add ca-certificates imagemagick6 mailcap musl nginx openssl tzdata \
+    apk add ca-certificates imagemagick mailcap musl nginx openssl tzdata \
         grep unzip wget zip perl perl-algorithm-diff perl-algorithm-diff-xs \
         perl-apache-logformat-compiler perl-archive-zip perl-authen-sasl \
         perl-authcas perl-berkeleydb perl-cache-cache perl-cgi perl-cgi-session \
@@ -38,20 +38,11 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-type-tiny perl-uri perl-www-mechanize perl-xml-canonicalizexml \
         perl-xml-easy perl-xml-generator perl-xml-parser perl-xml-tidy \
         perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
-        make musl-dev openssl-dev imagemagick6-dev graphviz \
-        libxml2-dev gcc git perl-dev --update-cache && \
-        rm -fr /var/cache/apk/APKINDEX.*
+        imagemagick-perlmagick git graphviz perl-dev make --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
+        rm -fr /var/cache/apk/APKINDEX.*
 
-RUN wget http://www.imagemagick.org/download/perl/PerlMagick-6.89.tar.gz && \
-         tar xvfz PerlMagick-6.89.tar.gz && \
-         cd PerlMagick-6.89 && \
-         perl Makefile.PL && \
-         make install && \
-         cd / && \
-         rm -f PerlMagick-6.89.tar.gz && \
-         rm -fr PerlMagick-6.89 && \
-         cd /root && \
+RUN cd /root && \
          git clone https://github.com/timlegge/perl-Net-SAML2.git && \
          cd perl-Net-SAML2 && \
          git fetch && \
