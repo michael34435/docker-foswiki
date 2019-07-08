@@ -3,6 +3,7 @@ Version 1.0.3
 Changes since 1.0.2
 
 1. Added perl-authcas
+2. Move to ImageMagick 7 package which includes perlmagick 
 
 Version 1.0.2
 
