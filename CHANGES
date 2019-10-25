@@ -1,3 +1,10 @@
+Version 1.0.4
+
+Changes since 1.0.3
+
+1. Added ssmtp (simple sendmail)
+2. Added local version of perl-image-info-1.42-r0.apk for LatexModePlugin support
+
 Version 1.0.3
 
 Changes since 1.0.2

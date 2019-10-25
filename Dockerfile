@@ -38,7 +38,7 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-type-tiny perl-uri perl-www-mechanize perl-xml-canonicalizexml \
         perl-xml-easy perl-xml-generator perl-xml-parser perl-xml-tidy \
         perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
-        imagemagick-perlmagick git graphviz perl-dev make --update-cache && \
+        imagemagick-perlmagick git graphviz perl-dev make ssmtp --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
         rm -fr /var/cache/apk/APKINDEX.*
 
@@ -51,6 +51,11 @@ RUN cd /root && \
          make install && \
          cd .. && \
          rm -fr perl-Net-SAML2
+
+COPY perl-image-info-1.42-r0.apk perl-image-info-1.42-r0.apk
+
+RUN apk add --allow-untrusted perl-image-info-1.42-r0.apk && \
+    rm perl-image-info-1.42-r0.apk
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \

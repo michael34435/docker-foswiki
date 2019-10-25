@@ -116,6 +116,7 @@ testing | XML-Easy | perl-xml-easy
 testing | XML-Generator | perl-xml-generator
 testing | XML-Tidy | perl-xml-tidy
 testing | libapreq2 | perl-libapreq2
+timlegge | Inage-Info | perl-image-info-1.42-r0.apk 
 
 ## How to Build
 You can build the docker image yourself from the git clone.  Dimply do the following in the git directory:
