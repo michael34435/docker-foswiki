@@ -26,8 +26,8 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-file-copy-recursive perl-file-remove perl-file-slurp \
         perl-filesys-notify-simple perl-file-which perl-gd perl-gssapi \
         perl-hash-merge-simple perl-hash-multivalue perl-html-tree \
-        perl-io-socket-inet6 perl-json perl-json-xs perl-ldap perl-libwww \
-        perl-locale-maketext-lexicon perl-locale-msgfmt \
+        perl-image-info perl-io-socket-inet6 perl-json perl-json-xs \
+        perl-ldap perl-libwww perl-locale-maketext-lexicon perl-locale-msgfmt \
         perl-lwp-protocol-https perl-mime-base64 perl-module-install \
         perl-module-pluggable perl-moo perl-moose perl-moosex \
         perl-moosex-types perl-moosex-types-common perl-locale-codes \
@@ -51,11 +51,6 @@ RUN cd /root && \
          make install && \
          cd .. && \
          rm -fr perl-Net-SAML2
-
-COPY perl-image-info-1.42-r0.apk perl-image-info-1.42-r0.apk
-
-RUN apk add --allow-untrusted perl-image-info-1.42-r0.apk && \
-    rm perl-image-info-1.42-r0.apk
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \

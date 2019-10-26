@@ -1,8 +1,7 @@
 # docker-foswiki
 
 ## Why I created this dockerfile?
-I've found no one create a new version of foswiki with docker, so I created one.
-And I minized the size of docker with alpinelinux, the total size for this image is `144MB`.
+I finally got tired of the dependancy issues of Foswiki on RedHat so I modified michael34435/docker-foswiki. The goal of this release is to have a stable version that runs foswiki with all the perl modules required for foswiki to run almost any Plugin. Alpinelinux minimizes the size of the container, the total size for this image is `375MB`.
 
 ## How to use
 ```bash
@@ -97,6 +96,7 @@ testing | DB_File-Lock | perl-db_file-lock
 testing | DateTime-Format-XSD | perl-datetime-format-xsd
 testing | Devel-OverloadInfo | perl-devel-overloadinfo
 testing | GSSAPI | perl-gssapi
+testing | Image-Info | perl-image-info 
 testing | JSON-XS | perl-json-xs
 testing | Locale-Codes | perl-locale-codes
 testing | MooseX | perl-moosex
@@ -116,7 +116,6 @@ testing | XML-Easy | perl-xml-easy
 testing | XML-Generator | perl-xml-generator
 testing | XML-Tidy | perl-xml-tidy
 testing | libapreq2 | perl-libapreq2
-timlegge | Inage-Info | perl-image-info-1.42-r0.apk 
 
 ## How to Build
 You can build the docker image yourself from the git clone.  Dimply do the following in the git directory:
