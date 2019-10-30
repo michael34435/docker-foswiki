@@ -22,6 +22,30 @@ docker run --rm --name docker-foswiki -idt -p 80:80 -v foswiki_www:/var/www/fosw
 The volume is located on the host at /var/lib/docker/volumes/foswili_www and will keep any change you make when configuring the container
 
 ### Included Alpine Packages
+
+The following base modules are installed to support Foswiki or the required Perl modules below.
+
+Repo | Application | Alpine Package
+-----|-------------|---------------
+main | Common-CA-certificates | ca-certificates
+main | Git | git
+main | GraphVis | graphviz
+main | Grep | grep
+main | mailcap | mailcap
+main | GNU-make | make
+main | musl-LibC | musl
+main | nginx-Web-Server | nginx
+main | openSSL | openssl
+main | Perl5 | perl
+main | Perl-Dev | perl-dev
+main | Simple-MTA | ssmtp
+main | Timezone-Data | tzdata
+main | unzip | unzip
+main | wget | wget
+main | zip | zip
+community | ImageMagick | imagemagick
+community | PerlMagick | imagemagick-perlmagick
+
 A lot of perl modules required by Foswiki and many of its expensions are included in this Docker file as native alpine packages:
 
 Repo | Perl Module | Alpine Package
@@ -46,6 +70,7 @@ main | Error | perl-error
 main | FCGI | perl-fcgi
 main | FCGI-ProcManager | perl-fcgi-procmanager
 main | File-Copy-Recursive-$pkgver | perl-file-copy-recursive
+main | File-Remove | perl-file-remove
 main | File-Slurp | perl-file-slurp
 main | File-Which | perl-file-which
 main | GD | perl-gd
@@ -116,9 +141,10 @@ testing | XML-Easy | perl-xml-easy
 testing | XML-Generator | perl-xml-generator
 testing | XML-Tidy | perl-xml-tidy
 testing | libapreq2 | perl-libapreq2
+timlegge | Net-SAML2 | perl-net-saml2
 
 ## How to Build
-You can build the docker image yourself from the git clone.  Dimply do the following in the git directory:
+You can build the docker image yourself from the git clone.  Simply do the following in the git directory:
 ```bash
 sudo docker build --no-cache -t docker-foswiki .
 ```

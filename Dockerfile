@@ -42,15 +42,10 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
         rm -fr /var/cache/apk/APKINDEX.*
 
-RUN cd /root && \
-         git clone https://github.com/timlegge/perl-Net-SAML2.git && \
-         cd perl-Net-SAML2 && \
-         git fetch && \
-         git rebase && \
-         perl Makefile.PL && \
-         make install && \
-         cd .. && \
-         rm -fr perl-Net-SAML2
+COPY perl-net-saml2-0.19.05-r0.apk perl-net-saml2-0.19.05-r0.apk
+
+RUN apk add --allow-untrusted perl-net-saml2-0.19.05-r0.apk && \
+    rm perl-net-saml2-0.19.05-r0.apk
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \
