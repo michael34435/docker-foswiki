@@ -21,7 +21,7 @@ docker run --rm --name docker-foswiki -idt -p 80:80 -v foswiki_www:/var/www/fosw
 
 The volume is located on the host at /var/lib/docker/volumes/foswili_www and will keep any change you make when configuring the container
 
-###Resetting the Admin Password
+### Resetting the Admin Password
    1. sudo docker exec -it docker-foswiki /bin/sh
    2. cd /var/www/foswiki/
    3. tools/configure -save -set {Password}='MyPassword'
