@@ -2,7 +2,7 @@ version: '3'
 
 services:
   foswiki:
-    image: timlegge/docker-foswiki:v1.07
+    image: timlegge/docker-foswiki
     container_name: foswiki
     ports:
       - 8765:80
