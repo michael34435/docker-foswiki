@@ -1,3 +1,14 @@
+Version 1.0.7
+
+1. Add information about reseting the admin password
+2. Add contributed docker-compose file to setup foswiki and solr
+3. Enable TopicTitle Plugin and update correct solr URL in docker-compose
+
+Version 1.0.6
+
+Not Released
+
+1. Add local copy of Alpine Package instead of git clone for perl-net-saml2
 Version 1.0.6
 
 Changes since 1.0.5
