@@ -22,13 +22,13 @@ docker run --rm --name docker-foswiki -idt -p 80:80 -v foswiki_www:/var/www/fosw
 The volume is located on the host at `/var/lib/docker/volumes/foswiki_www` and will keep any change you make when configuring the container
 
 ### Resetting the Admin Password
-   1. `docker exec -it docker /bin/sh`
+   1. `docker exec -it docker-foswiki /bin/sh`
    2. `cd /var/www/foswiki/`
    3. `tools/configure -save -set {Password}='MyPassword'`
 
 ### Running with Solr
 
-Using the `docker-compose.yaml` file creates a multi-conatainer Docker application : Foswiki + Solr. Simmply run :
+Using the `docker-compose.yaml` file creates a multi-container Docker application : Foswiki + Solr. Simply run :
 ```bash
 docker-compose up
 ```
