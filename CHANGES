@@ -1,3 +1,12 @@
+Version 1.0.8
+
+1. Enable the following plugins
+   1. AutoTemplatePlugin
+   2. BreadCrumbsPlugin
+   3. DBCachePlugin
+   4. FlexFormPlugin
+   5. FlexWebListPlugin
+
 Version 1.0.7
 
 1. Add information about reseting the admin password
