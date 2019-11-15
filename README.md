@@ -28,7 +28,7 @@ The volume is located on the host at `/var/lib/docker/volumes/foswiki_www` and w
 
 ### Running with Solr
 
-Using the =docker-compose.yaml= file creates a multi-conatainer Docker application : Foswiki + Solr. Simmply run :
+Using the `docker-compose.yaml` file creates a multi-conatainer Docker application : Foswiki + Solr. Simmply run :
 ```bash
 docker-compose up
 ```
