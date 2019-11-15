@@ -89,6 +89,7 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer LikePlugin -r -enable install && \
     tools/extension_installer ListyPlugin -r -enable install && \
     tools/extension_installer MediaElementPlugin -r -enable install && \
+    tools/extension_installer NatSkinPlugin -r -enable install && \
     tools/extension_installer MetaCommentPlugin -r -enable install && \
     tools/extension_installer MetaDataPlugin -r -enable install && \
     tools/extension_installer MimeIconPlugin -r -enable install && \
@@ -100,6 +101,7 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer SolrPlugin -r -enable install && \
     tools/extension_installer TagCloudPlugin -r -enable install && \
     tools/extension_installer TopicInteractionPlugin -r -enable install && \
+    tools/extension_installer TopicTitlePlugin -r -enable install && \
     tools/extension_installer WorkflowPlugin -r -enable install && \
     rm -fr /var/www/foswiki/working/configure/download/* && \
     rm -fr /var/www/foswiki/working/configure/backup/*
