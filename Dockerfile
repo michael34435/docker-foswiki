@@ -76,6 +76,7 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer DBCachePlugin -r -enable install && \
     tools/extension_installer DiffPlugin -r -enable install && \
     tools/extension_installer DocumentViewerPlugin -r -enable install && \
+    tools/extension_installer EditChapterPlugin -r -enable install && \
     tools/extension_installer FlexFormPlugin -r -enable install && \
     tools/extension_installer FlexWebListPlugin -r -enable install && \
     tools/extension_installer FilterPlugin -r -enable install && \
