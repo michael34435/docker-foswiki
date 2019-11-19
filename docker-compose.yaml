@@ -4,7 +4,7 @@ services:
   foswiki:
     image: timlegge/docker-foswiki
     ports:
-      - "${FOSWIKI_PORT}:80"
+      - "${FOSWIKI_PORT:-8765}:80"
     volumes:
       - solr_logs:/opt/solr/server/logs:z
       - solr_configsets:/opt/solr/server/solr/configsets:z
