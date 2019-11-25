@@ -1,7 +1,7 @@
 # docker-foswiki, with Solr and NatSkin
 
 ## Why I created this dockerfile?
-I finally got tired of the dependancy issues of Foswiki on RedHat so I modified michael34435/docker-foswiki. The goal of this release is to have a stable version that runs foswiki with all the perl modules required for foswiki to run almost any Plugin. Is is served by nginx. Alpinelinux minimizes the size of the container, the total size for this image is `400MB`.
+I finally got tired of the dependancy issues of Foswiki on RedHat so I modified michael34435/docker-foswiki. The goal of this release is to have a stable version that runs foswiki with all the perl modules required for foswiki to run almost any Plugin. It is served by nginx. Alpinelinux minimizes the size of the container, the total size for this image is `400MB`.
 
 A `docker-compose` file is also available in order to have a complete Foswiki + Solr faceted search application. 
 
@@ -44,11 +44,11 @@ FOSWIKI_PORT=80 docker-compose up
 See the volume declaration in the `docker-compose.yaml` file :
    * 4 volumes are created, for Foswiki data and Solr
    * the `:z` after the volume declaration is necessary with selinux on RedHat to set the permissions correctly
-   * the volume are located on the host by default under `/var/lib/docker/volumes/` and will keep any change you make when configuring the container
+   * the volumes are located on the host by default under `/var/lib/docker/volumes/` and will keep any change you make when configuring the container
 
-### Overringing the defaukts 
+### Overiding the defaults 
 
-Any setting declared in the compose file can be overided within another yaml file. For instance to change the port number and the volume location of the `foswiki_www` volume, create an `overrides.yml` file with the following content :
+Any setting declared in the compose file can be overidden within another yaml file. For instance to change the port number and the volume location of the `foswiki_www` volume, create an `overrides.yml` file with the following content :
 
 ```bash
 services:
