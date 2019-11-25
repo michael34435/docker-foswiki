@@ -10,7 +10,7 @@ ENV FOSWIKI_LATEST Foswiki-2.1.6
 
 RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
     apk add --update && \
-    apk add ca-certificates imagemagick mailcap musl nginx openssl tzdata \
+    apk add ca-certificates imagemagick mailcap musl nginx openssl tzdata bash \
         grep unzip wget zip perl perl-algorithm-diff perl-algorithm-diff-xs \
         perl-apache-logformat-compiler perl-archive-zip perl-authen-sasl \
         perl-authcas perl-berkeleydb perl-cache-cache perl-cgi perl-cgi-session \
@@ -43,6 +43,8 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         rm -fr /var/cache/apk/APKINDEX.*
 
 COPY perl-net-saml2-0.19.05-r0.apk perl-net-saml2-0.19.05-r0.apk
+
+RUN touch /root/.bashrc
 
 RUN apk add --allow-untrusted perl-net-saml2-0.19.05-r0.apk && \
     rm perl-net-saml2-0.19.05-r0.apk
