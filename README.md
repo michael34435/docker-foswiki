@@ -1,37 +1,85 @@
-# docker-foswiki
+# docker-foswiki, with Solr and NatSkin
 
 ## Why I created this dockerfile?
-I finally got tired of the dependancy issues of Foswiki on RedHat so I modified michael34435/docker-foswiki. The goal of this release is to have a stable version that runs foswiki with all the perl modules required for foswiki to run almost any Plugin. Alpinelinux minimizes the size of the container, the total size for this image is `378MB`.
+I finally got tired of the dependancy issues of Foswiki on RedHat so I modified michael34435/docker-foswiki. The goal of this release is to have a stable version that runs foswiki with all the perl modules required for foswiki to run almost any Plugin. It is served by nginx. Alpinelinux minimizes the size of the container, the total size for this image is `400MB`.
 
-## How to use
+A `docker-compose` file is also available in order to have a complete Foswiki + Solr faceted search application. 
+
+## Simple run
+
+To start the image :
+
 ```bash
 docker run -idt -p 80:80 timlegge/docker-foswiki
 
 ```
-### Running with persistent storage
 
-```bash
-docker run --rm --name docker-foswiki -idt -p 80:80 -v foswiki_www:/var/www/foswiki:z timlegge/docker-foswiki
-```
-
-  * The assumption above is that the user running the command is in the docker group otherwise sudo is required
-  * The `-rm` removes the container after it stops running (useful for testing)
-  * The `-v` says to create a docker volume on the host system named `foswiki_www` and mount it to `/var/www/foswiki` in the running container
-  * The `:z` after the volume is necessary with selinux on RedHat to set the permissions correctly
-
-The volume is located on the host at `/var/lib/docker/volumes/foswiki_www` and will keep any change you make when configuring the container
+Once started, open `http://localhost` in your browser. The user running the command is in the docker group otherwise sudo is required.
 
 ### Resetting the Admin Password
-   1. `docker exec -it docker-foswiki /bin/sh`
-   2. `cd /var/www/foswiki/`
-   3. `tools/configure -save -set {Password}='MyPassword'`
 
-### Running with Solr
+   1. `cd [where the project has been cloned]`
+   2. `docker exec -it docker-foswiki /bin/bash`
+   3. `cd /var/www/foswiki/`
+   4. `tools/configure -save -set {Password}='MyPassword'`
 
-Using the `docker-compose.yaml` file creates a multi-container Docker application : Foswiki + Solr. Simply run :
+### Complete run
+
+With the `docker-compose.yaml`, a Foswiki + Solr multi-container application is created. Start it with :
+
 ```bash
 docker-compose up
 ```
+
+Once started, open `http://localhost:8765` in your browser.
+
+To use another port, prepend the command :
+
+```bash
+FOSWIKI_PORT=80 docker-compose up
+```
+
+### Persistent storage
+
+See the volume declaration in the `docker-compose.yaml` file :
+   * 4 volumes are created, for Foswiki data and Solr
+   * the `:z` after the volume declaration is necessary with selinux on RedHat to set the permissions correctly
+   * the volumes are located on the host by default under `/var/lib/docker/volumes/` and will keep any change you make when configuring the container
+
+### Overiding the defaults 
+
+Any setting declared in the compose file can be overidden within another yaml file. For instance to change the port number and the volume location of the `foswiki_www` volume, create an `overrides.yml` file with the following content :
+
+```bash
+services:
+  foswiki:
+    ports:
+      - 8761:80
+
+volumes:
+  foswiki_www:
+    driver: local
+    driver_opts:
+      type: none
+      device: /opt/myVolumes/foswiki
+      o: bind
+```
+
+And start the application with :
+
+```bash
+docker-compose -f docker-compose.yaml -f overrides.yml up -d
+```
+
+### Running multiple instances 
+
+If multiple instances of Foswiki are needed, they have to live under different project name and TCP port :
+- `FOSWIKI_PORT=8761 docker-compose -p project1 up`
+- `FOSWIKI_PORT=8762 docker-compose -p project2 up`
+
+Or use an override file per instance :
+- `docker-compose -p project1 -f docker-compose.yaml -f overrides-project1.yml up`
+- `docker-compose -p project2 -f docker-compose.yaml -f overrides-project2.yml up`
 
 ### Included Alpine Packages
 
@@ -39,6 +87,7 @@ The following base modules are installed to support Foswiki or the required Perl
 
 Repo | Application | Alpine Package
 -----|-------------|---------------
+main | Bash | bash
 main | Common-CA-certificates | ca-certificates
 main | Git | git
 main | GraphVis | graphviz
