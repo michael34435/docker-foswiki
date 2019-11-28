@@ -22,8 +22,8 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-datetime perl-datetime-format-xsd perl-dbd-mysql perl-dbd-pg \
         perl-dbd-sqlite perl-db_file perl-db_file-lock perl-dbi \
         perl-devel-overloadinfo perl-digest-perl-md5 perl-digest-sha1 \
-        perl-email-mime perl-error perl-fcgi perl-fcgi-procmanager \
-        perl-file-copy-recursive perl-file-remove perl-file-slurp \
+        perl-email-mime perl-encode perl-error perl-fcgi perl-fcgi-procmanager \
+        perl-file-copy-recursive perl-file-remove perl-file-slurp perl-file-which \
         perl-filesys-notify-simple perl-file-which perl-gd perl-gssapi \
         perl-hash-merge-simple perl-hash-multivalue perl-html-tree \
         perl-image-info perl-io-socket-inet6 perl-json perl-json-xs \
@@ -32,13 +32,14 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-module-pluggable perl-moo perl-moose perl-moosex \
         perl-moosex-types perl-moosex-types-common perl-locale-codes \
         perl-moosex-types-datetime perl-moosex-types-uri \
-        perl-moox-types-mooselike perl-path-tiny perl-spreadsheet-xlsx \
-        perl-stream-buffered perl-sub-exporter-formethods perl-sereal \
-        perl-test-leaktrace perl-text-unidecode perl-text-soundex perl-time-parsedate \
-        perl-type-tiny perl-uri perl-www-mechanize perl-xml-canonicalizexml \
-        perl-xml-easy perl-xml-generator perl-xml-parser perl-xml-tidy \
-        perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
-        imagemagick-perlmagick git graphviz perl-dev make ssmtp --update-cache && \
+        perl-moox-types-mooselike perl-path-tiny perl-spreadsheet-parseexcel \
+        perl-spreadsheet-xlsx perl-stream-buffered perl-sub-exporter-formethods \
+        perl-sereal perl-test-leaktrace perl-text-unidecode perl-text-soundex \
+        perl-time-parsedate perl-type-tiny perl-uri perl-www-mechanize \
+        perl-xml-canonicalizexml perl-xml-easy perl-xml-generator perl-xml-parser \
+        perl-xml-tidy perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
+        imagemagick-perlmagick git graphviz perl-dev make ssmtp \
+        antiword lynx poppler-utils --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
         rm -fr /var/cache/apk/APKINDEX.*
 
@@ -69,31 +70,39 @@ RUN cd /var/www/foswiki && \
     tools/configure -save -set {PubUrlPath}='/pub' && \
     tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
     tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin' && \
-    tools/extension_installer ActionTrackerPlugin -r -enable install && \
+    tools/extension_installer AttachContentPlugin -r -enable install && \
+    tools/extension_installer AutoRedirectPlugin -r -enable install && \
     tools/extension_installer AutoTemplatePlugin -r -enable install && \
     tools/extension_installer BreadCrumbsPlugin -r -enable install && \
     tools/extension_installer NatSkin -r -enable install && \
     tools/extension_installer JQPhotoSwipeContrib -r -enable install && \
+    tools/extension_installer CaptchaPlugin -r -enable install && \
     tools/extension_installer ClassificationPlugin -r -enable install && \
+    tools/extension_installer CopyContrib -r -enable install && \
+    tools/extension_installer DBCacheContrib -r -enable install && \
     tools/extension_installer DBCachePlugin -r -enable install && \
     tools/extension_installer DiffPlugin -r -enable install && \
+    tools/extension_installer DigestPlugin -r -enable install && \
     tools/extension_installer DocumentViewerPlugin -r -enable install && \
     tools/extension_installer EditChapterPlugin -r -enable install && \
+    tools/extension_installer FarscrollContrib -r -enable install && \
     tools/extension_installer FlexFormPlugin -r -enable install && \
     tools/extension_installer FlexWebListPlugin -r -enable install && \
     tools/extension_installer FilterPlugin -r -enable install && \
-    tools/extension_installer GluePlugin -r -enable install && \
     tools/extension_installer GraphvizPlugin -r -enable install && \
     tools/extension_installer GridLayoutPlugin -r -enable install && \
     tools/extension_installer ImageGalleryPlugin -r -enable install && \
     tools/extension_installer ImagePlugin -r -enable install && \
+    tools/extension_installer InfiniteScrollContrib -r -enable install && \
+    tools/extension_installer JQAutoColorContrib -r -enable install && \
     tools/extension_installer JQDataTablesPlugin -r -enable install && \
     tools/extension_installer JQMomentContrib -r -enable install && \
     tools/extension_installer JQSelect2Contrib -r -enable install && \
     tools/extension_installer JQSerialPagerContrib -r -enable install && \
     tools/extension_installer JQTwistyContrib -r -enable install && \
     tools/extension_installer JSTreeContrib -r -enable install && \
-    tools/extension_installer LdapNgPlugin -r -enable install && \
+    tools/extension_installer LdapContrib -r install && \
+    tools/extension_installer LdapNgPlugin -r install && \
     tools/extension_installer LikePlugin -r -enable install && \
     tools/extension_installer ListyPlugin -r -enable install && \
     tools/extension_installer MediaElementPlugin -r -enable install && \
@@ -103,16 +112,21 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer MimeIconPlugin -r -enable install && \
     tools/extension_installer MoreFormfieldsPlugin -r -enable install && \
     tools/extension_installer MultiLingualPlugin -r -enable install && \
+    tools/extension_installer PageOptimizerPlugin -r -enable install && \
     tools/extension_installer PubLinkFixupPlugin -r -enable install && \
     tools/extension_installer NewUserPlugin -r -enable install && \
     tools/extension_installer RedDotPlugin -r -enable install && \
     tools/extension_installer RenderPlugin -r -enable install && \
+    tools/extension_installer SecurityHeadersPlugin -r -enable install && \
+    tools/extension_installer StringifierContrib -r -enable install && \
     tools/extension_installer SolrPlugin -r -enable install && \
     tools/extension_installer TagCloudPlugin -r -enable install && \
     tools/extension_installer TopicInteractionPlugin -r -enable install && \
     tools/extension_installer TopicTitlePlugin -r -enable install && \
     tools/extension_installer WebLinkPlugin -r -enable install && \
+    tools/extension_installer WebFontsContrib -r -enable install && \
     tools/extension_installer WorkflowPlugin -r -enable install && \
+    tools/extension_installer XSendFileContrib -r -enable install && \
     rm -fr /var/www/foswiki/working/configure/download/* && \
     rm -fr /var/www/foswiki/working/configure/backup/*
 
