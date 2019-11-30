@@ -1,3 +1,19 @@
+Version 1.0.9
+
+1. docker-foswiki
+   1. Enable EditChapterPlugin
+   2. Includes bash into the image, so that solrjob can run. Updated README.md
+   3. Add odt2txt package
+   4. Add and remove some plugins
+
+2. docker-compose
+   1. Change default Skin to nat
+   2. Clean up setup
+   3. Adds a default value of 8765 to FOSWIKI_PORT
+   4. Allow to run multiple instances of the Foswiki service with compose
+
+3. Docmentation updates
+
 Version 1.0.8
 
 1. Enable the following plugins
