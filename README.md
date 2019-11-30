@@ -82,70 +82,68 @@ Or use an override file per instance :
 - `docker-compose -p project2 -f docker-compose.yaml -f overrides-project2.yml up`
 
 ### Included Foswiki Contribs
-
-| JQPhotoSwipeContrib |
-| CopyContrib |
-| DBCacheContrib |
-| FarscrollContrib |
-| InfiniteScrollContrib |
-| JQAutoColorContrib |
-| JQMomentContrib |
-| JQSelect2Contrib |
-| JQSerialPagerContrib |
-| JQTwistyContrib |
-| JSTreeContrib |
-| LdapContrib |
-| SamlLoginContrib |
-| StringifierContrib |
-| WebFontsContrib |
-| XSendFileContrib |
+   * CopyContrib
+   * DBCacheContrib
+   * FarscrollContrib
+   * InfiniteScrollContrib
+   * JQAutoColorContrib
+   * JQMomentContrib
+   * JQPhotoSwipeContrib
+   * JQSelect2Contrib
+   * JQSerialPagerContrib
+   * JQTwistyContrib
+   * JSTreeContrib
+   * SamlLoginContrib
+   * LdapContrib
+   * StringifierContrib
+   * WebFontsContrib
+   * XSendFileContrib
 
 ### Included Foswiki Plugins
-
-| AttachContentPlugin |
-| AutoRedirectPlugin |
-| AutoTemplatePlugin |
-| BreadCrumbsPlugin |
-| CaptchaPlugin |
-| ClassificationPlugin |
-| DBCachePlugin |
-| DiffPlugin |
-| DigestPlugin |
-| DocumentViewerPlugin |
-| EditChapterPlugin |
-| FlexFormPlugin |
-| FlexWebListPlugin |
-| FilterPlugin |
-| GraphvizPlugin |
-| GridLayoutPlugin |
-| ImageGalleryPlugin |
-| ImagePlugin |
-| JQDataTablesPlugin |
-| LdapNgPlugin |
-| LikePlugin |
-| ListyPlugin |
-| MediaElementPlugin |
-| NatSkinPlugin |
-| MetaCommentPlugin |
-| MetaDataPlugin |
-| MimeIconPlugin |
-| MoreFormfieldsPlugin |
-| MultiLingualPlugin |
-| PageOptimizerPlugin |
-| PubLinkFixupPlugin |
-| NewUserPlugin |
-| RedDotPlugin |
-| RenderPlugin |
-| SecurityHeadersPlugin |
-| SolrPlugin |
-| TagCloudPlugin |
-| TopicInteractionPlugin |
-| TopicTitlePlugin |
-| WebLinkPlugin |
-| WorkflowPlugin |
+   * AttachContentPlugin
+   * AutoRedirectPlugin
+   * AutoTemplatePlugin
+   * BreadCrumbsPlugin
+   * CaptchaPlugin
+   * ClassificationPlugin
+   * DBCachePlugin
+   * DiffPlugin
+   * DigestPlugin
+   * DocumentViewerPlugin
+   * EditChapterPlugin
+   * FilterPlugin
+   * FlexFormPlugin
+   * FlexWebListPlugin
+   * GraphvizPlugin
+   * GridLayoutPlugin
+   * ImageGalleryPlugin
+   * ImagePlugin
+   * JQDataTablesPlugin
+   * LdapNgPlugin
+   * LikePlugin
+   * ListyPlugin
+   * MediaElementPlugin
+   * MetaCommentPlugin
+   * MetaDataPlugin
+   * MimeIconPlugin
+   * MoreFormfieldsPlugin
+   * MultiLingualPlugin
+   * NatSkinPlugin
+   * NewUserPlugin
+   * PageOptimizerPlugin
+   * PubLinkFixupPlugin
+   * RedDotPlugin
+   * RenderPlugin
+   * SecurityHeadersPlugin
+   * SolrPlugin
+   * TagCloudPlugin
+   * TopicInteractionPlugin
+   * TopicTitlePlugin
+   * WebLinkPlugin
+   * WorkflowPlugin
 
 ### Included Foswiki Skins
-| NatSkin |
+   * NatSkin
 
 ### Included Alpine Packages
 
