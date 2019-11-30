@@ -94,11 +94,13 @@ main | GraphVis | graphviz
 main | Grep | grep
 main | mailcap | mailcap
 main | GNU-make | make
+main | Lynx Texte Browser | lynx 
 main | musl-LibC | musl
 main | nginx-Web-Server | nginx
 main | openSSL | openssl
 main | Perl5 | perl
 main | Perl-Dev | perl-dev
+main | poppler-utils | poppler-utils
 main | Simple-MTA | ssmtp
 main | Timezone-Data | tzdata
 main | unzip | unzip
@@ -106,6 +108,7 @@ main | wget | wget
 main | zip | zip
 community | ImageMagick | imagemagick
 community | PerlMagick | imagemagick-perlmagick
+testing | odt2txt | odt2txt
 
 A lot of perl modules required by Foswiki and many of its expensions are included in this Docker file as native alpine packages:
 
@@ -127,6 +130,7 @@ main | DBI | perl-dbi
 main | DB_File | perl-db_file
 main | DateTime | perl-datetime
 main | Digest-SHA1 | perl-digest-sha1
+main | Encode | perl-encode
 main | Error | perl-error
 main | FCGI | perl-fcgi
 main | FCGI-ProcManager | perl-fcgi-procmanager
@@ -167,6 +171,7 @@ community | LWP-Protocol-https | perl-lwp-protocol-https
 community | Moo | perl-moo
 community | MooX-Types-MooseLike | perl-moox-types-mooselike
 community | Moose | perl-moose
+community | Spreadsheet-ParseExcel | perl-spreadsheet-parseexcel
 community | XML-Writer | perl-xml-writer
 community | XML-XPath | perl-xml-xpath
 community | YAML | perl-yaml
