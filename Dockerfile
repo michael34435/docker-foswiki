@@ -45,10 +45,14 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
 
 COPY perl-net-saml2-0.19.05-r0.apk perl-net-saml2-0.19.05-r0.apk
 
+COPY perl-email-address-xs-1.04-r0.apk perl-email-address-xs-1.04-r0.apk
+
 RUN touch /root/.bashrc
 
 RUN apk add --allow-untrusted perl-net-saml2-0.19.05-r0.apk && \
-    rm perl-net-saml2-0.19.05-r0.apk
+    apk add --allow-untrusted perl-email-address-xs-1.04-r0.apk && \
+    rm perl-email-address-xs-1.04-r0.apk \
+    perl-net-saml2-0.19.05-r0.apk
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \

@@ -1,3 +1,10 @@
+Version 1.0.10
+
+1. docker-foswiki
+   1. Add perl-email-address-xs-1.04-r0.apk from repo till its available from Alpine 
+
+2. Docmentation updates
+
 Version 1.0.9
 
 1. docker-foswiki

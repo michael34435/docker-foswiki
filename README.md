@@ -271,6 +271,7 @@ testing | XML-Easy | perl-xml-easy
 testing | XML-Generator | perl-xml-generator
 testing | XML-Tidy | perl-xml-tidy
 testing | libapreq2 | perl-libapreq2
+timlegge | Email-Address-XS | perl-email-address-xs
 timlegge | Net-SAML2 | perl-net-saml2
 
 ## How to Build
