@@ -39,20 +39,16 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-xml-canonicalizexml perl-xml-easy perl-xml-generator perl-xml-parser \
         perl-xml-tidy perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
         imagemagick-perlmagick git graphviz perl-dev make ssmtp \
-        odt2txt antiword lynx poppler-utils --update-cache && \
+        odt2txt antiword lynx poppler-utils perl-email-address-xs --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
         rm -fr /var/cache/apk/APKINDEX.*
 
 COPY perl-net-saml2-0.19.05-r0.apk perl-net-saml2-0.19.05-r0.apk
 
-COPY perl-email-address-xs-1.04-r0.apk perl-email-address-xs-1.04-r0.apk
-
 RUN touch /root/.bashrc
 
 RUN apk add --allow-untrusted perl-net-saml2-0.19.05-r0.apk && \
-    apk add --allow-untrusted perl-email-address-xs-1.04-r0.apk && \
-    rm perl-email-address-xs-1.04-r0.apk \
-    perl-net-saml2-0.19.05-r0.apk
+    rm perl-net-saml2-0.19.05-r0.apk
 
 RUN wget ${FOSWIKI_LATEST_URL} && \
     echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \

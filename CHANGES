@@ -1,11 +1,20 @@
-Version 1.0.10
+Version 1.11
+
+1. docker-foswiki
+   1. Change perl-email-address-xs to Alpine package from repo
+
+2. Docmentation updates
+
+3. Removed a minor digit from the version to match the docker tag
+
+Version 1.0.10 (1.10)
 
 1. docker-foswiki
    1. Add perl-email-address-xs-1.04-r0.apk from repo till its available from Alpine 
 
 2. Docmentation updates
 
-Version 1.0.9
+Version 1.0.9 (1.09)
 
 1. docker-foswiki
    1. Enable EditChapterPlugin
@@ -21,7 +30,7 @@ Version 1.0.9
 
 3. Docmentation updates
 
-Version 1.0.8
+Version 1.0.8 (1.08)
 
 1. Enable the following plugins
    1. AutoTemplatePlugin

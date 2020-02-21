@@ -229,6 +229,7 @@ community | Crypt-OpenSSL-Bignum | perl-crypt-openssl-bignum
 community | Crypt-OpenSSL-DSA | perl-crypt-openssl-dsa
 community | Dancer | perl-dancer
 community | Digest-Perl-MD5 | perl-digest-perl-md5
+communtiy | Email-Address-XS | perl-email-address-xs
 community | Email-MIME | perl-email-mime
 community | Hash-Merge-Simple | perl-hash-merge-simple
 community | LWP-Protocol-https | perl-lwp-protocol-https
@@ -271,7 +272,6 @@ testing | XML-Easy | perl-xml-easy
 testing | XML-Generator | perl-xml-generator
 testing | XML-Tidy | perl-xml-tidy
 testing | libapreq2 | perl-libapreq2
-timlegge | Email-Address-XS | perl-email-address-xs
 timlegge | Net-SAML2 | perl-net-saml2
 
 ## How to Build
