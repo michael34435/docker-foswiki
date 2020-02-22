@@ -132,9 +132,10 @@ RUN cd /var/www/foswiki && \
 
 RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
     cd SamlLoginContrib && \
-    tar cvf SamlLoginContrib.tar * && \
+    tar cvf SamlLoginContrib.tar data lib && \
     cd /var/www/foswiki && \
     tar xvf /SamlLoginContrib/SamlLoginContrib.tar && \
+    tools/configure -save -noprompt && \
     rm -fr /SamlLoginContrib && \
     apk update && \
     apk del --purge make musl-dev db-dev expat-dev openssl-dev \
