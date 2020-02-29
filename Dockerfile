@@ -9,16 +9,18 @@ ENV FOSWIKI_LATEST_MD5 706fc6bf1fa6df6bfbe8a079c5007aa3
 ENV FOSWIKI_LATEST Foswiki-2.1.6
 
 RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
+    apk update && \
+    apk upgrade && \
     apk add --update && \
     apk add ca-certificates imagemagick mailcap musl nginx openssl tzdata bash \
         grep unzip wget zip perl perl-algorithm-diff perl-algorithm-diff-xs \
         perl-apache-logformat-compiler perl-archive-zip perl-authen-sasl \
         perl-authcas perl-berkeleydb perl-cache-cache perl-cgi perl-cgi-session \
         perl-class-accessor perl-convert-pem perl-crypt-eksblowfish \
-        perl-crypt-openssl-bignum perl-crypt-openssl-dsa \
+        perl-crypt-jwt perl-crypt-openssl-bignum perl-crypt-openssl-dsa \
         perl-crypt-openssl-random perl-crypt-openssl-rsa \
-        perl-crypt-openssl-verifyx509 perl-crypt-openssl-x509 \
-        perl-crypt-passwdmd5 perl-crypt-smime perl-crypt-x509 perl-dancer \
+        perl-crypt-openssl-verifyx509 perl-crypt-openssl-x509 perl-crypt-passwdmd5 \
+        perl-crypt-random perl-crypt-smime perl-crypt-x509 perl-dancer \
         perl-datetime perl-datetime-format-xsd perl-dbd-mysql perl-dbd-pg \
         perl-dbd-sqlite perl-db_file perl-db_file-lock perl-dbi \
         perl-devel-overloadinfo perl-digest-perl-md5 perl-digest-sha1 \
@@ -38,7 +40,7 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-time-parsedate perl-type-tiny perl-uri perl-www-mechanize \
         perl-xml-canonicalizexml perl-xml-easy perl-xml-generator perl-xml-parser \
         perl-xml-tidy perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
-        imagemagick-perlmagick git graphviz perl-dev make ssmtp \
+        imagemagick-perlmagick graphviz \
         odt2txt antiword lynx poppler-utils perl-email-address-xs --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
         rm -fr /var/cache/apk/APKINDEX.*
@@ -112,11 +114,13 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer MimeIconPlugin -r -enable install && \
     tools/extension_installer MoreFormfieldsPlugin -r -enable install && \
     tools/extension_installer MultiLingualPlugin -r -enable install && \
+    tools/extension_installer OpenIDLoginContrib -r -enable install && \
     tools/extension_installer PageOptimizerPlugin -r -enable install && \
     tools/extension_installer PubLinkFixupPlugin -r -enable install && \
     tools/extension_installer NewUserPlugin -r -enable install && \
     tools/extension_installer RedDotPlugin -r -enable install && \
     tools/extension_installer RenderPlugin -r -enable install && \
+    tools/extension_installer SamlLoginContrib -r -enable install && \
     tools/extension_installer SecurityHeadersPlugin -r -enable install && \
     tools/extension_installer StringifierContrib -r -enable install && \
     tools/extension_installer SolrPlugin -r -enable install && \
@@ -129,17 +133,6 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer XSendFileContrib -r -enable install && \
     rm -fr /var/www/foswiki/working/configure/download/* && \
     rm -fr /var/www/foswiki/working/configure/backup/*
-
-RUN git clone https://github.com/timlegge/SamlLoginContrib.git && \
-    cd SamlLoginContrib && \
-    tar cvf SamlLoginContrib.tar data lib && \
-    cd /var/www/foswiki && \
-    tar xvf /SamlLoginContrib/SamlLoginContrib.tar && \
-    tools/configure -save -noprompt && \
-    rm -fr /SamlLoginContrib && \
-    apk update && \
-    apk del --purge make musl-dev db-dev expat-dev openssl-dev \
-        imagemagick6-dev krb5-dev libxml2-dev gcc git perl-dev
 
 RUN mkdir -p /run/nginx && \
     mkdir -p /etc/nginx/conf.d

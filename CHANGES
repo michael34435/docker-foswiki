@@ -1,3 +1,15 @@
+Version 1.12
+
+1. docker-foswiki
+   1. Update edge packages
+   1. Add perl modules:
+      1. Crypt::JWT
+      1. Crypt::Random
+   1. Use SamlLoginContrib from foswiki.org instead of local
+   1. Add OpenIDLoginContrib
+   1. Removed several packages including git and ssmp as beinein unneeded
+1. repo - removed old patches
+
 Version 1.11
 
 1. docker-foswiki

@@ -93,8 +93,9 @@ Or use an override file per instance :
    * JQSerialPagerContrib
    * JQTwistyContrib
    * JSTreeContrib
-   * SamlLoginContrib
    * LdapContrib
+   * OpenIDLoginContrib
+   * SamlLoginContrib
    * StringifierContrib
    * WebFontsContrib
    * XSendFileContrib
@@ -153,7 +154,6 @@ Repo | Application | Alpine Package
 -----|-------------|---------------
 main | Bash | bash
 main | Common-CA-certificates | ca-certificates
-main | Git | git
 main | GraphVis | graphviz
 main | Grep | grep
 main | mailcap | mailcap
@@ -163,9 +163,7 @@ main | musl-LibC | musl
 main | nginx-Web-Server | nginx
 main | openSSL | openssl
 main | Perl5 | perl
-main | Perl-Dev | perl-dev
 main | poppler-utils | poppler-utils
-main | Simple-MTA | ssmtp
 main | Timezone-Data | tzdata
 main | unzip | unzip
 main | wget | wget
@@ -225,53 +223,53 @@ main | perl-ldap | perl-ldap
 main | CGI-Session | perl-cgi-session
 main | Class-Accessor | perl-class-accessor
 community | Algorithm-Diff | perl-algorithm-diff
+community | Algorithm-Diff-XS | perl-algorithm-diff-xs
+community | AuthCAS | perl-authcas
+community | BerkeleyDB | perl-berkeleydb
+community | Crypt-PasswdMD5 | perl-crypt-passwdmd5
+community | Crypt-SMIME | perl-crypt-smime
+community | Convert-PEM | perl-convert-pem
 community | Crypt-OpenSSL-Bignum | perl-crypt-openssl-bignum
 community | Crypt-OpenSSL-DSA | perl-crypt-openssl-dsa
+community | Crypt-OpenSSL-VerifyX509 | perl-crypt-openssl-verifyx509
+community | Crypt-OpenSSL-X509 | perl-crypt-openssl-x509
 community | Dancer | perl-dancer
+community | DB_File-Lock | perl-db_file-lock
+community | DateTime-Format-XSD | perl-datetime-format-xsd
+community | Devel-OverloadInfo | perl-devel-overloadinfo
 community | Digest-Perl-MD5 | perl-digest-perl-md5
 communtiy | Email-Address-XS | perl-email-address-xs
 community | Email-MIME | perl-email-mime
 community | Hash-Merge-Simple | perl-hash-merge-simple
+community | Image-Info | perl-image-info 
+community | JSON-XS | perl-json-xs
+community | GSSAPI | perl-gssapi
+community | Locale-Codes | perl-locale-codes
+community | Locale-Msgfmt | perl-locale-msgfmt
 community | LWP-Protocol-https | perl-lwp-protocol-https
 community | Moo | perl-moo
 community | MooX-Types-MooseLike | perl-moox-types-mooselike
 community | Moose | perl-moose
+community | MooseX | perl-moosex
+community | MooseX-Types | perl-moosex-types
+community | MooseX-Types-Common | perl-moosex-types-common
+community | MooseX-Types-DateTime | perl-moosex-types-datetime
+community | MooseX-Types-URI | perl-moosex-types-uri
 community | Spreadsheet-ParseExcel | perl-spreadsheet-parseexcel
+community | Spreadsheet-XLSX | perl-spreadsheet-xlsx
+community | Sub-Exporter-ForMethods | perl-sub-exporter-formethods
+community | WWW-Mechanize | perl-www-mechanize
+community | XML-CanonicalizeXML | perl-xml-canonicalizexml
+community | XML-Easy | perl-xml-easy
+community | XML-Generator | perl-xml-generator
+community | XML-Tidy | perl-xml-tidy
 community | XML-Writer | perl-xml-writer
 community | XML-XPath | perl-xml-xpath
 community | YAML | perl-yaml
-testing | Algorithm-Diff-XS | perl-algorithm-diff-xs
-testing | AuthCAS | perl-authcas
-testing | BerkeleyDB | perl-berkeleydb
-testing | Crypt-OpenSSL-VerifyX509 | perl-crypt-openssl-verifyx509
-testing | Crypt-OpenSSL-X509 | perl-crypt-openssl-x509
-testing | Crypt-PasswdMD5 | perl-crypt-passwdmd5
-testing | Crypt-SMIME | perl-crypt-smime
-testing | Convert-PEM | perl-convert-pem
-testing | DB_File-Lock | perl-db_file-lock
-testing | DateTime-Format-XSD | perl-datetime-format-xsd
-testing | Devel-OverloadInfo | perl-devel-overloadinfo
-testing | GSSAPI | perl-gssapi
-testing | Image-Info | perl-image-info 
-testing | JSON-XS | perl-json-xs
-testing | Locale-Codes | perl-locale-codes
-testing | MooseX | perl-moosex
-testing | MooseX-Types | perl-moosex-types
-testing | MooseX-Types-Common | perl-moosex-types-common
-testing | MooseX-Types-DateTime | perl-moosex-types-datetime
-testing | MooseX-Types-URI | perl-moosex-types-uri
-testing | Locale-Msgfmt | perl-locale-msgfmt
-testing | Sereal | perl-sereal
-testing | Spreadsheet-XLSX | perl-spreadsheet-xlsx
-testing | Sub-Exporter-ForMethods | perl-sub-exporter-formethods
-testing | Text-Unidecode | perl-text-unidecode
-testing | Time-ParseDate | perl-time-parsedate
-testing | WWW-Mechanize | perl-www-mechanize
-testing | XML-CanonicalizeXML | perl-xml-canonicalizexml
-testing | XML-Easy | perl-xml-easy
-testing | XML-Generator | perl-xml-generator
-testing | XML-Tidy | perl-xml-tidy
+testing | Crypt-JWT | perl-crypt-jwt
+testing | Crypt-Random | perl-crypt-random
 testing | libapreq2 | perl-libapreq2
+testing | Sereal | perl-sereal
 timlegge | Net-SAML2 | perl-net-saml2
 
 ## How to Build
