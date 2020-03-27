@@ -1,11 +1,12 @@
-# docker-foswiki, with Solr and NatSkin
+# docker-foswiki, with Solr and NatSkin, multi-instances and Traefik ready
 
 ## Why I created this dockerfile?
+
 I finally got tired of the dependancy issues of Foswiki on RedHat so I modified michael34435/docker-foswiki. The goal of this release is to have a stable version that runs foswiki with all the perl modules required for foswiki to run almost any Plugin. It is served by nginx. Alpinelinux minimizes the size of the container, the total size for this image is `400MB`.
 
-A `docker-compose` file is also available in order to have a complete Foswiki + Solr faceted search application. 
+Three variations of the `docker-compose` file are available in order to have a complete Foswiki + Solr faceted search application : a simple one, a pre-configured one for multiple instances and a [Traefik](https://containo.us/traefik/) ready one.
 
-## Simple run
+## First run
 
 To start the image :
 
@@ -23,63 +24,87 @@ Once started, open `http://localhost` in your browser. The user running the comm
    3. `cd /var/www/foswiki/`
    4. `tools/configure -save -set {Password}='MyPassword'`
 
-### Complete run
+### Foswiki + Solr run
 
-With the `docker-compose.yaml`, a Foswiki + Solr multi-container application is created. Start it with :
+The first compose file provides a Foswiki + Solr multi-container application. Start it with :
 
 ```bash
-docker-compose up
+cp docker-compose.1-simple.yml docker-compose.yml
+docker-compose up -d
 ```
 
 Once started, open `http://localhost:8765` in your browser.
 
-To use another port, prepend the command :
+The Solr container is set up on an private Docker network.
+
+### Running multiple instances
+
+If multiple instances of Foswiki are needed, each one has to have its own folder, at same level as this repo :
+- `somepath/docker-foswiki/` : this repo
+- `somepath/instance1/` : folder for first Foswiki instance
+- `somepath/instance2/` : folder for second Foswiki instance
+- and so on
+
+Use the second compose file :
 
 ```bash
-FOSWIKI_PORT=80 docker-compose up
+cd somepath/docker-foswiki/
+cp docker-compose.2-multipleInstances.yml docker-compose.yml
 ```
 
-### Persistent storage
+Under each instance folder, simply copy the `.env` file :
 
-See the volume declaration in the `docker-compose.yaml` file :
+```bash
+cd somepath/instance1
+cp ../docker-foswiki/.env .
+```
+
+And edit it :
+- do not change `COMPOSE_FILE` 
+- change `COMPOSE_PROJECT_NAME` to this instance name, Docker will use it to prefix the containers name of this instance
+- change `EXTERNAL_PORT` so that each instance uses a different port number, for instance 8761, 8762 and so on
+- change `TZ` to your time zone
+- `ACME` is only used with Traefik, see below
+
+Start each instance under its own folder with :
+
+```bash
+cd somepath/instance1
+docker-compose up -d
+```
+
+### Running multiple instances with Traefik
+
+If you use Traefik as a reverse proxy for multiple instances, use the third compose file :
+
+```bash
+cd somepath/docker-foswiki/
+cp docker-compose.3-Traefik.yml docker-compose.yml
+```
+
+This compose file has all the labels required to work with your running Traefik container.
+
+In the `.env` file, change the `ACME` variable to the `certResolver` name you have declared within Traefik.
+
+After each instance starts, check the Traefik dashboard to verify it has been registered correctly.
+
+### Volumes
+
+See the volume declaration in the `docker-compose.yml` file :
    * 4 volumes are created, for Foswiki data and Solr
    * the `:z` after the volume declaration is necessary with selinux on RedHat to set the permissions correctly
-   * the volumes are located on the host by default under `/var/lib/docker/volumes/` and will keep any change you make when configuring the container
+   * the volumes are located by default under `/var/lib/docker/volumes/` 
 
-### Overiding the defaults 
-
-Any setting declared in the compose file can be overidden within another yaml file. For instance to change the port number and the volume location of the `foswiki_www` volume, create an `overrides.yml` file with the following content :
+The third compose file is configured so that the actual volumes data is located under its instance folder. To activate this run the following before starting your instance :
 
 ```bash
-services:
-  foswiki:
-    ports:
-      - 8761:80
-
-volumes:
-  foswiki_www:
-    driver: local
-    driver_opts:
-      type: none
-      device: /opt/myVolumes/foswiki
-      o: bind
+cd somepath/instance1
+mkdir volumes
+mkdir volumes/foswiki_www
+mkdir volumes/solr_configsets
+mkdir volumes/solr_foswiki
+mkdir volumes/solr_logs
 ```
-
-And start the application with :
-
-```bash
-docker-compose -f docker-compose.yaml -f overrides.yml up -d
-```
-
-### Running multiple instances 
-
-If multiple instances of Foswiki are needed, they have to live under different project name and TCP port :
-- `FOSWIKI_PORT=8761 docker-compose -p project1 up`
-- `FOSWIKI_PORT=8762 docker-compose -p project2 up`
-
-Or use an override file per instance :
-- `docker-compose -p project1 -f docker-compose.yaml -f overrides-project1.yml up`
-- `docker-compose -p project2 -f docker-compose.yaml -f overrides-project2.yml up`
 
 ### Included Foswiki Contribs
    * CopyContrib
