@@ -1,5 +1,8 @@
 # docker-foswiki, with Solr and NatSkin, multi-instances and Traefik ready
 
+## Support
+Log an issue or drop by the #timlegge-docker-foswiki irc channel on Freenode
+
 ## Why I created this dockerfile?
 
 I finally got tired of the dependancy issues of Foswiki on RedHat so I modified michael34435/docker-foswiki. The goal of this release is to have a stable version that runs foswiki with all the perl modules required for foswiki to run almost any Plugin. It is served by nginx. Alpinelinux minimizes the size of the container, the total size for this image is `400MB`.
