@@ -40,6 +40,58 @@ Once started, open `http://localhost:8765` in your browser.
 
 The Solr container is set up on an private Docker network.
 
+### Foswiki + Solr with https
+
+The second compose file provides a Foswiki + Solr multi-container application that enables HTTPS. Start it with :
+
+```bash
+cp docker-compose.2-simple-https.yml docker-compose.yml
+docker-compose up -d
+```
+#### For non-https connections:
+
+Once started, open `http://localhost:8765` in your browser.
+
+#### For https connections:
+
+Once started, open `https://localhost:8443` in your browser.
+
+#### Replacing the certificate and key files distributed here
+
+DO NOT use the certificates included here in a production environment (or really any environment).  They are here to simply allow the start up of a fully functional https configuration.  Simply run the following commands to replace the certificates with your own self-signed certificaes:
+
+Note that this produces an unencrypted key file.  This is needed to start the nginx web server without providing the password to decrypt the file.  Take appropriate measure to secure the file as needed for the security of your installation.
+
+```bash
+openssl req -x509 -newkey rsa:4096 -nodes -keyout https/docker-foswiki.key -out https/docker-foswiki.crt -days 365
+
+Generating a RSA private key
+........................................................................................................................................................................++++
+.................................................++++
+writing new private key to 'https/docker-foswiki.key'
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]: US
+State or Province Name (full name) [Some-State]: NY
+Locality Name (eg, city) []: New York
+Organization Name (eg, company) [Internet Widgits Pty Ltd]: Docker Foswiki
+Organizational Unit Name (eg, section) []: Security
+Common Name (e.g. server FQDN or YOUR name) []:docker-foswiki.local
+Email Address []:
+```
+#### Using the docker-foswiki.local server name
+
+You can define docker-foswiki.local in your host file to match the certificate name and nginx configuration. Change the server name in `https/nginx.default.conf` to the server name you wish to use.
+
+
+The Solr container is set up on an private Docker network.
+
 ### Running multiple instances
 
 If multiple instances of Foswiki are needed, each one has to have its own folder, at same level as this repo :
@@ -52,7 +104,7 @@ Use the second compose file :
 
 ```bash
 cd somepath/docker-foswiki/
-cp docker-compose.2-multipleInstances.yml docker-compose.yml
+cp docker-compose.3-multipleInstances.yml docker-compose.yml
 ```
 
 Under each instance folder, simply copy the `.env` file :
@@ -82,7 +134,7 @@ If you use Traefik as a reverse proxy for multiple instances, use the third comp
 
 ```bash
 cd somepath/docker-foswiki/
-cp docker-compose.3-Traefik.yml docker-compose.yml
+cp docker-compose.4-Traefik.yml docker-compose.yml
 ```
 
 This compose file has all the labels required to work with your running Traefik container.
