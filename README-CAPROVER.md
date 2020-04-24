@@ -46,7 +46,7 @@ and then using `docker exec -ti d392b0392d5e /bin/bash` to login to the machine.
 
 1. Connect to <https://foswiki.exapmle.com/>
 1. Login as the admin user (username: admin, password: [as set above])
-1. Access <https://foswiki.exapmle.co,m/bin/configure>
+1. Access <https://foswiki.exapmle.com/bin/configure>
 
 ### Start Modifications
 
