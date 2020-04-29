@@ -1,6 +1,6 @@
 # Congratulations
 
-You know have a running foswiki and solr container, and need to finalize some settings to ensure your work is complete.
+You now have a running foswiki and solr container, and need to finalize some settings to ensure your work is complete.
 
 ## Necessary CapRover Changes
 
@@ -95,7 +95,7 @@ Tip:
 " Rules
       1. Change `'WebSearch' => 'WebSearchView' to 'WebSearch' => 'SolrSearchView'`
       1. Save Configuration Changes
-1. Connect to <http://foswiki.exapmle.com/>
+1. Connect to <http://foswiki.example.com/>
 1. Click Search
 1. Type "Congrats" (you should see Main begin to appear)
 1. Press Enter (you should see the Solr results for "Congrats" search term)
