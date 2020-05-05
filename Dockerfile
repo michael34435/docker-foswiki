@@ -134,6 +134,11 @@ RUN cd /var/www/foswiki && \
     rm -fr /var/www/foswiki/working/configure/download/* && \
     rm -fr /var/www/foswiki/working/configure/backup/*
 
+RUN cd /var/www/foswiki && \
+    tools/configure -save -set {PermittedRedirectHostUrls}='http://docker-foswiki.local:8765,https://docker-foswiki.local:8443' && \
+    tools/configure -save -set {XSendFileContrib}{Header}='X-Accel-Redirect' && \
+    tools/configure -save -set {XSendFileContrib}{Location}='/files'
+
 RUN mkdir -p /run/nginx && \
     mkdir -p /etc/nginx/conf.d
 
