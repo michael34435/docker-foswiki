@@ -1,3 +1,22 @@
+Version 1.15
+
+Fixes #28 missing dependency for Perl File::MMagic
+The previous Version tags were foobared.  Will attempt to fix
+
+Version 1.14
+
+Fixes #26 Redirect look on System pages unauthenticated
+Fixes #27 Enabled xfilesend
+
+Version 1.13
+
+Multi instances improvement and Traefik ready (Thanks Michel Mallejac @mmallejac)
+Sample https configuration in repo
+Caprover Application Compatibility (See README-CAPROVER.md) Thanks Shawn Beasley
+@dignin)
+Improved nginx Configuration files
+Documentation updates
+
 Version 1.12
 
 1. docker-foswiki
