@@ -1,7 +1,10 @@
 Version 1.15
 
 Fixes #28 missing dependency for Perl File::MMagic
-The previous Version tags were foobared.  Will attempt to fix
+The previous Version tags were foobared.  This is what it should have been:
+commit 77d8aa878fb5faa4b7cc6aa6afb12fab32c3d924 (tag: v1.14, origin/master, origin/HEAD)
+commit 460b40d4ecd53226ade695f1d2e1b57e9b408383 (tag: v1.13, tag: 1.13, https)
+
 
 Version 1.14
 
