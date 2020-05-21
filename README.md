@@ -1,7 +1,6 @@
 # docker-foswiki, with Solr and NatSkin, multi-instances and Traefik ready
 
 ## Support
-
 Log an issue or drop by the #timlegge-docker-foswiki irc channel on Freenode
 
 ## Why I created this dockerfile?
@@ -28,7 +27,7 @@ Once started, open `http://localhost` in your browser. The user running the comm
    3. `cd /var/www/foswiki/`
    4. `tools/configure -save -set {Password}='MyPassword'`
 
-## Foswiki + Solr run
+### Foswiki + Solr run
 
 The first compose file provides a Foswiki + Solr multi-container application. Start it with :
 
@@ -86,7 +85,6 @@ Organizational Unit Name (eg, section) []: Security
 Common Name (e.g. server FQDN or YOUR name) []:docker-foswiki.local
 Email Address []:
 ```
-
 #### Using the docker-foswiki.local server name
 
 You can define docker-foswiki.local in your host file to match the certificate name and nginx configuration. Change the server name in `https/nginx.default.conf` to the server name you wish to use.
@@ -94,7 +92,7 @@ You can define docker-foswiki.local in your host file to match the certificate n
 
 The Solr container is set up on an private Docker network.
 
-## Running multiple instances
+### Running multiple instances
 
 If multiple instances of Foswiki are needed, each one has to have its own folder, at same level as this repo :
 - `somepath/docker-foswiki/` : this repo
@@ -130,7 +128,7 @@ cd somepath/instance1
 docker-compose up -d
 ```
 
-## Running multiple instances with Traefik
+### Running multiple instances with Traefik
 
 If you use Traefik as a reverse proxy for multiple instances, use the third compose file :
 
@@ -145,7 +143,7 @@ In the `.env` file, change the `ACME` variable to the `certResolver` name you ha
 
 After each instance starts, check the Traefik dashboard to verify it has been registered correctly.
 
-## Volumes
+### Volumes
 
 See the volume declaration in the `docker-compose.yml` file :
    * 4 volumes are created, for Foswiki data and Solr
@@ -163,14 +161,7 @@ mkdir volumes/solr_foswiki
 mkdir volumes/solr_logs
 ```
 
-## About Caprover
-
-
-
-## Image content
-
 ### Included Foswiki Contribs
-
    * CopyContrib
    * DBCacheContrib
    * FarscrollContrib
@@ -190,7 +181,6 @@ mkdir volumes/solr_logs
    * XSendFileContrib
 
 ### Included Foswiki Plugins
-
    * AttachContentPlugin
    * AutoRedirectPlugin
    * AutoTemplatePlugin
@@ -234,7 +224,6 @@ mkdir volumes/solr_logs
    * WorkflowPlugin
 
 ### Included Foswiki Skins
-
    * NatSkin
 
 ### Included Alpine Packages
@@ -363,10 +352,7 @@ testing | libapreq2 | perl-libapreq2
 testing | Sereal | perl-sereal
 timlegge | Net-SAML2 | perl-net-saml2
 
-## Use the image
-
-### How to Build
-
+## How to Build
 You can build the docker image yourself from the git clone.  Simply do the following in the git directory:
 ```bash
 docker build --no-cache -t docker-foswiki .
@@ -377,28 +363,23 @@ docker build --no-cache  --build-arg https_proxy=http://proxy.example.com:8080 -
 ```
 Unfortunately as the build use's wget, perl LWP and apk from AlpineLinux all four environment variables are necessary as each uses a different case or protocol to download the proper files.
 
-### How to run the Build
-
+## How to run the Build
 ```bash
 docker run --name docker-foswiki -d  -p 80:80 docker-foswiki
 ```
-### How to access the running container as root
-
+## How to access the running container as root
 ```bash
 docker exec -it docker-foswiki /bin/sh
 ``` 
-### How to stop the container
-
+## How to stop the container
 ```bash
 docker stop docker-foswiki
 ``` 
-### How to remove the container
-
+## How to remove the container
 ```bash
 docker rm docker-foswiki
 ``` 
-### How to publish image to Docker Hub
-
+## How to publish image to Docker Hub
 ```bash
 docker login
 docker tag docker-foswiki $DOCKER_ID_USER/docker-foswiki
@@ -406,5 +387,4 @@ docker push  $DOCKER_ID_USER/docker-foswiki
 ``` 
 
 ## License
-
 MIT
