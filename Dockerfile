@@ -68,7 +68,6 @@ RUN cd /var/www/foswiki && \
     tools/configure -save -set {ScriptUrlPath}='/bin' && \
     tools/configure -save -set {ScriptUrlPaths}{view}='' && \
     tools/configure -save -set {PubUrlPath}='/pub' && \
-    tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
     tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin' && \
     tools/configure -save -set {PermittedRedirectHostUrls}='http://docker-foswiki.local:8765,https://docker-foswiki.local:8443' && \
     tools/configure -save -set {XSendFileContrib}{Header}='X-Accel-Redirect' && \
