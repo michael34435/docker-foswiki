@@ -1,5 +1,34 @@
 # docker-foswiki, with Solr and NatSkin, multi-instances and Traefik ready
 
+## Table of Contents
+
+   * [docker-foswiki, with Solr and NatSkin, multi-instances and Traefik ready](#docker-foswiki-with-solr-and-natskin-multi-instances-and-traefik-ready)
+      * [Support](#support)
+      * [Why I created this dockerfile?](#why-i-created-this-dockerfile)
+      * [First run](#first-run)
+         * [Resetting the Admin Password](#resetting-the-admin-password)
+      * [Foswiki and Solr run](#foswiki--solr-run)
+      * [Foswiki and Solr with https](#foswiki--solr-with-https)
+         * [Replacing the certificate and key files distributed here](#replacing-the-certificate-and-key-files-distributed-here)
+         * [Using the docker-foswiki.local server name](#using-the-docker-foswikilocal-server-name)
+      * [Running multiple instances](#running-multiple-instances)
+      * [Running multiple instances with Traefik](#running-multiple-instances-with-traefik)
+      * [Volumes](#volumes)
+      * [Image content](#image-content)
+         * [Included Foswiki Contribs](#included-foswiki-contribs)
+         * [Included Foswiki Plugins](#included-foswiki-plugins)
+         * [Included Foswiki Skins](#included-foswiki-skins)
+         * [Included Alpine Packages](#included-alpine-packages)
+      * [Use the image](#use-the-image)
+         * [How to Build](#how-to-build)
+         * [How to run the Build](#how-to-run-the-build)
+         * [How to access the running container as root](#how-to-access-the-running-container-as-root)
+         * [How to stop the container](#how-to-stop-the-container)
+         * [How to remove the container](#how-to-remove-the-container)
+         * [How to publish image to Docker Hub](#how-to-publish-image-to-docker-hub)
+      * [About Caprover](#about-caprover)
+      * [License](#license)
+
 ## Support
 
 Log an issue or drop by the #timlegge-docker-foswiki irc channel on Freenode
@@ -28,7 +57,7 @@ Once started, open `http://localhost` in your browser. The user running the comm
    3. `cd /var/www/foswiki/`
    4. `tools/configure -save -set {Password}='MyPassword'`
 
-## Foswiki + Solr run
+## Foswiki and Solr run
 
 The first compose file provides a Foswiki + Solr multi-container application. Start it with :
 
@@ -41,7 +70,7 @@ Once started, open `http://localhost:8765` in your browser.
 
 The Solr container is set up on an private Docker network.
 
-### Foswiki + Solr with https
+## Foswiki and Solr with https
 
 The second compose file provides a Foswiki + Solr multi-container application that enables HTTPS. Start it with :
 
@@ -49,15 +78,9 @@ The second compose file provides a Foswiki + Solr multi-container application th
 cp docker-compose.2-simple-https.yml docker-compose.yml
 docker-compose up -d
 ```
-#### For non-https connections:
-
-Once started, open `http://localhost:8765` in your browser.
-
-#### For https connections:
-
 Once started, open `https://localhost:8443` in your browser.
 
-#### Replacing the certificate and key files distributed here
+### Replacing the certificate and key files distributed here
 
 DO NOT use the certificates included here in a production environment (or really any environment).  They are here to simply allow the start up of a fully functional https configuration.  Simply run the following commands to replace the certificates with your own self-signed certificaes:
 
@@ -87,7 +110,7 @@ Common Name (e.g. server FQDN or YOUR name) []:docker-foswiki.local
 Email Address []:
 ```
 
-#### Using the docker-foswiki.local server name
+### Using the docker-foswiki.local server name
 
 You can define docker-foswiki.local in your host file to match the certificate name and nginx configuration. Change the server name in `https/nginx.default.conf` to the server name you wish to use.
 
@@ -162,10 +185,6 @@ mkdir volumes/solr_configsets
 mkdir volumes/solr_foswiki
 mkdir volumes/solr_logs
 ```
-
-## About Caprover
-
-
 
 ## Image content
 
@@ -404,6 +423,10 @@ docker login
 docker tag docker-foswiki $DOCKER_ID_USER/docker-foswiki
 docker push  $DOCKER_ID_USER/docker-foswiki
 ``` 
+
+## About Caprover
+
+This docker image is used by [CapRover](https://caprover.com/) for their one-click app integration, see README-CAPROVER.md file.
 
 ## License
 
