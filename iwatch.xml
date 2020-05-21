@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "/etc/iwatch/iwatch.dtd" >
+<config>
+  <guard email="root@localhost" name="IWatch"/>
+  <watchlist>
+    <title>Foswiki</title>
+    <contactpoint email="root@localhost" name="Administrator"/>
+    <path type="recursive" filter=".*\.txt$" alert="off" syslog="on" exec="su -s /bin/sh nginx -c '/var/www/foswiki/tools/solrjob'">/var/www/foswiki/data</path>
+    <path type="regexception">\.tmp|\.sw\w|\.svn|\.lease|\.lock|,$|\.changes|,v|^_[0-9]|^log|^Temporary|^UnitTestCheck</path>
+  </watchlist>
+</config>
+

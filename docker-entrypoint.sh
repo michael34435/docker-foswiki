@@ -17,6 +17,9 @@ sed -i '/SolrPlugin..Url/s/localhost/solr/' /var/www/foswiki/lib/LocalSite.cfg
 echo "...enabling NatSkin"
 grep -q "Set SKIN = nat" /var/www/foswiki/data/Main/SitePreferences.txt || sed -i '/---++ Appearance/a\ \ \ * Set SKIN = nat' /var/www/foswiki/data/Main/SitePreferences.txt
 
+echo "...starting iwatch"
+iwatch -d
+
 echo "...starting nginx+foswiki"
 cd /var/www/foswiki/bin
 
