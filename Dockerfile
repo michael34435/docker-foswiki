@@ -44,7 +44,8 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         perl-xml-canonicalizexml perl-xml-easy perl-xml-generator perl-xml-parser \
         perl-xml-tidy perl-xml-writer perl-xml-xpath perl-yaml perl-yaml-tiny \
         perl-file-mmagic perl-net-saml2 imagemagick-perlmagick graphviz \
-        odt2txt antiword lynx poppler-utils perl-email-address-xs --update-cache && \
+        odt2txt antiword lynx poppler-utils perl-email-address-xs \
+        perl-crypt-openssl-verify iwatch  --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
         rm -fr /var/cache/apk/APKINDEX.*
 
@@ -131,14 +132,20 @@ RUN cd /var/www/foswiki && \
     tools/extension_installer WebFontsContrib -r -enable install && \
     tools/extension_installer WorkflowPlugin -r -enable install && \
     tools/extension_installer XSendFileContrib -r -enable install && \
+    tools/configure -save -set {Plugins}{AutoViewTemplatePlugin}{Enabled}='0' && \
+    tools/configure -save -set {Plugins}{LdapNgPlugin}{Enabled}='0' && \
+    tools/configure -save -set {Plugins}{SamlLoginContrib}{Enabled}='0' && \
     rm -fr /var/www/foswiki/working/configure/download/* && \
     rm -fr /var/www/foswiki/working/configure/backup/*
 
 RUN mkdir -p /run/nginx && \
     mkdir -p /etc/nginx/conf.d
 
+RUN chown -R nginx:nginx /var/www/foswiki
+
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
+COPY iwatch.xml /etc/iwatch.xml
 
 EXPOSE 80
 

@@ -11,6 +11,7 @@
       * [Foswiki and Solr with https](#foswiki--solr-with-https)
          * [Replacing the certificate and key files distributed here](#replacing-the-certificate-and-key-files-distributed-here)
          * [Using the docker-foswiki.local server name](#using-the-docker-foswikilocal-server-name)
+      * [Solr Configuration](#solr-configuration)
       * [Running multiple instances](#running-multiple-instances)
       * [Running multiple instances with Traefik](#running-multiple-instances-with-traefik)
       * [Volumes](#volumes)
@@ -116,6 +117,16 @@ You can define docker-foswiki.local in your host file to match the certificate n
 
 
 The Solr container is set up on an private Docker network.
+
+## Solr Configuration
+
+### Solr WebSearch, WebChanges and WikiUsers
+
+See: https://foswiki.org/Extensions/SolrPlugin#Using_Solr_for_WebSearch_44_WebChanges_and_Main.WikiUsers
+
+### Automatic Indexing
+
+The Docker container includes iwatch which automatically indexes files that have changed.  Everything is set up but you can review https://foswiki.org/Extensions/SolrPlugin#Realtime_indexing
 
 ## Running multiple instances
 
