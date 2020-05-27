@@ -1,3 +1,16 @@
+Version 1.16
+
+6611a54 Add some Solr documentation
+379c9bf Fixes #29 Add support for iwatch
+c52b4d0 Added TOC, made using https://github.com/ekalinin/github-markdown-toc
+	Improved titles identation Added CapRover lines
+7b59ae9 Fix type #30, DefaultUrlHost was set twice
+75a8e4f Fix typo #30, DefaultUrlHost was set twice
+b49f968 Revert "Fix typo #30, DefaultUrlHost was set twice"
+39a9c26 Fix typo #30, DefaultUrlHost was set twice
+83021e5 Mention perl-net-saml2 now official Alpine package
+f8438c5 Add info around the scred up tags
+
 Version 1.15
 
 Fixes #28 missing dependency for Perl File::MMagic
