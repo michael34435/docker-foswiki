@@ -1,3 +1,9 @@
+Version 1.17
+
+9689869 Merge pull request #32 from timlegge/v0.16
+c87a56c Update CHANGES
+70be08f Merge pull request #31 from timlegge/iwatch
+
 Version 1.16
 
 6611a54 Add some Solr documentation
