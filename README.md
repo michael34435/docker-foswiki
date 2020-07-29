@@ -346,7 +346,7 @@ main | Class-Accessor | perl-class-accessor
 community | Algorithm-Diff | perl-algorithm-diff
 community | Algorithm-Diff-XS | perl-algorithm-diff-xs
 community | AuthCAS | perl-authcas
-community | BerkeleyDB | perl-berkeleydb
+community | BerkeleyDB | perl-db
 community | Crypt-PasswdMD5 | perl-crypt-passwdmd5
 community | Crypt-SMIME | perl-crypt-smime
 community | Convert-PEM | perl-convert-pem

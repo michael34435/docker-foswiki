@@ -18,7 +18,7 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
     apk add ca-certificates imagemagick mailcap musl nginx openssl tzdata bash \
         grep unzip wget zip perl perl-algorithm-diff perl-algorithm-diff-xs \
         perl-apache-logformat-compiler perl-archive-zip perl-authen-sasl \
-        perl-authcas perl-berkeleydb perl-cache-cache perl-cgi perl-cgi-session \
+        perl-authcas perl-db perl-cache-cache perl-cgi perl-cgi-session \
         perl-class-accessor perl-convert-pem perl-crypt-eksblowfish \
         perl-crypt-jwt perl-crypt-openssl-bignum perl-crypt-openssl-dsa \
         perl-crypt-openssl-random perl-crypt-openssl-rsa \
