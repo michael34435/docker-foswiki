@@ -9,9 +9,8 @@ ENV FOSWIKI_LATEST_MD5 706fc6bf1fa6df6bfbe8a079c5007aa3
 ENV FOSWIKI_LATEST Foswiki-2.1.6
 
 RUN rm -rf /var/cache/apk/* && \
-    rm -rf /tmp/*
-
-RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
+    rm -rf /tmp/* && \
+    sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && \
     apk update && \
     apk upgrade && \
     apk add --update && \
@@ -47,11 +46,9 @@ RUN sed -n 's/main/testing/p' /etc/apk/repositories >> /etc/apk/repositories && 
         odt2txt antiword lynx poppler-utils perl-email-address-xs \
         perl-crypt-openssl-verify perl-xml-sig iwatch  --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
-        rm -fr /var/cache/apk/APKINDEX.*
-
-RUN touch /root/.bashrc
-
-RUN wget ${FOSWIKI_LATEST_URL} && \
+        rm -fr /var/cache/apk/APKINDEX.* && \
+    touch /root/.bashrc && \
+    wget ${FOSWIKI_LATEST_URL} && \
     echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \
     md5sum -cs ${FOSWIKI_LATEST}.tgz.md5 && \
     mkdir -p /var/www && \
@@ -61,9 +58,8 @@ RUN wget ${FOSWIKI_LATEST_URL} && \
     rm -rf ${FOSWIKI_LATEST}.tgz && \
     mv ${FOSWIKI_LATEST} foswiki && \
     cd foswiki && \
-    sh tools/fix_file_permissions.sh
-
-RUN cd /var/www/foswiki && \
+    sh tools/fix_file_permissions.sh && \
+    cd /var/www/foswiki && \
     tools/configure -save -noprompt && \
     tools/configure -save -set {DefaultUrlHost}='http://localhost' && \
     tools/configure -save -set {ScriptUrlPath}='/bin' && \
@@ -136,12 +132,10 @@ RUN cd /var/www/foswiki && \
     tools/configure -save -set {Plugins}{LdapNgPlugin}{Enabled}='0' && \
     tools/configure -save -set {Plugins}{SamlLoginContrib}{Enabled}='0' && \
     rm -fr /var/www/foswiki/working/configure/download/* && \
-    rm -fr /var/www/foswiki/working/configure/backup/*
-
-RUN mkdir -p /run/nginx && \
-    mkdir -p /etc/nginx/conf.d
-
-RUN chown -R nginx:nginx /var/www/foswiki
+    rm -fr /var/www/foswiki/working/configure/backup/* && \
+    mkdir -p /run/nginx && \
+    mkdir -p /etc/nginx/conf.d && \
+    chown -R nginx:nginx /var/www/foswiki
 
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh docker-entrypoint.sh
