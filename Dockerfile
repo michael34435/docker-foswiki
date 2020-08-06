@@ -46,7 +46,7 @@ RUN rm -rf /var/cache/apk/* && \
         odt2txt antiword lynx poppler-utils perl-email-address-xs \
         perl-crypt-openssl-verify perl-xml-sig iwatch  --update-cache && \
         # perl-libapreq2 -- Apache2::Request - Here for completeness but we use nginx \
-        rm -fr /var/cache/apk/APKINDEX.* && \
+    rm -fr /var/cache/apk/APKINDEX.* && \
     touch /root/.bashrc && \
     wget ${FOSWIKI_LATEST_URL} && \
     echo "${FOSWIKI_LATEST_MD5}  ${FOSWIKI_LATEST}.tgz" > ${FOSWIKI_LATEST}.tgz.md5 && \
@@ -67,8 +67,6 @@ RUN rm -rf /var/cache/apk/* && \
     tools/configure -save -set {PubUrlPath}='/pub' && \
     tools/configure -save -set {SafeEnvPath}='/bin:/usr/bin' && \
     tools/configure -save -set {PermittedRedirectHostUrls}='http://docker-foswiki.local:8765,https://docker-foswiki.local:8443' && \
-    tools/configure -save -set {XSendFileContrib}{Header}='X-Accel-Redirect' && \
-    tools/configure -save -set {XSendFileContrib}{Location}='/files' && \
     tools/extension_installer AttachContentPlugin -r -enable install && \
     tools/extension_installer AutoRedirectPlugin -r -enable install && \
     tools/extension_installer AutoTemplatePlugin -r -enable install && \
