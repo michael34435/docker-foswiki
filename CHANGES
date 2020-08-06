@@ -1,6 +1,13 @@
-Version 
+Version 1.18
 
-Perl-berkeleydb replaced by perl-db
+db58507 Fix missing XSendFileContrib settings
+e0164df Raised nginx upload size to 50M + reduced docker image layers number (so image size 560M -> 390M !)
+0e2fbba perl-db replaces perl-berkeleydb
+
+    This version requires the following changes in existing docker-foswiki installations
+        1. Installation of XSendFileContrib
+        2. Set $Foswiki::cfg{XSendFileContrib}{Header} = 'X-Accel-Redirect';
+        3. Set $Foswiki::cfg{XSendFileContrib}{Location} = '/files';
 
 Version 1.17
 
