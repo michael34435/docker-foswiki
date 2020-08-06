@@ -130,7 +130,8 @@ RUN rm -rf /var/cache/apk/* && \
     tools/extension_installer XSendFileContrib -r -enable install && \
     tools/configure -save -set {Plugins}{AutoViewTemplatePlugin}{Enabled}='0' && \
     tools/configure -save -set {Plugins}{LdapNgPlugin}{Enabled}='0' && \
-    tools/configure -save -set {Plugins}{SamlLoginContrib}{Enabled}='0' && \
+    tools/configure -save -set {XSendFileContrib}{Header}='X-Accel-Redirect' && \
+    tools/configure -save -set {XSendFileContrib}{Location}='/files' && \
     rm -fr /var/www/foswiki/working/configure/download/* && \
     rm -fr /var/www/foswiki/working/configure/backup/* && \
     mkdir -p /run/nginx && \
